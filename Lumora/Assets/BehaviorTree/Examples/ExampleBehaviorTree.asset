@@ -1,0 +1,382 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9173513392576165645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: DoneWaiting
+  NodeRect:
+    serializedVersion: 2
+    x: 456.80005
+    y: 652
+    width: 120
+    height: 60
+  Parent: {fileID: -5993964223959859138}
+  Children: []
+  key: DoneWaiting
+  expectedValue: 1
+--- !u!114 &-6905966451849403723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8282a6902d0064aafec0d4e900c205, type: 3}
+  m_Name: BTSelector
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: BTSelector
+  NodeRect:
+    serializedVersion: 2
+    x: 633.5999
+    y: 438.40005
+    width: 120
+    height: 60
+  Parent: {fileID: -161056338400996235}
+  Children:
+  - {fileID: -5993964223959859138}
+  - {fileID: -3169340422112483042}
+--- !u!114 &-5993964223959859138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: BTSequence
+  NodeRect:
+    serializedVersion: 2
+    x: 560
+    y: 538.3999
+    width: 120
+    height: 60
+  Parent: {fileID: -6905966451849403723}
+  Children:
+  - {fileID: -9173513392576165645}
+  - {fileID: 8583276456276090507}
+--- !u!114 &-5896485938091789318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: BTSequence
+  NodeRect:
+    serializedVersion: 2
+    x: 196.79999
+    y: 275.19998
+    width: 120
+    height: 60
+  Parent: {fileID: 8503605469207570191}
+  Children:
+  - {fileID: -5532660372164353021}
+  - {fileID: 7531549689161633863}
+--- !u!114 &-5532660372164353021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: InPlayerSight
+  NodeRect:
+    serializedVersion: 2
+    x: 78.400024
+    y: 435.20004
+    width: 120
+    height: 60
+  Parent: {fileID: -5896485938091789318}
+  Children: []
+  key: InPlayerSight
+  expectedValue: 1
+--- !u!114 &-3169340422112483042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46138ef8d556293468283bf70100c72d, type: 3}
+  m_Name: BTRunningActionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: WaitContinuousAction
+  NodeRect:
+    serializedVersion: 2
+    x: 739.20013
+    y: 539.19995
+    width: 120
+    height: 60
+  Parent: {fileID: -6905966451849403723}
+  Children: []
+  functionName: Wait
+  doUntilConditionName: DoneWaiting
+--- !u!114 &-2462427687130100302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: RootNode
+  NodeRect:
+    serializedVersion: 2
+    x: 350.40005
+    y: 25.600021
+    width: 120
+    height: 60
+  Parent: {fileID: 0}
+  Children:
+  - {fileID: 8503605469207570191}
+--- !u!114 &-1887411808363948276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
+  m_Name: BTActionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: Patrol
+  NodeRect:
+    serializedVersion: 2
+    x: 697.6
+    y: 281.59998
+    width: 120
+    height: 60
+  Parent: {fileID: 8503605469207570191}
+  Children: []
+  functionName: Patrol
+--- !u!114 &-1128371002089970578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c62a64e7563b44b8a5eeea5108773c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - Key: InPlayerSight
+    Type: 3
+    StringValue: 
+    IntValue: 0
+    FloatValue: 0
+    BoolValue: 0
+    GameObjectValue: {fileID: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Key: IsHidden
+    Type: 3
+    StringValue: 
+    IntValue: 0
+    FloatValue: 0
+    BoolValue: 0
+    GameObjectValue: {fileID: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Key: WaitTime
+    Type: 2
+    StringValue: 
+    IntValue: 0
+    FloatValue: 5
+    BoolValue: 1
+    GameObjectValue: {fileID: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Key: DoneWaiting
+    Type: 3
+    StringValue: 
+    IntValue: 0
+    FloatValue: 5
+    BoolValue: 0
+    GameObjectValue: {fileID: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+--- !u!114 &-161056338400996235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: BTSequence
+  NodeRect:
+    serializedVersion: 2
+    x: 476.8
+    y: 282.4
+    width: 120
+    height: 60
+  Parent: {fileID: 8503605469207570191}
+  Children:
+  - {fileID: 6553813559730846172}
+  - {fileID: -6905966451849403723}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 199428a7a8f42de44a10dc7461dad8f2, type: 3}
+  m_Name: ExampleBehaviorTree
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: -2462427687130100302}
+  nodes:
+  - {fileID: -5896485938091789318}
+  - {fileID: -5532660372164353021}
+  - {fileID: 7531549689161633863}
+  - {fileID: 8503605469207570191}
+  - {fileID: 6553813559730846172}
+  - {fileID: -161056338400996235}
+  - {fileID: -9173513392576165645}
+  - {fileID: -6905966451849403723}
+  - {fileID: -5993964223959859138}
+  - {fileID: 8583276456276090507}
+  - {fileID: -1887411808363948276}
+  - {fileID: -3169340422112483042}
+--- !u!114 &6553813559730846172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: IsHidden
+  NodeRect:
+    serializedVersion: 2
+    x: 431.19992
+    y: 438.4
+    width: 120
+    height: 60
+  Parent: {fileID: -161056338400996235}
+  Children: []
+  key: IsHidden
+  expectedValue: 1
+--- !u!114 &7531549689161633863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
+  m_Name: BTActionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: HideActionNode
+  NodeRect:
+    serializedVersion: 2
+    x: 256.80002
+    y: 438.3999
+    width: 120
+    height: 60
+  Parent: {fileID: -5896485938091789318}
+  Children: []
+  functionName: Hide
+--- !u!114 &8503605469207570191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8282a6902d0064aafec0d4e900c205, type: 3}
+  m_Name: BTSelector
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: BTSelector
+  NodeRect:
+    serializedVersion: 2
+    x: 350.4
+    y: 145.6
+    width: 120
+    height: 60
+  Parent: {fileID: -2462427687130100302}
+  Children:
+  - {fileID: -5896485938091789318}
+  - {fileID: -161056338400996235}
+  - {fileID: -1887411808363948276}
+--- !u!114 &8583276456276090507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
+  m_Name: BTActionNode
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: -1128371002089970578}
+  Name: StopHidingAction
+  NodeRect:
+    serializedVersion: 2
+    x: 628.00006
+    y: 659.2
+    width: 120
+    height: 60
+  Parent: {fileID: -5993964223959859138}
+  Children: []
+  functionName: StopHiding
