@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviour
+public class UIAudioController : MonoBehaviour
 {
     //UI interactions with Audio Manager
     //Attached to options canvas so will only be active when in canvas
