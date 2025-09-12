@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameEvent", menuName = "Scriptable Objects/GameEvent")]
+[CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GenericEvent")]
 public class GameEvent : ScriptableObject
 {
     private event Action OnEventRaised;
