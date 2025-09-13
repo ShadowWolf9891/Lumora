@@ -4,7 +4,9 @@ using UnityEngine.InputSystem;
 public class UIManager : MonoBehaviour
 {
     public InputActionAsset inputActions;
-    private InputAction inputAction;
+    public GameObject pauseCanvas, optionsCanvas, inventoryCanvas;
+    private InputAction optionsAction;
+    private InputAction inventoryAction;
     public static UIManager Instance;
     [SerializeField] GameObject activeCanvas;
     void Awake()
@@ -18,11 +20,12 @@ public class UIManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        inputAction = InputSystem.actions.FindAction("Escape");
+        optionsAction = InputSystem.actions.FindAction("Escape");
+        inventoryAction = InputSystem.actions.FindAction("Interact");
     }
     void Update()
     {
-        if (inputAction.WasPressedThisFrame())
+        if (optionsAction.WasPressedThisFrame())
         {
             //checks if a canvas is active, if not open pause menu
             if (activeCanvas != null)
@@ -35,8 +38,19 @@ public class UIManager : MonoBehaviour
                 PauseMenu();
             }
         }
+        if (inventoryAction.WasPressedThisFrame())
+        {
+            if (inventoryCanvas.activeInHierarchy)
+            {
+                inventoryCanvas.SetActive(false);
+                activeCanvas = null;
+            }
+            else
+            {
+                InventoryMenu();
+            }
+        }
     }
-    public GameObject pauseCanvas, optionsCanvas;
     public void OptionsMenu()
     {
         optionsCanvas.SetActive(true);
@@ -47,4 +61,10 @@ public class UIManager : MonoBehaviour
         pauseCanvas.SetActive(true);
         activeCanvas = pauseCanvas;
     }
+    public void InventoryMenu()
+    {
+        inventoryCanvas.SetActive(true);
+        activeCanvas = inventoryCanvas;
+    }
+
 }

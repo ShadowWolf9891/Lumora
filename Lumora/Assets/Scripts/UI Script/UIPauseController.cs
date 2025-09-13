@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UIPauseManager : MonoBehaviour
+public class UIPauseController : MonoBehaviour
 {
     void Start()
     {
