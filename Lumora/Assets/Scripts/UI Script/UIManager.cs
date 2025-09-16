@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
         optionsAction = InputSystem.actions.FindAction("Escape");
-        inventoryAction = InputSystem.actions.FindAction("Interact");
+        inventoryAction = InputSystem.actions.FindAction("North");
     }
     void Update()
     {
