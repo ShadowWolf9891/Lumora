@@ -11,12 +11,17 @@ public class JoTestPlayer : MonoBehaviour
      * and defining a zone around the player that finds the nearest wall when prompted.
      */
     private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction;
-    public float moveSpeed, jumpHeight;
+    public float playerHeight, moveSpeed, stoppingForce, maxSpeed, jumpHeight;
+    private bool shouldFaceMoveDirection = true;
+
+    private LayerMask groundMask;
+    private Vector3 verticalVelocity;
+
 
     private CharacterController characterController;
     private Rigidbody rB;
     private Vector2 moveInput;
-    private Transform groundedCheckObject;
+    public Transform groundedCheckObject;
     public Transform cameraTransform;
 
     private void Start()
@@ -27,8 +32,8 @@ public class JoTestPlayer : MonoBehaviour
         interactAction = InputSystem.actions.FindAction("North");
         crouchAction = InputSystem.actions.FindAction("East");
         jumpAction = InputSystem.actions.FindAction("South");
-        groundedCheckObject = transform.Find("GroundedCheckObject").transform;
         //
+        groundMask = LayerMask.GetMask("Ground");
         characterController = GetComponent<CharacterController>();
         rB = GetComponent<Rigidbody>();
     }
@@ -57,34 +62,51 @@ public class JoTestPlayer : MonoBehaviour
         }
         if (jumpAction.WasPressedThisFrame())
         {
-            Debug.Log("Jump Action!");
-            if (Physics.CheckSphere(groundedCheckObject.position,0.1f))
+            if (IsGrounded())
             {
                 rB.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
             }
         }
     }
 
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, playerHeight, groundMask);
+    }
+
     private void MovePlayer()
     {
-        //does all movement to rigidbody attached to CharacterController
-        //grab camera properties
+        //calculates proper move direction
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
         camForward.y = 0f;
         camRight.y = 0f;
         camForward.Normalize();
         camRight.Normalize();
-        //move character based on move direction
         Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
-        characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
-        characterController.Move(new Vector3(0, Physics.gravity.y * Time.deltaTime, 0));
-        //rotate character to face move direction, if there is a move input
-        if (moveDirection.sqrMagnitude > 0.01f)
+        //movement
+        if (moveDirection!= Vector3.zero)
         {
-            Quaternion toRotate = Quaternion.LookRotation(moveDirection, Vector3.up);
-            //smoothing with Slerp
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotate, 100f * Time.deltaTime);
+            rB.AddForce(moveDirection * moveSpeed * 10f, ForceMode.Force);
+            if (rB.linearVelocity.magnitude > maxSpeed)
+            {
+                rB.linearVelocity = new Vector3(moveDirection.x * maxSpeed, rB.linearVelocity.y, moveDirection.z * maxSpeed);
+            }
+            if (shouldFaceMoveDirection)
+            {
+                Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
+                rB.rotation = Quaternion.Slerp(rB.rotation, rotateTo, 10f * Time.deltaTime);
+            }
         }
+        else if (IsGrounded())
+        {
+            rB.linearVelocity = Vector3.Slerp(rB.linearVelocity, Vector3.zero, stoppingForce * Time.deltaTime);
+        }
+
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z));
     }
 }
