@@ -45,4 +45,12 @@ public class EnemyBehavior : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Player Detected! We'd reset the stage but this is our 1st prototype");
+        }
+    }
+
 }
