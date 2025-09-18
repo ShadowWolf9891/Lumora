@@ -11,17 +11,19 @@ public class JoTestPlayer : MonoBehaviour
      * player movement, player basic interactions, 
      * and defining a zone around the player that finds the nearest wall when prompted.
      */
+
+    public GameObject currentInteractable;
     private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction;
     public float playerHeight, moveSpeed, maxSpeed, stoppingForce, jumpHeight;
-    private bool shouldFaceMoveDirection = true;
+    private bool shouldFaceMoveDirection = true, canInteract = false;
 
     private LayerMask groundMask;
     private Vector3 verticalVelocity;
 
 
-    private CharacterController characterController;
     private Rigidbody rB;
     private Vector2 moveInput;
+
     public Transform groundedCheckObject;
     public Transform cameraTransform;
 
@@ -35,7 +37,6 @@ public class JoTestPlayer : MonoBehaviour
         jumpAction = InputSystem.actions.FindAction("South");
         //
         groundMask = LayerMask.GetMask("Ground");
-        characterController = GetComponent<CharacterController>();
         rB = GetComponent<Rigidbody>();
     }
 
@@ -56,7 +57,7 @@ public class JoTestPlayer : MonoBehaviour
         }
         if (interactAction.WasPressedThisFrame())
         {
-            Debug.Log("Interact Action!");
+            RunInteractionEvent();
         }
         if (crouchAction.WasPressedThisFrame())
         {
@@ -115,6 +116,39 @@ public class JoTestPlayer : MonoBehaviour
         {
             Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed;
             rB.linearVelocity = new Vector3(limitedVelocity.x, rB.linearVelocity.y, limitedVelocity.z);
+        }
+    }
+    
+
+    //All interaction stuff is designed around the prototype!!! we need to redo this!!!!!
+    private void RunInteractionEvent()
+    {
+        if (currentInteractable != null)
+        {
+            Debug.Log($"Interacted with {currentInteractable.name}");
+            Destroy(currentInteractable);
+        }
+        else
+        {
+            Debug.Log("Nothing to interact with!");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Collectable"))
+        {
+            canInteract = true;
+            currentInteractable = other.gameObject;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        // if theres nothing in radius and last thing leaves
+        if (other.gameObject.CompareTag("Collectable"))
+        {
+            canInteract = false;
+            currentInteractable = null;
         }
     }
 
