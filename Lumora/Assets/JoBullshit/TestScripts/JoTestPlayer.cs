@@ -66,6 +66,7 @@ public class JoTestPlayer : MonoBehaviour
         {
             if (IsGrounded())
             {
+                Debug.Log("Jump Action!");
                 rB.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
             }
         }
@@ -102,7 +103,7 @@ public class JoTestPlayer : MonoBehaviour
             //add drag (the force not the race)
             Vector3 dragForce = new Vector3(-rB.linearVelocity.x * stoppingForce, 0, -rB.linearVelocity.z * stoppingForce);
             rB.AddForce(dragForce, ForceMode.Force);
-            Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+            //Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
         }
 
     }
