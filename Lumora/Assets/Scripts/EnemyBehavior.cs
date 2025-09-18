@@ -45,6 +45,7 @@ public class EnemyBehavior : MonoBehaviour
 
     }
 
+    //OnTriggerEnter currently works as a sight cone, I was thinking this could be used for an enemy radius sphere later.
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
