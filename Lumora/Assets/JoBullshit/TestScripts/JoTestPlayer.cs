@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class JoTestPlayer : MonoBehaviour
@@ -11,7 +12,7 @@ public class JoTestPlayer : MonoBehaviour
      * and defining a zone around the player that finds the nearest wall when prompted.
      */
     private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction;
-    public float playerHeight, moveSpeed, stoppingForce, maxSpeed, jumpHeight;
+    public float playerHeight, moveSpeed, maxSpeed, stoppingForce, jumpHeight;
     private bool shouldFaceMoveDirection = true;
 
     private LayerMask groundMask;
@@ -42,6 +43,7 @@ public class JoTestPlayer : MonoBehaviour
     {
         GetPlayerInputs();
         MovePlayer();
+        HandleSpeedControl();
     }
 
     private void GetPlayerInputs()
@@ -88,22 +90,33 @@ public class JoTestPlayer : MonoBehaviour
         if (moveDirection!= Vector3.zero)
         {
             rB.AddForce(moveDirection * moveSpeed * 10f, ForceMode.Force);
-            if (rB.linearVelocity.magnitude > maxSpeed)
-            {
-                rB.linearVelocity = new Vector3(moveDirection.x * maxSpeed, rB.linearVelocity.y, moveDirection.z * maxSpeed);
-            }
+            
             if (shouldFaceMoveDirection)
             {
                 Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
                 rB.rotation = Quaternion.Slerp(rB.rotation, rotateTo, 10f * Time.deltaTime);
             }
         }
-        else if (IsGrounded())
+        else if (IsGrounded() && rB.linearVelocity.magnitude > 0.1f)
         {
-            rB.linearVelocity = Vector3.Slerp(rB.linearVelocity, Vector3.zero, stoppingForce * Time.deltaTime);
+            //add drag (the force not the race)
+            Vector3 dragForce = new Vector3(-rB.linearVelocity.x * stoppingForce, 0, -rB.linearVelocity.z * stoppingForce);
+            rB.AddForce(dragForce, ForceMode.Force);
+            Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
         }
 
     }
+
+    private void HandleSpeedControl()
+    {
+        Vector3 groundSpeed = new Vector3(rB.linearVelocity.x, 0, rB.linearVelocity.z);
+        if (groundSpeed.magnitude > maxSpeed)
+        {
+            Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed;
+            rB.linearVelocity = new Vector3(limitedVelocity.x, rB.linearVelocity.y, limitedVelocity.z);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
