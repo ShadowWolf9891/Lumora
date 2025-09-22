@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8891842623710054491}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraFollowPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7705727513175790136}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GroundedCheckObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,9 +77,9 @@ GameObject:
   - component: {fileID: 4738392434576407821}
   - component: {fileID: 4975226791562960143}
   - component: {fileID: 7257983983751162677}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6610a9182d4d81e4b82c15def511687d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JoTestPlayer
+  currentInteractable: {fileID: 0}
   playerHeight: 1.2
   moveSpeed: 6
   maxSpeed: 7
@@ -263,7 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2985698476228275460}
   - component: {fileID: 6936449560533317096}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CollectionRadius
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,7 +319,7 @@ GameObject:
   - component: {fileID: 7147058515210716066}
   - component: {fileID: 4152543424435582562}
   - component: {fileID: 6337952122032302447}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

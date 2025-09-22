@@ -6,18 +6,28 @@ public class EnemyBehavior : MonoBehaviour
 {
     [SerializeField]
     BehaviorTree bt;
+    BTBlackboard bb;
 
     [SerializeField]
     Transform[] patrolPoints;
     int currentPoint = 0;
 
+    [SerializeField]
+    float sightRange;
+    [SerializeField]
+    float angleOfVision = 30f;
+
+
     NavMeshAgent agent;
-
-
+    GameObject playerRef;
+    Transform eyesTransform;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        bb = bt.rootNode.GetBlackboard();
+        eyesTransform = this.gameObject.transform.GetChild(1);
+        playerRef = GameObject.Find("Player");
     }
 
     // Update is called once per frame
@@ -43,15 +53,40 @@ public class EnemyBehavior : MonoBehaviour
 			agent.SetDestination(patrolPoints[currentPoint].position);
 		}
 
+        Vector3 dirToPlayer = -(eyesTransform.position - playerRef.gameObject.transform.position);
+        float raycastAngle = Vector3.Angle(eyesTransform.position, playerRef.gameObject.transform.position);
+        if (raycastAngle < angleOfVision)
+        {
+            if (Physics.Raycast(eyesTransform.position, dirToPlayer, sightRange, LayerMask.GetMask("Player")))
+            {
+                Debug.Log("spotted!");
+                bb.Set<bool>("CanSeePlayer", true);
+            }
+        }
+
+
     }
 
-    //OnTriggerEnter currently works as a sight cone, I was thinking this could be used for an enemy radius sphere later.
-    private void OnTriggerEnter(Collider other)
+    /// <summary>
+    /// Have the enemy chase the player. 
+    /// </summary>
+    void Alert()
     {
-        if (other.gameObject.CompareTag("Player"))
+        agent.SetDestination(playerRef.transform.position);
+
+        if (agent.remainingDistance < 0.6f)
         {
-            Debug.Log("Player Detected! We'd reset the stage but this is our 1st prototype");
+            Attack();
+            bb.Set<bool>("CanSeePlayer", false);
         }
+    }
+
+    /// <summary>
+    /// This function runs when the player is in a set range of an enemy who is alerted.
+    /// </summary>
+    void Attack()
+    {
+        Debug.Log("Tag! you're it");
     }
 
 }
