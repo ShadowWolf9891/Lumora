@@ -16,6 +16,8 @@ public class EnemyBehavior : MonoBehaviour
     float sightRange;
     [SerializeField]
     float angleOfVision = 30f;
+    [SerializeField]
+    float attackRange = 1f;
 
 
     NavMeshAgent agent;
@@ -74,7 +76,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         agent.SetDestination(playerRef.transform.position);
 
-        if (agent.remainingDistance < 0.6f)
+        if (agent.remainingDistance < 1)
         {
             Attack();
             bb.Set<bool>("CanSeePlayer", false);

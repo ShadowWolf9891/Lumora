@@ -1,4 +1,7 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -26,7 +29,10 @@ public class JoTestPlayer : MonoBehaviour
 
     public Transform groundedCheckObject;
     public Transform cameraTransform;
-
+    
+    List<Collider> coverInRange = new List<Collider>();
+    [SerializeField]
+    bool behindCoverMovement;
     private void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
@@ -59,9 +65,29 @@ public class JoTestPlayer : MonoBehaviour
         {
             RunInteractionEvent();
         }
-        if (crouchAction.WasPressedThisFrame())
+        if (crouchAction.WasPressedThisFrame() && coverInRange.Count >= 1)
         {
-            Debug.Log("Crouch Action!");
+            if (!behindCoverMovement && coverInRange.Count >= 0)
+            {
+                //find nearest collider 
+                Collider nearestCover = coverInRange.First();
+                foreach (Collider c in coverInRange)
+                {
+                    float distanceToC = Vector3.Distance(c.ClosestPointOnBounds(transform.position), transform.position);
+                    if (distanceToC < Vector3.Distance(nearestCover.ClosestPointOnBounds(transform.position), transform.position))
+                    {
+                        nearestCover = c;
+                    }
+
+                }
+                Debug.Log($"Finding Nearest cover, {nearestCover.gameObject.name} is nearest");
+                TakeCover(nearestCover);
+            }
+            else
+            {
+                LeaveCover();
+            }
+
         }
         if (jumpAction.WasPressedThisFrame())
         {
@@ -71,6 +97,18 @@ public class JoTestPlayer : MonoBehaviour
                 rB.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
             }
         }
+    }
+
+    //we can run events here!
+    private void TakeCover(Collider nearestCover)
+    {
+        behindCoverMovement = true;
+        Vector3 directionToCover = -(transform.position - nearestCover.ClosestPointOnBounds(transform.position));
+        rB.AddForce(directionToCover, ForceMode.Impulse);
+    }
+    private void LeaveCover()
+    {
+        behindCoverMovement = false;
     }
 
     private bool IsGrounded()
@@ -88,25 +126,72 @@ public class JoTestPlayer : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
         Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
+
         //movement
-        if (moveDirection!= Vector3.zero)
+        if (moveDirection!= Vector3.zero && !behindCoverMovement)
         {
             rB.AddForce(moveDirection * moveSpeed * 10f, ForceMode.Force);
-            
-            if (shouldFaceMoveDirection)
-            {
-                Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-                rB.rotation = Quaternion.Slerp(rB.rotation, rotateTo, 10f * Time.deltaTime);
-            }
         }
-        else if (IsGrounded() && rB.linearVelocity.magnitude > 0.1f)
+        //Movement behind cover
+        else if (moveDirection != Vector3.zero && behindCoverMovement)
         {
-            //add drag (the force not the race)
+            moveDirection.Normalize();
+
+            //finding valid movement directions
+            Vector3 closestValidMoveDirection = new Vector3(0, 0, 0);
+            foreach (Collider c in coverInRange)
+            {
+                //raycasts to colliders near player
+                RaycastHit ray;
+                if (Physics.Raycast(transform.position, -(transform.position - c.ClosestPointOnBounds(transform.position)), out ray))
+                {
+                    //find 2 directions paralell to normal hit
+                    Vector3 hitNormal = ray.normal;
+                    Debug.DrawLine(ray.point, ray.point + hitNormal, Color.darkOrange);
+                    Vector3 direction1 = Quaternion.Euler(0, 90, 0) * hitNormal;
+                    Vector3 direction2 = Quaternion.Euler(0, -90, 0) * hitNormal;
+                    direction1.Normalize();
+                    direction2.Normalize();
+
+                    //finds valid direction closest to moveDirection vector
+                    if (Vector3.Distance(direction1, moveDirection) < Vector3.Distance(closestValidMoveDirection, moveDirection))
+                    {
+                        closestValidMoveDirection = direction1;
+                    }
+                    if (Vector3.Distance(direction2, moveDirection) < Vector3.Distance(closestValidMoveDirection, moveDirection))
+                    {
+                        closestValidMoveDirection = direction2;
+                    }
+                    Debug.DrawLine(transform.position, transform.position + direction1, Color.blue);
+                    Debug.DrawLine(transform.position, transform.position + direction2, Color.blue);
+                }
+            }
+
+            Debug.DrawLine(transform.position, transform.position + closestValidMoveDirection, Color.green);
+            //after finding best direction, moves player at half speed (note 5f multiplier instead of 10).
+            rB.AddForce(closestValidMoveDirection * moveSpeed * 5f, ForceMode.Force);
+        }
+
+        //facing character to movement
+        if (shouldFaceMoveDirection)
+        {
+            FaceMoveDirection(moveDirection);
+        }
+
+        //adding drag while grounded
+        if (IsGrounded() && rB.linearVelocity.magnitude > 0.1f)
+        {
             Vector3 dragForce = new Vector3(-rB.linearVelocity.x * stoppingForce, 0, -rB.linearVelocity.z * stoppingForce);
             rB.AddForce(dragForce, ForceMode.Force);
             //Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
         }
 
+    }
+
+    private void FaceMoveDirection(Vector3 moveDirection)
+    {
+        Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
+        rB.rotation = Quaternion.Slerp(rB.rotation, rotateTo, 10f * Time.deltaTime);
     }
 
     private void HandleSpeedControl()
@@ -136,6 +221,12 @@ public class JoTestPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // works on default layer
+        if (other.gameObject.layer == 0)
+        {
+            Debug.Log("added to cover in range");
+            coverInRange.Add(other);
+        }
         if (other.gameObject.CompareTag("Collectable"))
         {
             canInteract = true;
@@ -144,6 +235,16 @@ public class JoTestPlayer : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
+        // works on default layer
+        if (other.gameObject.layer == 0 && coverInRange.Contains(other))
+        {
+            Debug.Log("removed cover in range");
+            coverInRange.Remove(other);
+            if (coverInRange.Count == 0)
+            {
+                LeaveCover();
+            }
+        }
         // if theres nothing in radius and last thing leaves
         if (other.gameObject.CompareTag("Collectable"))
         {
@@ -151,10 +252,15 @@ public class JoTestPlayer : MonoBehaviour
             currentInteractable = null;
         }
     }
-
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z));
+        Gizmos.color = Color.red;
+        if (behindCoverMovement)
+        {
+            Vector3 moveLinePoint = transform.position;
+            moveLinePoint.x += moveInput.x;
+            moveLinePoint.z += moveInput.y;
+            Gizmos.DrawLine(transform.position, moveLinePoint);
+        }
     }
 }
