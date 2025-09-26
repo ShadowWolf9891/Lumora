@@ -31,37 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3238719513988401299}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4239528582283221782
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7705727513175790136}
-  m_Layer: 0
-  m_Name: GroundedCheckObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7705727513175790136
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4239528582283221782}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3238719513988401299}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5350591719694058521
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,6 +46,7 @@ GameObject:
   - component: {fileID: 4975226791562960143}
   - component: {fileID: 7257983983751162677}
   - component: {fileID: 6481701089280577369}
+  - component: {fileID: 7166657601331200534}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -99,7 +69,6 @@ Transform:
   m_Children:
   - {fileID: 8891842623710054491}
   - {fileID: 3646764263478511198}
-  - {fileID: 7705727513175790136}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6998252883528382027
@@ -245,12 +214,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64004f7d73669f54e8d0cab59e76b23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  groundedCheckObject: {fileID: 7705727513175790136}
-  moveSpeed: 6
-  maxSpeed: 7
+  cameraTransform: {fileID: 0}
+--- !u!114 &7166657601331200534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350591719694058521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c8a4b7c42f93f947925e6ffcd37e79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBehavior
+  acceleration: 10
+  maxSpeed: 3
   stoppingForce: 3
   playerHeight: 1.2
   jumpHeight: 5
+  directionsToCheck: 8
 --- !u!1 &8013750285147696185
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,7 +244,6 @@ GameObject:
   - component: {fileID: 3646764263478511198}
   - component: {fileID: 7147058515210716066}
   - component: {fileID: 4152543424435582562}
-  - component: {fileID: 6337952122032302447}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -341,24 +322,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6337952122032302447
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8013750285147696185}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
