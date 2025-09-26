@@ -49,33 +49,50 @@ public class PlayerBehavior : MonoBehaviour
 			rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
 		}
 		//Movement behind cover
-		else if (moveDirection != Vector3.zero && isHiding)
+		else if (moveDirection != Vector3.zero && isHiding && coverObject != null)
 		{
-			//raycasts to collider nearest to the player
-			if (Physics.Raycast(transform.position, (coverObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position) - transform.position).normalized, out RaycastHit ray))
+			Collider currentCollider = coverObject.GetComponent<Collider>();
+			Physics.Raycast(transform.position, (currentCollider.ClosestPoint(transform.position) - transform.position).normalized,
+			out RaycastHit currentHit);
+
+			Vector3 currentNormal = currentHit.normal;
+			Vector3 currentPoint = currentHit.point;
+
+			// Project move direction onto current plane
+			Vector3 projected = Vector3.ProjectOnPlane(moveDirection, currentNormal).normalized;
+
+			if (Physics.Raycast(transform.position, moveDirection.normalized, out RaycastHit forwardHit, 1f, ~0))
 			{
-				Vector3 hitNormal = ray.normal;
-				Vector3 hitPoint = ray.point;
-				Debug.DrawLine(hitPoint, hitPoint + hitNormal, Color.darkOrange);
-
-				
-				float distanceToCover = Vector3.Distance(transform.position, hitPoint);
-
-				if (Mathf.Abs(distanceToCover) > 1f) // tweak threshold
+				// If wall found and it's not the same object
+				if (forwardHit.collider.gameObject != coverObject)
 				{
-					coverObject = null;
-					GameContext.Instance.RaiseHidePressed();
-					return;
+					// Switch cover!
+					coverObject = forwardHit.collider.gameObject;
+					currentNormal = forwardHit.normal;
+					currentPoint = forwardHit.point;
+
+					projected = Vector3.ProjectOnPlane(moveDirection, currentNormal).normalized;
 				}
-
-				Vector3 projected = Vector3.ProjectOnPlane(moveDirection, hitNormal).normalized;
-
-				rb.AddForce(acceleration * Time.deltaTime * 60 * projected, ForceMode.Acceleration);
-				Debug.DrawLine(transform.position, transform.position + projected, Color.green);
-
-				
 			}
+			float distanceToCover = Vector3.Distance(transform.position, currentPoint);
+			if (distanceToCover > 1f)
+			{
+				coverObject = null;
+				GameContext.Instance.RaiseHidePressed();
+				return;
+			}
+			else
+			{
+				// Snap to correct distance from wall
+				Vector3 offset = currentNormal.normalized * (0.6f - distanceToCover);
+				rb.MovePosition(Vector3.Slerp(transform.position, transform.position + offset, 0.5f));
+
+				// Then apply movement along the wall
+				rb.AddForce(acceleration * Time.deltaTime * 60 * projected, ForceMode.Acceleration);
+			}
+			Debug.DrawLine(transform.position, transform.position + projected, Color.green);
 		}
+
 		FaceMoveDirection(moveDirection);
 		//adding drag while grounded
 		if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f && !isHiding)
@@ -123,13 +140,12 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		if (!isHiding)
 		{
-			coverObject = GetClosestObject(2, ~0);
+			coverObject = GetClosestObject(1, ~0);
 			if (coverObject != null)
 			{
 				//Toggle hiding
 				isHiding = true;
 			}
-			
 		}
 		else
 		{
@@ -176,6 +192,7 @@ public class PlayerBehavior : MonoBehaviour
 	}
 	public GameObject GetClosestObject(float distance, int layerMask = ~0)
 	{
+		
 		List<Collider> nearbyWalls = CheckSurroundings(distance, layerMask);
 
 		if (nearbyWalls.Count == 0 || nearbyWalls == null) return null; //Return if nothing was hit
