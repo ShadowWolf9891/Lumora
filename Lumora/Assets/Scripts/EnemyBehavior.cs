@@ -29,7 +29,7 @@ public class EnemyBehavior : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         bb = bt.rootNode.GetBlackboard();
         eyesTransform = this.gameObject.transform.GetChild(1);
-        playerRef = GameObject.Find("Player");
+        playerRef = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
