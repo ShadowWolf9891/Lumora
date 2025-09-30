@@ -6,16 +6,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField]
-	Transform cameraTransform;
 
 	//Private variables
 	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction;
 	private Vector2 moveInput;
 	private bool canInteract;
-	
+    private Transform cameraTransform;
 
-	private void Start()
+
+    private void Start()
 	{
 		//TODO: Find correct action using a reference instead of a string
 		moveAction = InputSystem.actions.FindAction("Move");
@@ -23,6 +22,8 @@ public class PlayerController : MonoBehaviour
 		interactAction = InputSystem.actions.FindAction("North");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
+		//
+		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 	}
 
 	private void Update()

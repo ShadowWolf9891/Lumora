@@ -15,9 +15,18 @@ public class GameContext
 	public event Action OnHidePressed;
 	public event Action OnJumpPressed;
 
+    //Player Event Context
+    public event Action OnEnterHideState;
+    public event Action OnLeaveHideState;
+
+	//Player Controls
 	public void RaiseMove(Vector3 move) {  OnMove?.Invoke(move); }
 	public void RaiseAttack() { OnAttackPressed?.Invoke(); }
 	public void RaiseInteract() {  OnInteractPressed?.Invoke(); }
 	public void RaiseHidePressed() {  OnHidePressed?.Invoke(); }
 	public void RaiseJumpPressed() {  OnJumpPressed?.Invoke(); }
+
+	//Player Events
+    public void RaiseEnterStealth() { OnEnterHideState?.Invoke(); }
+    public void RaiseLeaveStealth() { OnLeaveHideState?.Invoke(); }
 }
