@@ -23,14 +23,20 @@ public class VignetteController : MonoBehaviour
     }
     private void EnterHiding()
     {
-        Debug.Log("vignette activated");
-        vignetteActive = true;
-        volume.weight = Mathf.Lerp(minValue, maxValue, 1);
+        if (!vignetteActive)
+        {
+            Debug.Log("vignette activated");
+            vignetteActive = true;
+            volume.weight = Mathf.Lerp(minValue, maxValue, 3);
+        }
     }
     private void LeaveHiding()
     {
-        Debug.Log("vignette Deactivated");
-        vignetteActive = false;
-        volume.weight = Mathf.Lerp(maxValue, minValue, 1);
+        if (vignetteActive)
+        {
+            Debug.Log("vignette Deactivated");
+            vignetteActive = false;
+            volume.weight = Mathf.Lerp(maxValue, minValue, 3);
+        }
     }
 }

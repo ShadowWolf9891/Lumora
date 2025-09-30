@@ -17,7 +17,8 @@ public class GameContext
 
     //Player Event Context
     public event Action OnEnterHideState;
-    public event Action OnLeaveHideState;
+	public event Action OnLeaveHideState;
+	public event Action OnPlayerSpotted;
 
 	//Player Controls
 	public void RaiseMove(Vector3 move) {  OnMove?.Invoke(move); }
