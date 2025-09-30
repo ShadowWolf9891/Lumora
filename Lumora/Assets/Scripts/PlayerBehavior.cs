@@ -20,7 +20,9 @@ public class PlayerBehavior : MonoBehaviour
 
 	private bool isGrounded;
 	private bool isInteracting;
-	private bool isHiding;
+
+	//public get for isHiding
+	public bool isHiding { get; private set; }
 
 	Rigidbody rb;
 	private GameObject coverObject;
@@ -35,7 +37,7 @@ public class PlayerBehavior : MonoBehaviour
 		GameContext.Instance.OnMove += Move;
         GameContext.Instance.OnAttackPressed += Attack;
         GameContext.Instance.OnInteractPressed += Interact;
-		GameContext.Instance.OnHidePressed += Hide;
+		GameContext.Instance.OnHidePressed += TryHide;
 		GameContext.Instance.OnJumpPressed += Jump;
 
 
@@ -78,7 +80,7 @@ public class PlayerBehavior : MonoBehaviour
 			if (distanceToCover > 1f)
 			{
 				coverObject = null;
-				GameContext.Instance.RaiseHidePressed();
+				TryHide();
 				return;
 			}
 			else
@@ -136,22 +138,21 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		//TODO: Raycast to see if the player is interacting with something
 	}
-	private void Hide()
+	private void TryHide()
 	{
-		if (!isHiding)
-		{
-			coverObject = GetClosestObject(1, ~0);
-			if (coverObject != null)
-			{
-				//Toggle hiding
-				isHiding = true;
-			}
-		}
-		else
+		coverObject = GetClosestObject(1, ~0);
+
+		if (coverObject != null)
+        {
+            //Toggle hiding
+            isHiding = true;
+            GameContext.Instance.RaiseEnterStealth();
+        }
+        else
 		{
 			isHiding = false;
+			GameContext.Instance.RaiseLeaveStealth();
 		}
-		Debug.Log($"Hiding = {isHiding}");
 	}
 
 	/// <summary>
@@ -220,5 +221,4 @@ public class PlayerBehavior : MonoBehaviour
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
 	}
-	
 }
