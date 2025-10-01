@@ -16,12 +16,9 @@ public class PlayerBehavior : MonoBehaviour
 	float playerHeight = 1.2f;
 	[SerializeField, Tooltip("How high the player can jump in m")]
 	float jumpHeight = 5;
-
-
-	private bool isGrounded;
-	private bool isInteracting;
-	private bool isHiding;
-
+	
+	//Private properties
+	bool isHiding;
 	Rigidbody rb;
 	private GameObject coverObject;
 
@@ -35,8 +32,9 @@ public class PlayerBehavior : MonoBehaviour
 		GameContext.Instance.OnMove += Move;
         GameContext.Instance.OnAttackPressed += Attack;
         GameContext.Instance.OnInteractPressed += Interact;
-		GameContext.Instance.OnHidePressed += Hide;
+		GameContext.Instance.OnHidePressed += DoHide;
 		GameContext.Instance.OnJumpPressed += Jump;
+		GameContext.Instance.OnPlayerSpotted += GetSpotted;
 
 
 		rb = GetComponent<Rigidbody>();
@@ -78,7 +76,7 @@ public class PlayerBehavior : MonoBehaviour
 			if (distanceToCover > 1f)
 			{
 				coverObject = null;
-				GameContext.Instance.RaiseHidePressed();
+				TryHide();
 				return;
 			}
 			else
@@ -108,8 +106,10 @@ public class PlayerBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool IsGrounded()
 	{
-		return Physics.Raycast(transform.position, Vector3.down, playerHeight, LayerMask.NameToLayer("Ground"));
-	}
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), Color.azure);
+        //return Physics.Raycast(transform.position, Vector3.down, playerHeight, LayerMask.NameToLayer("Ground"));
+        return Physics.Raycast(transform.position, Vector3.down, playerHeight);
+    }
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
@@ -136,31 +136,62 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		//TODO: Raycast to see if the player is interacting with something
 	}
-	private void Hide()
+
+	/// <summary>
+	/// Checks the area for gameobjects with colliders and enters hiding state
+	/// </summary>
+	private void TryHide()
 	{
-		if (!isHiding)
-		{
-			coverObject = GetClosestObject(1, ~0);
-			if (coverObject != null)
-			{
-				//Toggle hiding
-				isHiding = true;
-			}
-		}
-		else
+		coverObject = GetClosestObject(1, ~0);
+
+		if (coverObject != null)
+        {
+            //Toggle hiding
+            isHiding = true;
+            GameContext.Instance.RaiseEnterStealth();
+        }
+        else
 		{
 			isHiding = false;
+			GameContext.Instance.RaiseLeaveStealth();
 		}
-		Debug.Log($"Hiding = {isHiding}");
 	}
 
 	/// <summary>
-	/// Check the surroundings of the player by casting rays in a number of directions. 
+	/// Triggers on button press. Player tries to hide if not hiding, untoggles hiding state when hiding.
 	/// </summary>
-	/// <param name="distance"></param>
-	/// <param name="hitLayer"></param>
-	/// <returns>A list of colliders that were hit on the layer <paramref name="hitLayer"/> or a new empty list.</returns>
-	private List<Collider> CheckSurroundings(float distance, LayerMask hitLayer)
+    private void DoHide()
+    {
+        coverObject = GetClosestObject(1, ~0);
+
+        if (!isHiding)
+        {
+			TryHide();
+        }
+        else
+        {
+			isHiding = false;
+			GameContext.Instance.RaiseLeaveStealth();
+        }
+    }
+
+	/// <summary>
+	/// behavior for when player is spotted. Runs via gamecontext event
+	/// </summary>
+	private void GetSpotted()
+    {
+        isHiding = false;
+        GameContext.Instance.RaiseLeaveStealth();
+		//give player temporary movespeed buff? players should run away here, right?
+    }
+
+    /// <summary>
+    /// Check the surroundings of the player by casting rays in a number of directions. 
+    /// </summary>
+    /// <param name="distance"></param>
+    /// <param name="hitLayer"></param>
+    /// <returns>A list of colliders that were hit on the layer <paramref name="hitLayer"/> or a new empty list.</returns>
+    private List<Collider> CheckSurroundings(float distance, LayerMask hitLayer)
 	{
 		List<Collider> hitObjects = new();
 		for(int i = 0; i < directionsToCheck; i++) 
@@ -220,5 +251,4 @@ public class PlayerBehavior : MonoBehaviour
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
 	}
-	
 }
