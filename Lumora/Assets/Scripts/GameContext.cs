@@ -30,4 +30,5 @@ public class GameContext
 	//Player Events
     public void RaiseEnterStealth() { OnEnterHideState?.Invoke(); }
     public void RaiseLeaveStealth() { OnLeaveHideState?.Invoke(); }
+    public void RaisePlayerSpotted() { OnPlayerSpotted?.Invoke(); }
 }
