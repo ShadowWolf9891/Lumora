@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
 	//Private variables
 	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction;
 	private Vector2 moveInput;
-	private bool canInteract;
     private Transform cameraTransform;
 
 
