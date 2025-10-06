@@ -21,7 +21,8 @@ public class PlayerController : MonoBehaviour
 		interactAction = InputSystem.actions.FindAction("North");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
-		//
+		//Add attack back if needed, function is commented out to account for throw mechanic
+		//attackAction = InputSystem.actions.FindAction("");
 		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 	}
 
@@ -38,9 +39,9 @@ public class PlayerController : MonoBehaviour
 			MovePlayer();
 		}
 		//if (attackAction.WasPressedThisFrame())
-		//{
+		{
 			//GameContext.Instance.RaiseAttack();
-		//}
+		}
 		if (interactAction.WasPressedThisFrame())
 		{
 			GameContext.Instance.RaiseInteract();
