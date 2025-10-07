@@ -15,11 +15,21 @@ public class EnemyAlertController : MonoBehaviour
         displayImage = GetComponent<Image>();
     }
 
-    public void ChangeImage(int index)
+    public void ChangeImage(AlertStates state)
     {
-        if (index <= sprites.Count() || index >= 0)
+        if ((int)state <= sprites.Count() || (int)state >= 0)
         {
-            displayImage.sprite = sprites[index];
+            displayImage.sprite = sprites[(int)state];
         }
     }
 }
+
+public enum AlertStates
+{ 
+    IDLE = 0,
+    ALERT = 1,
+    CHASING = 2
+    
+
+}
+
