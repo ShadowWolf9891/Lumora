@@ -482,15 +482,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829935706fd20c8418c055721a18269b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  bt: {fileID: 11400000, guid: a62d88f6769707a4cb4fd5129c46c856, type: 2}
-  sightRange: 10
+  btAsset: {fileID: 11400000, guid: a62d88f6769707a4cb4fd5129c46c856, type: 2}
+  sightRange: 15
+  alertRange: 10
   angleOfVision: 30
   attackRange: 0.5
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  patrolPoints: []
+  timeAtEachPatrolPoint: 2
+  searchRadius: 5
+  numberOfSearchPoints: 3
+  timeAtEachPoint: 2
   alertedTime: 10
 --- !u!195 &949569845706991502
 NavMeshAgent:
