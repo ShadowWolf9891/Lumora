@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class BillboardFaceCamera : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    //Helper script to face objects towards the main camera. Should allow 2D objects to 'exist' in 3D space (canvases, any image)
+    Transform cameraTarget;
+    private void Start()
     {
-        
+        cameraTarget = Camera.main.transform;
     }
-
-    // Update is called once per frame
     void Update()
     {
-        
+        Vector3 pointToLookAt = transform.position + (transform.position - cameraTarget.position);
+        transform.LookAt(pointToLookAt);
     }
 }
