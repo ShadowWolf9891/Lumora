@@ -16,7 +16,7 @@ public class CollectibleBehaviour : MonoBehaviour, IInteractable
 
     public void OnInteractStart()
     {
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 
     public void OnInteractStop()

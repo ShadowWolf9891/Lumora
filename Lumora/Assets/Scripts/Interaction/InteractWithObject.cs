@@ -12,7 +12,11 @@ public class InteractWithObject : MonoBehaviour
 	[SerializeField] LayerMask interactableLayer;
 	[SerializeField] TextMeshProUGUI interactionUI;
 
-    // Update is called once per frame
+    private void Start()
+    {
+		GameContext.Instance.OnInteractPressed += OnInteract;
+    }
+
     void Update()
     {
         CheckForInteractable();
