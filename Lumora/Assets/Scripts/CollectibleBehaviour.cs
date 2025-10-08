@@ -1,9 +1,27 @@
 using UnityEngine;
 
-public class CollectibleBehaviour : MonoBehaviour
+public class CollectibleBehaviour : MonoBehaviour, IInteractable
 {
-    void OnInteract()
+    [SerializeField]
+    string interactionPrompt;
+    public string GetInteractionPrompt()
     {
-        Destroy(this);
+        return interactionPrompt;
     }
+
+    public bool IsHoldInteraction()
+    {
+        return false;
+    }
+
+    public void OnInteractStart()
+    {
+        Destroy(this.gameObject);
+    }
+
+    public void OnInteractStop()
+    {
+        
+    }
+
 }
