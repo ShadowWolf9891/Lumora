@@ -8,7 +8,6 @@ public class InteractWithObject : MonoBehaviour
 {
 
     IInteractable currentInteractable;
-	[SerializeField] Transform CameraRoot;
 	[SerializeField] float interactRange = 2f;
 	[SerializeField] LayerMask interactableLayer;
 	[SerializeField] TextMeshProUGUI interactionUI;
@@ -24,18 +23,19 @@ public class InteractWithObject : MonoBehaviour
     /// </summary>
 	private void CheckForInteractable()
 	{
-		Ray ray = new Ray(CameraRoot.transform.position, CameraRoot.transform.forward); // Adjust origin as needed
-		//Debug.DrawRay(ray.origin, ray.direction);
-		if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer))
+		//adjusted Ray to work with 3rd person movement.
+		//Ray is cast in front of player.
+		Ray ray = new Ray(gameObject.transform.position, gameObject.transform.forward); // Adjust origin as needed
+		Debug.DrawRay(gameObject.transform.position, gameObject.transform.forward);
+		if (Physics.Raycast(gameObject.transform.position, gameObject.transform.forward, out RaycastHit hit, interactRange, interactableLayer))
 		{
 			if (hit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))
-			{
-				currentInteractable = interactable;
+            {
+                currentInteractable = interactable;
 				interactionUI.text = (currentInteractable.GetInteractionPrompt());
 				return;
-			}
-		}
-
+            }
+        }
 		currentInteractable = null;
 		interactionUI.text = "";
 	}
