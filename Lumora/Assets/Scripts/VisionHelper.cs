@@ -23,7 +23,7 @@ public static class VisionHelper
 		float angleToTarget = Vector3.Angle(viewer.transform.forward, directionToTarget);
 		if (angleToTarget > viewAngle * 0.5f) return false;
 
-		Debug.DrawRay(origin, directionToTarget.normalized * distanceToTarget, Color.mediumVioletRed, Time.deltaTime);
+		Debug.DrawRay(origin, directionToTarget.normalized * (distanceToTarget), Color.mediumVioletRed, Time.deltaTime);
 	
 		if (Physics.Raycast(origin, directionToTarget.normalized, out RaycastHit hit, distanceToTarget, layerMask))
 		{
