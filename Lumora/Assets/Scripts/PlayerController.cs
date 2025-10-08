@@ -54,6 +54,10 @@ public class PlayerController : MonoBehaviour
 		{
 			GameContext.Instance.RaiseJumpPressed();
 		}
+		if (throwAction.WasReleasedThisFrame())
+		{
+			GameContext.Instance.RaiseThrowReleased();
+		}
 		if (throwAction.WasPressedThisFrame())
 		{
 			GameContext.Instance.RaiseThrowPressed();

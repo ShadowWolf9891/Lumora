@@ -15,6 +15,7 @@ public class GameContext
 	public event Action OnHidePressed;
 	public event Action OnJumpPressed;
 	public event Action OnThrowPressed;
+	public event Action OnThrowReleased;
 
     //Player Event Context
 	public event Action OnEnterHideState;
@@ -28,6 +29,7 @@ public class GameContext
 	public void RaiseHidePressed() {  OnHidePressed?.Invoke(); }
 	public void RaiseJumpPressed() {  OnJumpPressed?.Invoke(); }
 	public void RaiseThrowPressed() { OnThrowPressed?.Invoke(); }
+	public void RaiseThrowReleased() { OnThrowReleased?.Invoke(); }
 
 	//Player Events
 	public void RaiseEnterStealth() { OnEnterHideState?.Invoke(); }

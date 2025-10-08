@@ -35,7 +35,8 @@ public class PlayerBehavior : MonoBehaviour
 		GameContext.Instance.OnHidePressed += DoHide;
 		GameContext.Instance.OnJumpPressed += Jump;
 		GameContext.Instance.OnPlayerSpotted += GetSpotted;
-		GameContext.Instance.OnThrowPressed += Throw;
+		GameContext.Instance.OnThrowPressed += PrepareThrow;
+		GameContext.Instance.OnThrowReleased += Throw;
 
 
 		rb = GetComponent<Rigidbody>();
@@ -133,9 +134,14 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		Debug.Log("Attack Pressed.");
 	}
+	private void PrepareThrow()
+	{
+		Debug.Log("Preparing throw.");
+
+	}
 	private void Throw()
 	{
-		Debug.Log("Throw action pressed.");
+		Debug.Log("Throw key released.");
 	}
 	private void Interact()
 	{
