@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        //dialogueEvent.Raise(0, 0);
+        //dialogueEvent.Raise(2, 1);
     }
 
     // Update is called once per frame
