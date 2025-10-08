@@ -35,6 +35,7 @@ public class PlayerBehavior : MonoBehaviour
 		GameContext.Instance.OnHidePressed += DoHide;
 		GameContext.Instance.OnJumpPressed += Jump;
 		GameContext.Instance.OnPlayerSpotted += GetSpotted;
+		GameContext.Instance.OnThrowPressed += Throw;
 
 
 		rb = GetComponent<Rigidbody>();
@@ -131,6 +132,10 @@ public class PlayerBehavior : MonoBehaviour
 	private void Attack()
 	{
 		Debug.Log("Attack Pressed.");
+	}
+	private void Throw()
+	{
+		Debug.Log("Throw action pressed.");
 	}
 	private void Interact()
 	{
