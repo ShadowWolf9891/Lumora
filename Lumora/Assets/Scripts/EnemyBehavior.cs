@@ -102,7 +102,12 @@ public class EnemyBehavior : MonoBehaviour
 		}
 		else
 		{
-			if (bb.Get<bool>(bb_CanSeePlayer)) bb.Set<bool>(bb_CanSeePlayer, false);
+			if (bb.Get<bool>(bb_CanSeePlayer))
+			{
+				bb.Set<bool>(bb_CanSeePlayer, false);
+				Debug.Log($"{this.name} cannot see the player. Distance {distance}, Cansee = {canSee}");
+			}
+				
 		}
 	}
 	#endregion
@@ -164,6 +169,7 @@ public class EnemyBehavior : MonoBehaviour
 			if(searchPoints.Count <= 0)
 			{
 				bb.Set<bool>(bb_LostPlayer, false);
+				Debug.Log("No valid search points");
 				return;
 			}
 			agent.SetDestination(GetClosestPoint(lastKnownPlayerLocation, searchPoints));
@@ -234,7 +240,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-		return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, ~0);
+		return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
