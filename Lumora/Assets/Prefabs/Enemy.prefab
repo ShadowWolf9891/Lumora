@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2910845369768682456}
   - component: {fileID: 6897849828270184149}
   - component: {fileID: 8937360446232299191}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 3081694049032002726}
   - component: {fileID: 2736529896378171361}
   - component: {fileID: 3428818707765296330}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 5884760777435996341}
   - component: {fileID: 3091443006297102707}
   - component: {fileID: 1365284481771111594}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,7 +445,7 @@ GameObject:
   - component: {fileID: 5834094678125490573}
   - component: {fileID: 1185649223247278612}
   - component: {fileID: 949569845706991502}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,16 +483,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   btAsset: {fileID: 11400000, guid: a62d88f6769707a4cb4fd5129c46c856, type: 2}
-  sightRange: 15
-  alertRange: 10
-  angleOfVision: 30
+  chasingRange: 10
+  alertRange: 20
+  angleOfVision: 120
   attackRange: 0.5
   patrolPoints: []
   timeAtEachPatrolPoint: 2
-  searchRadius: 5
+  searchRadius: 10
   numberOfSearchPoints: 3
-  timeAtEachPoint: 2
-  alertedTime: 10
+  timeAtEachPoint: 0
+  alertedTime: 2
 --- !u!195 &949569845706991502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -506,8 +506,8 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 360
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -526,7 +526,7 @@ GameObject:
   - component: {fileID: 473265254657648473}
   - component: {fileID: 2639649522413443269}
   - component: {fileID: 6874333818797191989}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,7 +616,7 @@ GameObject:
   - component: {fileID: 5414547727339123433}
   - component: {fileID: 2213004111793195849}
   - component: {fileID: 2924967676488075355}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}

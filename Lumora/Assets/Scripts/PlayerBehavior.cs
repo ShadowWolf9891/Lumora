@@ -35,11 +35,14 @@ public class PlayerBehavior : MonoBehaviour
 		GameContext.Instance.OnHidePressed += DoHide;
 		GameContext.Instance.OnJumpPressed += Jump;
 		GameContext.Instance.OnPlayerSpotted += GetSpotted;
-
+		GameContext.Instance.OnThrowPressed += Throw;
+		GameContext.Instance.OnEnterHideState += EnterHide;
+		GameContext.Instance.OnLeaveHideState += LeaveHide;
 
 		rb = GetComponent<Rigidbody>();
     }
-	private void Move(Vector3 moveDirection)
+
+    private void Move(Vector3 moveDirection)
 	{
 		//movement
 		if (moveDirection != Vector3.zero && !isHiding)
@@ -132,6 +135,10 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		Debug.Log("Attack Pressed.");
 	}
+	private void Throw()
+	{
+		Debug.Log("Throw action pressed.");
+	}
 	private void Interact()
 	{
 		//TODO: Raycast to see if the player is interacting with something
@@ -147,12 +154,10 @@ public class PlayerBehavior : MonoBehaviour
 		if (coverObject != null)
         {
             //Toggle hiding
-            isHiding = true;
             GameContext.Instance.RaiseEnterStealth();
         }
         else
 		{
-			isHiding = false;
 			GameContext.Instance.RaiseLeaveStealth();
 		}
 	}
@@ -170,7 +175,6 @@ public class PlayerBehavior : MonoBehaviour
         }
         else
         {
-			isHiding = false;
 			GameContext.Instance.RaiseLeaveStealth();
         }
     }
@@ -180,7 +184,6 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void GetSpotted()
     {
-        isHiding = false;
         GameContext.Instance.RaiseLeaveStealth();
 		//give player temporary movespeed buff? players should run away here, right?
     }
@@ -251,4 +254,16 @@ public class PlayerBehavior : MonoBehaviour
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
 	}
+    private void LeaveHide()
+    {
+		isHiding = false;
+		// TODO: Add animation
+    }
+
+    private void EnterHide()
+    {
+		isHiding = true;
+		// TODO: Add animation
+    }
+
 }

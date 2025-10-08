@@ -1,289 +1,340 @@
 using UnityEngine;
 using EasyBehaviorTree;
 using UnityEngine.AI;
-using Unity.VisualScripting;
-using UnityEngine.UI;
-using UnityEngine.Accessibility;
-using System.Linq;
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 
 public class EnemyBehavior : MonoBehaviour
 {
 	[SerializeField]
 	BehaviorTree btAsset;
 
-    [Header("Vision Properties")]
-    [SerializeField]
-    float sightRange;
+	[Header("Vision Properties")]
+	[SerializeField]
+	float chasingRange;
 	[SerializeField]
 	float alertRange;
 	[SerializeField]
-    float angleOfVision = 30f;
-    [SerializeField]
-    float attackRange = 1f;
+	float angleOfVision = 30f;
+	[SerializeField]
+	float attackRange = 1f;
 
-    [Header("Partol Points")]
-    [SerializeField]
-    List<Transform> patrolPoints;
-    [SerializeField]
-    float timeAtEachPatrolPoint = 2f;
-    
+	[Header("Partol Points")]
+	[SerializeField]
+	List<Transform> patrolPoints;
+	[SerializeField]
+	float timeAtEachPatrolPoint = 2f;
 
-    [Header("Search Settings")]
-	[SerializeField] float searchRadius = 5f;
+
+	[Header("Search Settings")]
+	[SerializeField] float searchRadius = 10f;
 	[SerializeField] int numberOfSearchPoints = 3;
-	[SerializeField] float timeAtEachPoint = 2f;
+	[SerializeField] float timeAtEachPoint = 1f;
 
 	[Header("Alerted Properties")]
-    [SerializeField]
-    float alertedTime = 2f;
-   
-    NavMeshAgent agent;
-    GameObject playerRef;
+	[SerializeField]
+	float alertedTime = 2f;
+
+	NavMeshAgent agent;
+	GameObject playerRef;
 	BehaviorTree bt;
 	BTBlackboard bb;
 
 	EnemyAlertController alertController;
-	private float alertedTimer;
 	Vector3 lastKnownPlayerLocation;
-    AlertStates curState;
-    float waitTimer = 0; //Amount of time to wait at each patrol point.
+	AlertStates curState;
+	float waitTimer = 0; //Amount of time to wait at each patrol point.
 	List<Vector3> searchPoints = new(); //List of points generated when lost sight of player
-	int currentPoint = 0;
+	int curPatrolPoint = 0;
+
+	string bb_CanSeePlayer = "CanSeePlayer";
+	string bb_IsAlerted = "IsAlerted";
+	string bb_LostPlayer = "LostPlayer";
+
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
-    {
+	{
 		agent = GetComponent<NavMeshAgent>();
-        playerRef = GameObject.FindGameObjectWithTag("Player");
+		playerRef = GameObject.FindGameObjectWithTag("Player");
 
-		
-		bt = DeepCloneBehaviorTree(btAsset);
 		bb = ScriptableObject.CreateInstance<BTBlackboard>();
-
-		bt.rootNode.SetBlackboard(bb);
-		foreach (var node in bt.nodes)
-			node.SetBlackboard(bb);
-
+		bt = DeepCloneBehaviorTree(btAsset);
+		
 		// Initialize blackboard values
-		bb.Set<bool>("CanSeePlayer", false);
-		bb.Set<bool>("IsAlerted", false);
-		bb.Set<bool>("LostPlayer", false);
+		bb.Set<bool>(bb_CanSeePlayer, false);
+		bb.Set<bool>(bb_IsAlerted, false);
+		bb.Set<bool>(bb_LostPlayer, false);
 
-		Debug.Log(bb.GetInstanceID());
 		alertController = GetComponentInChildren<EnemyAlertController>();
-        curState = AlertStates.IDLE;
-        OnChangeState();
-    }
+		curState = AlertStates.IDLE;
+		OnChangeState();
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        bt.Tick(gameObject);
-        CheckVision();
-        //react to other enemies? If a player is spotted by one enemy, should others alert?
-    }
+	// Update is called once per frame
+	void Update()
+	{
+		CheckVision();
+		bt.Tick(gameObject);
+	}
 
-    private void CheckVision()
-    {
-        if(playerRef == null) { return; }
+	#region Vision
+	private void CheckVision()
+	{
+		if (playerRef == null) return;
 
-		if (IsObjectInRange(playerRef, sightRange))
+		float distance = Vector3.Distance(transform.position, playerRef.transform.position);
+		bool canSee = false;
+
+		// Only do expensive raycast if within alert range
+		if (distance <= alertRange)
 		{
-			if (CanSeeTarget(playerRef, sightRange))
+			canSee = CanSeeTarget(playerRef, alertRange);
+			if (canSee && !bb.Get<bool>(bb_IsAlerted))
+				bb.Set<bool>(bb_IsAlerted, true);
+		}
+
+		if (distance <= chasingRange && canSee)
+		{
+			if (!bb.Get<bool>(bb_CanSeePlayer)) bb.Set<bool>(bb_CanSeePlayer, true);
+			if (!bb.Get<bool>(bb_LostPlayer)) bb.Set<bool>(bb_LostPlayer, true);
+		}
+		else
+		{
+			if (bb.Get<bool>(bb_CanSeePlayer))
 			{
-				if (IsObjectInRange(playerRef, alertRange))
-				{
-					bb.Set<bool>("CanSeePlayer", true);
-				}
-
-				bb.Set<bool>("IsAlerted", true);
-				lastKnownPlayerLocation = playerRef.transform.position;
-				Debug.Log($"Player in sight range. CanSeePlayer = {bb.Get<bool>("CanSeePlayer")}");
+				bb.Set<bool>(bb_CanSeePlayer, false);
+				Debug.Log($"{this.name} cannot see the player. Distance {distance}, Cansee = {canSee}");
 			}
+				
 		}
-		else if (bb.Get<bool>("IsAlerted"))
+	}
+	#endregion
+	//States are controlled by the behavior tree
+	#region States
+	/// <summary>
+	/// Have the enemy patrol between the set points
+	/// </summary>
+	public void Patrol()
+	{
+		if (curState != AlertStates.IDLE)
 		{
-			//Search
-			bb.Set<bool>("LostPlayer", true);
-			lastKnownPlayerLocation = playerRef.transform.position;
-			Debug.Log($"Lost Player");
+			curState = AlertStates.IDLE;
+			OnChangeState();
 		}
-        
-    }
 
+		if (patrolPoints.Count == 0) return;
 
-    /// <summary>
-    /// Have the enemy patrol between the set points
-    /// </summary>
-    void Patrol()
-    {
-        if(curState != AlertStates.IDLE) 
-        {
-            curState = AlertStates.IDLE;
-            OnChangeState();
-        }
-
-        if (patrolPoints.Count == 0) return; //Return early if no patrol points are specified
-
-        if (agent.remainingDistance <= agent.stoppingDistance)
-        {
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= timeAtEachPatrolPoint)
-            {
-                currentPoint++;
-                waitTimer = 0;
-
-                if (currentPoint >= patrolPoints.Count)
-                {
-                    currentPoint = 0;
-                }
-				agent.SetDestination(patrolPoints[currentPoint].position);
+		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
+		{
+			waitTimer += Time.deltaTime;
+			if (waitTimer >= timeAtEachPatrolPoint)
+			{
+				curPatrolPoint = (curPatrolPoint + 1) % patrolPoints.Count;
+				agent.SetDestination(patrolPoints[curPatrolPoint].position);
+				waitTimer = 0f;
 			}
-           
-        }
-    }
-    void Alerted()
-    {
-        if (curState != AlertStates.ALERT)
-        {
+		}
+	}
+
+	public void Alerted()
+	{
+		if (curState != AlertStates.ALERT)
+		{
 			curState = AlertStates.ALERT;
 			OnChangeState();
 		}
-    }
-	void Searching()
-	{
-		if (searchPoints.Count <= 0) 
-        {
-            GenerateSearchPoints();
-			if (searchPoints.Count > 0)
+
+		waitTimer += Time.deltaTime;
+		if (waitTimer >= alertedTime) //Wait an amount of time alerted
+		{
+			waitTimer = 0f;
+			if (patrolPoints.Count > 0)
 			{
-				agent.SetDestination(searchPoints[0]);
+				agent.SetDestination(GetClosestPoint(transform.position, patrolPoints)); //Go back to patrol path
 			}
-			else
-			{
-				Debug.Log("No valid search points found — skipping search.");
-				EndSearch();
-			}
+
+			bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
 		}
-		
-		if (agent.remainingDistance <= agent.stoppingDistance)
+	}
+
+	public void Searching()
+	{
+		if (searchPoints.Count <= 0 && bb.Get<bool>(bb_LostPlayer)) 
+		{
+			curState = AlertStates.ALERT;
+			OnChangeState();
+			GenerateSearchPoints();
+			if(searchPoints.Count <= 0)
+			{
+				bb.Set<bool>(bb_LostPlayer, false);
+				Debug.Log("No valid search points");
+				return;
+			}
+			agent.SetDestination(GetClosestPoint(lastKnownPlayerLocation, searchPoints));
+			waitTimer = timeAtEachPoint;
+		}
+
+		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
 		{
 			waitTimer += Time.deltaTime;
-
 			if (waitTimer >= timeAtEachPoint)
 			{
-				currentPoint++;
-
-				if (currentPoint < searchPoints.Count)
+				waitTimer = 0f;
+				searchPoints.Remove(GetClosestPoint(transform.position, searchPoints));
+				if (searchPoints.Count > 0)
 				{
-					agent.SetDestination(searchPoints[currentPoint]);
-					waitTimer = 0f;
+					agent.SetDestination(GetClosestPoint(lastKnownPlayerLocation, searchPoints));
 				}
 				else
 				{
-					EndSearch();
+					bb.Set<bool>(bb_LostPlayer, false);
 				}
 			}
 		}
 	}
 
-	private void GenerateSearchPoints()
+	public void Chase()
 	{
-		List<Vector3> points = new List<Vector3>();
+		if (playerRef == null) return;
 
-		for (int i = 0; i < numberOfSearchPoints; i++)
-		{
-			Vector2 randomCircle = Random.insideUnitCircle * searchRadius;
-			Vector3 candidate = lastKnownPlayerLocation + new Vector3(randomCircle.x, 0f, randomCircle.y);
-
-			if (TryGetNavMeshPoint(candidate, 2f, out Vector3? validPoint))
-			{
-				points.Add(validPoint.Value);
-			}
-			else
-			{
-				Debug.LogWarning($"Could not find NavMesh point near {candidate}");
-			}
-		}
-	}
-
-	private bool TryGetNavMeshPoint(Vector3 candidate, float maxDistance, out Vector3? validPoint)
-	{
-		NavMeshHit hit;
-		if (NavMesh.SamplePosition(candidate, out hit, maxDistance, NavMesh.AllAreas))
-		{
-			validPoint = hit.position;
-			return true;
-		}
-
-        validPoint = null;
-		return false;
-	}
-
-	void Chase()
-	{
 		if (curState != AlertStates.CHASING)
 		{
 			curState = AlertStates.CHASING;
 			OnChangeState();
 		}
-        agent.SetDestination(playerRef.transform.position);
+
+		Vector3 predictedPos = playerRef.transform.position + playerRef.GetComponent<Rigidbody>().linearVelocity * 0.5f;
+
+		agent.SetDestination(predictedPos);
+
+		lastKnownPlayerLocation = predictedPos;
 
 		if (IsObjectInRange(playerRef, attackRange))
 		{
 			Attack();
 		}
+			
+
 	}
 
-    private void OnChangeState()
-    {
-        alertController.ChangeImage(curState);
-        currentPoint = 0;
-    }
-	private void EndSearch()
+	private void Attack()
 	{
-		bb.Set<bool>("IsAlerted",false);
-		bb.Set<bool>("LostPlayer", false);
-		bb.Set<bool>("CanSeePlayer", false);
-		waitTimer = 0f;
-		currentPoint = 0;
+		Debug.Log("Tag! you're it");
+	}
+	#endregion
 
-		if (patrolPoints.Count > 0)
+	private void OnChangeState()
+	{
+		alertController.ChangeImage(curState);
+		searchPoints.Clear();
+	}
+
+
+	/// <summary>
+	/// Check if this object can see a target and the target is within a range.
+	/// </summary>
+	/// <param name="target"></param>
+	/// <param name="range"></param>
+	/// <returns></returns>
+	private bool CanSeeTarget(GameObject target, float range)
+	{
+		return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
+	}
+	private bool IsObjectInRange(GameObject other, float range)
+	{
+		return Vector3.Distance(transform.position, other.transform.position) <= range;
+	}
+	private void GenerateSearchPoints()
+	{
+		searchPoints.Clear();
+		if (NavMesh.SamplePosition(lastKnownPlayerLocation, out NavMeshHit hit, 5.0f, agent.areaMask))
 		{
-			agent.SetDestination(patrolPoints[0].position);
+			searchPoints.Add(hit.position);
 		}
+		else
+		{
+			Debug.LogWarning($"Could not find NavMesh point near {lastKnownPlayerLocation}. Player is likely off the navmesh");
+			return;
+		}
+		for (int i = 1; i < numberOfSearchPoints; i++)
+		{
+			if (GetRandomPoint(searchPoints[i-1], searchRadius, out Vector3 validPoint))
+			{
+				searchPoints.Add(validPoint);
+			}
+			else
+			{
+				Debug.LogWarning($"Could not find NavMesh point near {lastKnownPlayerLocation}");
+				searchPoints.Add(lastKnownPlayerLocation);
+			}
+		}
+	}
+	bool GetRandomPoint(Vector3 center, float range, out Vector3 result)
+	{
+		for (int i = 0; i < 30; i++)
+		{
+			float angle = Random.Range(-angleOfVision, angleOfVision);
+			float distance = Random.Range(2f, range);
+			Quaternion rotation = Quaternion.Euler(0, angle, 0);
+			Vector3 direction = rotation * transform.forward;
+			Vector3 randomPoint = center + direction * distance;
+
+			if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 1.0f, agent.areaMask))
+			{
+				result = hit.position;
+				return true;
+			}
+		}
+		
+		result = Vector3.zero;
+		return false;
 	}
 
 	/// <summary>
-	/// This function runs when the player is in a set range of an enemy who is alerted.
+	/// Gets the closest point of a list of transforms
 	/// </summary>
-	void Attack()
-    {
-        //animator.play attack animation
-        //agent.SetDestination(transform.position);
-        Debug.Log("Tag! you're it");
-    }
+	/// <param name="startPos"></param>
+	/// <param name="points"></param>
+	/// <returns></returns>
+	private Vector3 GetClosestPoint(Vector3 startPos, List<Transform> points)
+	{
+		List<Vector3> v3Points = new List<Vector3>();
+		foreach(var point in points)
+		{
+			v3Points.Add(point.position);
+		}
+		return GetClosestPoint(startPos, v3Points);
 
-    /// <summary>
-    /// Check if this object can see a target and the target is within a range.
-    /// </summary>
-    /// <param name="target"></param>
-    /// <param name="range"></param>
-    /// <returns></returns>
-    private bool CanSeeTarget(GameObject target, float range)
-    {
-        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, ~0);
-    }
+	}
+	/// <summary>
+	/// Gets the closest point of a list of vector3's
+	/// </summary>
+	/// <param name="startPos"></param>
+	/// <param name="points"></param>
+	/// <returns></returns>
+	private Vector3 GetClosestPoint(Vector3 startPos, List<Vector3> points)
+	{
+		if (searchPoints.Count <= 0)
+		{
+			return startPos;
+		}
+		//Get closest point to start search at.
+		Vector3 closestPoint = points[0];
+		float closestDistance = Vector3.Distance(points[0], transform.position);
 
-    private bool IsObjectInRange(GameObject other, float range)
-    {
-        return Vector3.Distance(transform.position, other.transform.position) <= range;
-    }
+		foreach (Vector3 point in points)
+		{
+			float dist = Vector3.Distance(point, transform.position);
+			if (dist < closestDistance)
+			{
+				closestDistance = dist;
+				closestPoint = point;
+			}
+		}
+		return closestPoint;
+	}
 	/// <summary>
 	/// Fix enemies all using the same scriptable object assets.
 	/// </summary>
@@ -299,11 +350,11 @@ public class EnemyBehavior : MonoBehaviour
 		Dictionary<BTNode, BTNode> oldToNew = new Dictionary<BTNode, BTNode>();
 
 		BTNode newRootNode = ScriptableObject.Instantiate(source.rootNode);
-		newNodes.Add(newRootNode);
 		oldToNew[source.rootNode] = newRootNode;
-
+		
 		foreach (var node in source.nodes)
 		{
+			if (node == source.rootNode) continue;
 			BTNode newNode = ScriptableObject.Instantiate(node);
 			newNodes.Add(newNode);
 			oldToNew[node] = newNode;
@@ -333,10 +384,27 @@ public class EnemyBehavior : MonoBehaviour
 			}
 		}
 
+		foreach (var node in newNodes)
+		{
+			node.SetBlackboard(bb);
+		}
+		newTree.rootNode.SetBlackboard(bb);
 		// 4. Assign the new root node
 		newTree.rootNode = oldToNew[source.rootNode];
 		newTree.nodes = newNodes;
 
 		return newTree;
+	}
+
+	private void OnDrawGizmos()
+	{
+		if(searchPoints.Count > 0) 
+		{
+			foreach (var point in searchPoints) 
+			{
+				Gizmos.color = Color.yellow;
+				Gizmos.DrawCube(point, Vector3.one * 0.1f);
+			}
+		}
 	}
 }

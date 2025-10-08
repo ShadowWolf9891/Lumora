@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
 
 	//Private variables
-	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction;
+	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction, throwAction;
 	private Vector2 moveInput;
     private Transform cameraTransform;
 
@@ -17,11 +17,12 @@ public class PlayerController : MonoBehaviour
 	{
 		//TODO: Find correct action using a reference instead of a string
 		moveAction = InputSystem.actions.FindAction("Move");
-		attackAction = InputSystem.actions.FindAction("West");
+		throwAction = InputSystem.actions.FindAction("West");
 		interactAction = InputSystem.actions.FindAction("North");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
-		//
+		//Add attack back if needed, function is commented out to account for throw mechanic
+		//attackAction = InputSystem.actions.FindAction("");
 		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 	}
 
@@ -37,9 +38,9 @@ public class PlayerController : MonoBehaviour
 			moveInput = moveAction.ReadValue<Vector2>();
 			MovePlayer();
 		}
-		if (attackAction.WasPressedThisFrame())
+		//if (attackAction.WasPressedThisFrame())
 		{
-			GameContext.Instance.RaiseAttack();
+			//GameContext.Instance.RaiseAttack();
 		}
 		if (interactAction.WasPressedThisFrame())
 		{
@@ -52,6 +53,10 @@ public class PlayerController : MonoBehaviour
 		if (jumpAction.WasPressedThisFrame())
 		{
 			GameContext.Instance.RaiseJumpPressed();
+		}
+		if (throwAction.WasPressedThisFrame())
+		{
+			GameContext.Instance.RaiseThrowPressed();
 		}
 	}
 	private void MovePlayer()
