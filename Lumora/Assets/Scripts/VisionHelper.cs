@@ -3,32 +3,29 @@ using UnityEngine;
 public static class VisionHelper
 {
 	/// <summary>
- /// Checks if the viewer can see the target.
- /// </summary>
- /// <param name="viewer">The observer GameObject.</param>
- /// <param name="target">The target GameObject.</param>
- /// <param name="viewAngle">FOV angle in degrees.</param>
- /// <param name="viewDistance">Maximum viewing distance.</param>
- /// <param name="layerMask">Layers to check for obstacles.</param>
- /// <returns>True if visible.</returns>
+	/// Checks if the viewer can see the target.
+	/// </summary>
+	/// <param name="viewer">The observer GameObject.</param>
+	/// <param name="target">The target GameObject.</param>
+	/// <param name="viewAngle">FOV angle in degrees.</param>
+	/// <param name="viewDistance">Maximum viewing distance.</param>
+	/// <param name="layerMask">Layers to check for obstacles.</param>
+	/// <returns>True if visible.</returns>
 	public static bool CanSeeTarget(GameObject viewer, GameObject target, float viewAngle, float viewDistance, LayerMask layerMask)
 	{
-		if(Vector3.Distance(viewer.transform.position, target.transform.position) > viewDistance) { return false; }
-
 		Vector3 origin = viewer.transform.position + Vector3.up * 1.5f;
 		Vector3 directionToTarget = target.transform.position - origin;
 		float distanceToTarget = directionToTarget.magnitude;
-
-		Debug.DrawRay(viewer.transform.position + Vector3.up * 1.5f, directionToTarget.normalized * distanceToTarget, Color.red, 1f);
 
 		if (distanceToTarget > viewDistance)
 			return false;
 
 		float angleToTarget = Vector3.Angle(viewer.transform.forward, directionToTarget);
-		if (angleToTarget > viewAngle * 0.5f)
-			return false;
-		int defaultMask = ~0;
-		if (Physics.Raycast(origin, directionToTarget.normalized, out RaycastHit hit, viewDistance, defaultMask))
+		if (angleToTarget > viewAngle * 0.5f) return false;
+
+		Debug.DrawRay(origin, directionToTarget.normalized * distanceToTarget, Color.mediumVioletRed, Time.deltaTime);
+	
+		if (Physics.Raycast(origin, directionToTarget.normalized, out RaycastHit hit, distanceToTarget, layerMask))
 		{
 			return hit.collider.gameObject == target || hit.collider.transform.IsChildOf(target.transform);
 		}

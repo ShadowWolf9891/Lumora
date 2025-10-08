@@ -1,5 +1,28 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7094553706152414191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
+  blackboard: {fileID: 4582775741818728380}
+  Name: BTSequence
+  NodeRect:
+    serializedVersion: 2
+    x: 198.40005
+    y: 172.79996
+    width: 120
+    height: 60
+  Parent: {fileID: 5566909765494067401}
+  Children:
+  - {fileID: 1895538345791935119}
 --- !u!114 &-6411627075126116447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16,14 +39,36 @@ MonoBehaviour:
   Name: BTSequence
   NodeRect:
     serializedVersion: 2
-    x: -71.466675
-    y: 278.5333
+    x: -120.26668
+    y: 188.93327
     width: 120
     height: 60
   Parent: {fileID: 5566909765494067401}
   Children:
   - {fileID: 3416001590898217211}
   - {fileID: 4743781131496862014}
+--- !u!114 &-4307816765050787802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8282a6902d0064aafec0d4e900c205, type: 3}
+  m_Name: BTSelector
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSelector
+  blackboard: {fileID: 4582775741818728380}
+  Name: BTSelector
+  NodeRect:
+    serializedVersion: 2
+    x: 354.4
+    y: 296.00003
+    width: 120
+    height: 60
+  Parent: {fileID: 0}
+  Children: []
 --- !u!114 &-3749383689463194458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,14 +85,14 @@ MonoBehaviour:
   Name: Patrol
   NodeRect:
     serializedVersion: 2
-    x: 687.4667
-    y: 231.06665
+    x: 409.8667
+    y: 175.86665
     width: 120
     height: 60
   Parent: {fileID: 5566909765494067401}
   Children: []
   functionName: Patrol
---- !u!114 &-3314069839556026211
+--- !u!114 &-2001364535851365699
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,38 +108,14 @@ MonoBehaviour:
   Name: BTSequence
   NodeRect:
     serializedVersion: 2
-    x: 200.79999
-    y: 271.19998
+    x: 270.4
+    y: 360.8
     width: 120
     height: 60
-  Parent: {fileID: 5566909765494067401}
+  Parent: {fileID: 0}
   Children:
   - {fileID: 1045441819679091466}
   - {fileID: 6399140941337875590}
---- !u!114 &-873461583045839875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
-  m_Name: BTSequence
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 4582775741818728380}
-  Name: BTSequence
-  NodeRect:
-    serializedVersion: 2
-    x: 468.39993
-    y: 277.8667
-    width: 120
-    height: 60
-  Parent: {fileID: 5566909765494067401}
-  Children:
-  - {fileID: 1895538345791935119}
-  - {fileID: 4415527253878800437}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,10 +137,11 @@ MonoBehaviour:
   - {fileID: 4743781131496862014}
   - {fileID: 6399140941337875590}
   - {fileID: 1895538345791935119}
-  - {fileID: -873461583045839875}
   - {fileID: 1045441819679091466}
   - {fileID: 4415527253878800437}
-  - {fileID: -3314069839556026211}
+  - {fileID: -2001364535851365699}
+  - {fileID: -7094553706152414191}
+  - {fileID: -4307816765050787802}
 --- !u!114 &1045441819679091466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,11 +158,11 @@ MonoBehaviour:
   Name: LostPlayer
   NodeRect:
     serializedVersion: 2
-    x: 146.4
-    y: 420.80005
+    x: 168.79999
+    y: 503.2
     width: 120
     height: 60
-  Parent: {fileID: -3314069839556026211}
+  Parent: {fileID: -2001364535851365699}
   Children: []
   key: LostPlayer
   expectedValue: 1
@@ -160,11 +182,11 @@ MonoBehaviour:
   Name: IsAlerted
   NodeRect:
     serializedVersion: 2
-    x: 455.73337
-    y: 410.66666
+    x: 94.93338
+    y: 293.86673
     width: 120
     height: 60
-  Parent: {fileID: -873461583045839875}
+  Parent: {fileID: -7094553706152414191}
   Children: []
   key: IsAlerted
   expectedValue: 1
@@ -184,8 +206,8 @@ MonoBehaviour:
   Name: CanSeePlayer
   NodeRect:
     serializedVersion: 2
-    x: -195.73334
-    y: 413.73334
+    x: -233.33334
+    y: 305.73334
     width: 120
     height: 60
   Parent: {fileID: -6411627075126116447}
@@ -208,11 +230,11 @@ MonoBehaviour:
   Name: OnAlert
   NodeRect:
     serializedVersion: 2
-    x: 607.99994
-    y: 411.20004
+    x: 436.79984
+    y: 359.19998
     width: 120
     height: 60
-  Parent: {fileID: -873461583045839875}
+  Parent: {fileID: 0}
   Children: []
   functionName: Alerted
 --- !u!114 &4582775741818728380
@@ -268,8 +290,8 @@ MonoBehaviour:
   Name: Chase
   NodeRect:
     serializedVersion: 2
-    x: -27.06668
-    y: 417.86673
+    x: -79.066666
+    y: 305.0667
     width: 120
     height: 60
   Parent: {fileID: -6411627075126116447}
@@ -298,8 +320,7 @@ MonoBehaviour:
   Parent: {fileID: 5952354492407787188}
   Children:
   - {fileID: -6411627075126116447}
-  - {fileID: -3314069839556026211}
-  - {fileID: -873461583045839875}
+  - {fileID: -7094553706152414191}
   - {fileID: -3749383689463194458}
 --- !u!114 &5952354492407787188
 MonoBehaviour:
@@ -313,7 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
   m_Name: RootNode
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 4582775741818728380}
+  blackboard: {fileID: 0}
   Name: RootNode
   NodeRect:
     serializedVersion: 2
@@ -340,10 +361,10 @@ MonoBehaviour:
   Name: Searching
   NodeRect:
     serializedVersion: 2
-    x: 295.20013
-    y: 415.46658
+    x: 355.99997
+    y: 506.66663
     width: 120
     height: 60
-  Parent: {fileID: -3314069839556026211}
+  Parent: {fileID: -2001364535851365699}
   Children: []
   functionName: Searching

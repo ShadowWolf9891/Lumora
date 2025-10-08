@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8891842623710054491}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraFollowPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 7257983983751162677}
   - component: {fileID: 6481701089280577369}
   - component: {fileID: 7166657601331200534}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -214,7 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64004f7d73669f54e8d0cab59e76b23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  cameraTransform: {fileID: 0}
 --- !u!114 &7166657601331200534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBehavior
   acceleration: 10
-  maxSpeed: 3
+  maxSpeed: 5
   stoppingForce: 3
   playerHeight: 1.2
   jumpHeight: 5
@@ -244,7 +243,7 @@ GameObject:
   - component: {fileID: 3646764263478511198}
   - component: {fileID: 7147058515210716066}
   - component: {fileID: 4152543424435582562}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
