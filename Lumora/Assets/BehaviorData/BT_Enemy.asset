@@ -23,6 +23,7 @@ MonoBehaviour:
   Parent: {fileID: 5566909765494067401}
   Children:
   - {fileID: 1895538345791935119}
+  - {fileID: -4307816765050787802}
 --- !u!114 &-6411627075126116447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,12 +64,14 @@ MonoBehaviour:
   Name: BTSelector
   NodeRect:
     serializedVersion: 2
-    x: 354.4
-    y: 296.00003
+    x: 347.20004
+    y: 280.80005
     width: 120
     height: 60
-  Parent: {fileID: 0}
-  Children: []
+  Parent: {fileID: -7094553706152414191}
+  Children:
+  - {fileID: -2001364535851365699}
+  - {fileID: 4415527253878800437}
 --- !u!114 &-3749383689463194458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,8 +88,8 @@ MonoBehaviour:
   Name: Patrol
   NodeRect:
     serializedVersion: 2
-    x: 409.8667
-    y: 175.86665
+    x: 414.6667
+    y: 159.06665
     width: 120
     height: 60
   Parent: {fileID: 5566909765494067401}
@@ -112,7 +115,7 @@ MonoBehaviour:
     y: 360.8
     width: 120
     height: 60
-  Parent: {fileID: 0}
+  Parent: {fileID: -4307816765050787802}
   Children:
   - {fileID: 1045441819679091466}
   - {fileID: 6399140941337875590}
@@ -142,6 +145,29 @@ MonoBehaviour:
   - {fileID: -2001364535851365699}
   - {fileID: -7094553706152414191}
   - {fileID: -4307816765050787802}
+  - {fileID: 231096744801493775}
+--- !u!114 &231096744801493775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
+  blackboard: {fileID: 4582775741818728380}
+  Name: BTSequence
+  NodeRect:
+    serializedVersion: 2
+    x: 483.99997
+    y: 16.799978
+    width: 120
+    height: 60
+  Parent: {fileID: 0}
+  Children: []
 --- !u!114 &1045441819679091466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,11 +256,11 @@ MonoBehaviour:
   Name: OnAlert
   NodeRect:
     serializedVersion: 2
-    x: 436.79984
-    y: 359.19998
+    x: 441.59982
+    y: 364.8
     width: 120
     height: 60
-  Parent: {fileID: 0}
+  Parent: {fileID: -4307816765050787802}
   Children: []
   functionName: Alerted
 --- !u!114 &4582775741818728380
@@ -361,8 +387,8 @@ MonoBehaviour:
   Name: Searching
   NodeRect:
     serializedVersion: 2
-    x: 355.99997
-    y: 506.66663
+    x: 349.59998
+    y: 505.06665
     width: 120
     height: 60
   Parent: {fileID: -2001364535851365699}
