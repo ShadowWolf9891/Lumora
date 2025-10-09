@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +9,8 @@ public class PlayerController : MonoBehaviour
 {
 
 	//Private variables
-	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction, throwAction;
-	private Vector2 moveInput;
+	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
+	private Vector2 moveInput, cameraMove;
     private Transform cameraTransform;
 
 
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
 		interactAction = InputSystem.actions.FindAction("North");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
+		lookAction = InputSystem.actions.FindAction("Look");
 		//Add attack back if needed, function is commented out to account for throw mechanic
 		//attackAction = InputSystem.actions.FindAction("");
 		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
 	private void Update()
 	{
 		GetPlayerInputs();
+
 	}
 
 	private void GetPlayerInputs()
@@ -37,6 +40,11 @@ public class PlayerController : MonoBehaviour
 		{
 			moveInput = moveAction.ReadValue<Vector2>();
 			MovePlayer();
+		}
+		if (lookAction.IsInProgress())
+		{
+			cameraMove = lookAction.ReadValue<Vector2>();
+			GameContext.Instance.RaiseCameraMove(cameraMove);
 		}
 		//if (attackAction.WasPressedThisFrame())
 		{

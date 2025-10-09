@@ -10,6 +10,7 @@ public class GameContext
 
 	//Player controls
 	public event Action<Vector3> OnMove;
+	public event Action<Vector3> OnCameraLook;
 	public event Action OnAttackPressed;
 	public event Action OnInteractPressed;
 	public event Action OnHidePressed;
@@ -24,6 +25,7 @@ public class GameContext
 
 	//Player Controls
 	public void RaiseMove(Vector3 move) {  OnMove?.Invoke(move); }
+	public void RaiseCameraMove(Vector3 amountMoved) { OnCameraLook?.Invoke(amountMoved); }
 	public void RaiseAttack() { OnAttackPressed?.Invoke(); }
 	public void RaiseInteract() {  OnInteractPressed?.Invoke(); }
 	public void RaiseHidePressed() {  OnHidePressed?.Invoke(); }

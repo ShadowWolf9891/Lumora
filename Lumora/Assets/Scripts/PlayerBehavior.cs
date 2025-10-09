@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
@@ -30,6 +31,7 @@ public class PlayerBehavior : MonoBehaviour
 	void Start()
     {
 		GameContext.Instance.OnMove += Move;
+		GameContext.Instance.OnCameraLook += UpdateThrow;
         GameContext.Instance.OnAttackPressed += Attack;
         GameContext.Instance.OnInteractPressed += Interact;
 		GameContext.Instance.OnHidePressed += DoHide;
@@ -136,13 +138,53 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		Debug.Log("Attack Pressed.");
 	}
+	//throw mechanic
+	[SerializeField] GameObject thrownObjPrefab;
+	[SerializeField] Transform throwLocation;
+	[SerializeField] Camera mainCamera;
+	
+	[SerializeField] float throwForce = 20;
+
+	//line renderer 
+	[SerializeField] LineRenderer lineRenderer;
+	private int linePoints = 30;
+	private float timeBetweenPoints = 0.1f;
+	private bool isThrowing;
 	private void PrepareThrow()
 	{
+		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		Debug.Log("Preparing throw.");
+		isThrowing = true;
+	}
+	private void UpdateThrow(Vector3 moveDirection)
+	{
+		if (isThrowing)
+		{
+			Vector3 startPos = throwLocation.position;
+			Vector3 startVelocity = mainCamera.transform.forward * throwForce;
+			Vector3[] points = new Vector3[linePoints];
+			for (int i = 0; i < linePoints; i++)
+			{
+				float time = i * timeBetweenPoints;
+				Vector3 position = startPos + startVelocity * time + 0.5f * Physics.gravity * time * time;
+				points[i] = position;
+			}
+			lineRenderer.positionCount = linePoints;
+			lineRenderer.SetPositions(points);
+			lineRenderer.enabled = true;
+		}
 	}
 	private void ReleaseThrow()
 	{
+		//releasing the throw key will remove the line render and throw the projectile based on player location (cube attached to player atm)
+		//throw direction is based on camera position (forward)
 		Debug.Log("Release Throw");
+		isThrowing = false;
+		lineRenderer.enabled = false;
+		GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
+		Vector3 throwDirection = mainCamera.transform.forward;
+		Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+		projectileRb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
 	}
 	private void Interact()
 	{
