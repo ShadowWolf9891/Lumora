@@ -12,19 +12,22 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI DialogueText;
 
-	[Header("Dialogue Event Reference"), SerializeField] private DialogueEvent dialogueEvent;
-	void OnEnable() => dialogueEvent.Register(BeginDialogue);
-	void OnDisable() => dialogueEvent.Unregister(BeginDialogue);
-
 	DialogueData data; //All dialogue json file
     DialogueLine[] currentDialogue; //The current chapter / scene dialogue
 	int currentLine = 0; //The current line in the dialogue
 
-    void Load()
+	private void Start()
+	{
+		 GameContext.Instance.OnPlayDialogue += BeginDialogue;
+	}
+
+	void Load()
     {
 		TextAsset jsonFile = Resources.Load<TextAsset>("dialogue");
 		data = JsonUtility.FromJson<DialogueData>(jsonFile.text);
 		Debug.Log($"Loaded json file.");
+
+       
 	}
 
     /// <summary>
@@ -63,7 +66,6 @@ public class DialogueSystem : MonoBehaviour
     /// <param name="SceneID">The scene within the chapter to play the dialogue from</param>
     public void BeginDialogue(int ChapterID, int SceneID)
     {
-
         currentLine = 0;
         currentDialogue = GetDialogueLines(ChapterID, SceneID);
 		DisplayDialogue(currentDialogue[currentLine]);

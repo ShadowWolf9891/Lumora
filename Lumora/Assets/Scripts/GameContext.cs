@@ -17,6 +17,7 @@ public class GameContext
 	public event Action OnJumpPressed;
 	public event Action OnThrowPressed;
 	public event Action OnThrowReleased;
+	public event Action<int,int> OnPlayDialogue;
 
     //Player Event Context
 	public event Action OnEnterHideState;
@@ -32,6 +33,7 @@ public class GameContext
 	public void RaiseJumpPressed() {  OnJumpPressed?.Invoke(); }
 	public void RaiseThrowPressed() { OnThrowPressed?.Invoke(); }
 	public void RaiseThrowReleased() { OnThrowReleased?.Invoke(); }
+	public void RaisePlayDialogue(int chapter, int scene) { OnPlayDialogue?.Invoke(chapter,scene); }
 
 	//Player Events
 	public void RaiseEnterStealth() { OnEnterHideState?.Invoke(); }
