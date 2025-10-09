@@ -141,37 +141,48 @@ public class PlayerBehavior : MonoBehaviour
 	//throw mechanic
 	[SerializeField] GameObject thrownObjPrefab;
 	[SerializeField] Transform throwLocation;
-	[SerializeField] Camera mainCamera;
 	
-	[SerializeField] float throwForce = 20;
+	[SerializeField] float throwForce = 10;
 
 	//line renderer 
 	[SerializeField] LineRenderer lineRenderer;
 	private int linePoints = 30;
 	private float timeBetweenPoints = 0.1f;
 	private bool isThrowing;
+
+	Vector3 startVelocity = Vector3.zero;
 	private void PrepareThrow()
 	{
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		Debug.Log("Preparing throw.");
 		isThrowing = true;
+
 	}
-	private void UpdateThrow(Vector3 moveDirection)
+	private void UpdateThrow(Transform cameraTransform)
 	{
 		if (isThrowing)
 		{
 			Vector3 startPos = throwLocation.position;
-			Vector3 startVelocity = mainCamera.transform.forward * throwForce;
+			startVelocity = (cameraTransform.forward + (cameraTransform.up /2)) * throwForce;
 			Vector3[] points = new Vector3[linePoints];
 			for (int i = 0; i < linePoints; i++)
 			{
 				float time = i * timeBetweenPoints;
-				Vector3 position = startPos + startVelocity * time + 0.5f * Physics.gravity * time * time;
+
+				Vector3 curVelocity = startVelocity * time;
+				Vector3 curAcceleration = 0.5f * Mathf.Pow(time,2f) * Physics.gravity;
+				Vector3 position = startPos + curVelocity + curAcceleration;
+
 				points[i] = position;
 			}
 			lineRenderer.positionCount = linePoints;
 			lineRenderer.SetPositions(points);
 			lineRenderer.enabled = true;
+
+			Vector3 moveDir = cameraTransform.forward;
+			moveDir.y = 0f;
+
+			FaceMoveDirection(moveDir);
 		}
 	}
 	private void ReleaseThrow()
@@ -182,9 +193,8 @@ public class PlayerBehavior : MonoBehaviour
 		isThrowing = false;
 		lineRenderer.enabled = false;
 		GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
-		Vector3 throwDirection = mainCamera.transform.forward;
 		Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-		projectileRb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+		projectileRb.AddForce(startVelocity, ForceMode.Impulse);
 	}
 	private void Interact()
 	{
