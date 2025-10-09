@@ -105,6 +105,7 @@ public class PlayerBehavior : MonoBehaviour
 			//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
 		}
 		HandleSpeedControl();
+		if(isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
 	}
 	/// <summary>
 	/// Checks if the player is on the ground or not.
@@ -156,6 +157,8 @@ public class PlayerBehavior : MonoBehaviour
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		Debug.Log("Preparing throw.");
 		isThrowing = true;
+		CameraManager.SetCurrentCamera("ThrowCamera", 0.2f);
+		UpdateThrow(CameraManager.CurrentCamera.transform);
 
 	}
 	private void UpdateThrow(Transform cameraTransform)
@@ -192,9 +195,13 @@ public class PlayerBehavior : MonoBehaviour
 		Debug.Log("Release Throw");
 		isThrowing = false;
 		lineRenderer.enabled = false;
-		GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
-		Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-		projectileRb.AddForce(startVelocity, ForceMode.Impulse);
+		if (!CameraManager.IsBlending())
+		{
+			GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
+			Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+			projectileRb.AddForce(startVelocity, ForceMode.Impulse);
+		}
+		CameraManager.ReturnToPreviousCamera(0.5f);
 	}
 	private void Interact()
 	{
