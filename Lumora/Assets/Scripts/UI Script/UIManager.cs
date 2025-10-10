@@ -1,5 +1,7 @@
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class UIManager : MonoBehaviour
     private InputAction inventoryAction;
     public static UIManager Instance;
     [SerializeField] GameObject activeCanvas;
+    public GameObject endScreen;
+    /*
     void Awake()
     {
         if (Instance == null)
@@ -51,11 +55,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void OptionsMenu()
-    {
-        optionsCanvas.SetActive(true);
-        activeCanvas = optionsCanvas;
-    }
     public void PauseMenu()
     {
         pauseCanvas.SetActive(true);
@@ -65,6 +64,16 @@ public class UIManager : MonoBehaviour
     {
         inventoryCanvas.SetActive(true);
         activeCanvas = inventoryCanvas;
+    } */
+    public void OptionsMenu()
+    {
+        optionsCanvas.SetActive(true);
+        activeCanvas = optionsCanvas;
+    }
+    public void RestartLevel()
+    {
+        endScreen.SetActive(false);
+        SceneManager.LoadScene(1);
     }
 
 }

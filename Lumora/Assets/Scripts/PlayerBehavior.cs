@@ -25,8 +25,8 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] float throwForce = 10;
 	//line renderer 
 	[SerializeField] LineRenderer lineRenderer;
-	private int linePoints = 30;
-	private float timeBetweenPoints = 0.1f;
+	private int linePoints = 8;
+	private float timeBetweenPoints = 0.15f;
 	private bool isThrowing;
 
 	[Header("Stealth Settings")]
