@@ -493,6 +493,7 @@ MonoBehaviour:
   numberOfSearchPoints: 3
   timeAtEachPoint: 0
   alertedTime: 2
+  endScreen: {fileID: 0}
 --- !u!195 &949569845706991502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -616,6 +617,7 @@ GameObject:
   - component: {fileID: 5414547727339123433}
   - component: {fileID: 2213004111793195849}
   - component: {fileID: 2924967676488075355}
+  - component: {fileID: 3330585151495869051}
   m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
@@ -718,3 +720,16 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &3330585151495869051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8279032578275009318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c87b4a9320ecc374a8bd0562396bc664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCollision
+  endScreen: {fileID: 0}
