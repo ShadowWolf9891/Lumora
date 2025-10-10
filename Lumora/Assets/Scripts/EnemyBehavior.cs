@@ -52,7 +52,7 @@ public class EnemyBehavior : MonoBehaviour
 	string bb_IsAlerted = "IsAlerted";
 	string bb_LostPlayer = "LostPlayer";
 
-
+	[SerializeField] GameObject endScreen;
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
@@ -215,8 +215,6 @@ public class EnemyBehavior : MonoBehaviour
 		{
 			Attack();
 		}
-			
-
 	}
 
 	private void Attack()
@@ -398,9 +396,9 @@ public class EnemyBehavior : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if(searchPoints.Count > 0) 
+		if (searchPoints.Count > 0)
 		{
-			foreach (var point in searchPoints) 
+			foreach (var point in searchPoints)
 			{
 				Gizmos.color = Color.yellow;
 				Gizmos.DrawCube(point, Vector3.one * 0.1f);

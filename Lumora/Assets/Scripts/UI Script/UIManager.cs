@@ -72,6 +72,7 @@ public class UIManager : MonoBehaviour
     }
     public void RestartLevel()
     {
+        //button not working removed from ui
         endScreen.SetActive(false);
         SceneManager.LoadScene(1);
     }

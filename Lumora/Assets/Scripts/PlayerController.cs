@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 	{
 		//TODO: Find correct action using a reference instead of a string
 		moveAction = InputSystem.actions.FindAction("Move");
-		throwAction = InputSystem.actions.FindAction("West");
+		throwAction = InputSystem.actions.FindAction("Right Trigger");
 		interactAction = InputSystem.actions.FindAction("North");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");

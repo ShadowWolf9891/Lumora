@@ -17,7 +17,8 @@ public class GameContext
 	public event Action OnJumpPressed;
 	public event Action OnThrowPressed;
 	public event Action OnThrowReleased;
-	public event Action<int,int> OnPlayDialogue;
+	public event Action<int, int> OnPlayDialogue;
+	public event Action OnDialogueNextLine;
 
     //Player Event Context
 	public event Action OnEnterHideState;
