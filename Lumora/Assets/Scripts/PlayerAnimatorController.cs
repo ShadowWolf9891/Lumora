@@ -1,5 +1,6 @@
 using System;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAnimatorController : MonoBehaviour
@@ -7,16 +8,29 @@ public class PlayerAnimatorController : MonoBehaviour
     //unserialized because i'm lazy and i dont wanna reconnect everything later :/
     Animator animator;
     PlayerBehavior behavior;
+    Rigidbody rb;
 
     private void Start()
     {
         GameContext.Instance.OnMove += Move;
         GameContext.Instance.OnEnterHideState += EnterHide;
         GameContext.Instance.OnLeaveHideState += LeaveHide;
+        GameContext.Instance.OnThrowReleased += DoThrow;
         //onthrow GameContext.Instance.OnMove += Move;
 
         animator = GetComponent<Animator>(); 
-        //behavior = gameObject.GetComponentInParent<PlayerBehavior>();
+        behavior = gameObject.GetComponentInParent<PlayerBehavior>();
+        rb = behavior.gameObject.GetComponent<Rigidbody>();
+    }
+
+    private void DoThrow()
+    {
+        animator.SetTrigger("doThrow");
+    }
+
+    private void Update()
+    {
+        animator.SetFloat("moveSpeed", rb.linearVelocity.normalized.magnitude);
     }
 
     private void LeaveHide()
@@ -37,14 +51,9 @@ public class PlayerAnimatorController : MonoBehaviour
         }
     }
 
-    private void Move(Vector3 vector)
+    private void Move(Vector3 moveDir)
     {
-        //animator.SetFloat("moveSpeed", 1);
-    }
-    //TODO Add function to set movenment to null
-
-    private void Update()
-    {
-        
+        animator.SetTrigger("doMovement");
+        animator.SetFloat("moveSpeed", moveDir.normalized.magnitude);
     }
 }
