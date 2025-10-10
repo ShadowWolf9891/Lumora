@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
 	//Private variables
 	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
-	private Vector2 moveInput, cameraMove;
+	private Vector2 moveInput;
     private Transform cameraTransform;
 
 
@@ -43,8 +43,7 @@ public class PlayerController : MonoBehaviour
 		}
 		if (lookAction.IsInProgress())
 		{
-			cameraMove = lookAction.ReadValue<Vector2>();
-			GameContext.Instance.RaiseCameraMove(cameraMove);
+			GameContext.Instance.RaiseCameraMove(cameraTransform);
 		}
 		//if (attackAction.WasPressedThisFrame())
 		{
