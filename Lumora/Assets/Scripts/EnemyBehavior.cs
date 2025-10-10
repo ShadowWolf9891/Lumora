@@ -52,7 +52,7 @@ public class EnemyBehavior : MonoBehaviour
 	string bb_IsAlerted = "IsAlerted";
 	string bb_LostPlayer = "LostPlayer";
 
-
+	[SerializeField] GameObject endScreen;
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
@@ -215,13 +215,12 @@ public class EnemyBehavior : MonoBehaviour
 		{
 			Attack();
 		}
-			
-
 	}
 
 	private void Attack()
 	{
 		Debug.Log("Tag! you're it");
+		endScreen.SetActive(true);
 	}
 	#endregion
 
