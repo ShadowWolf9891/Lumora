@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9029358854267193617}
   - component: {fileID: 4654983748964475490}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ThrowLineRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,6 +142,59 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &416226673266243034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7677057415841593061}
+  - component: {fileID: 6320507177013503183}
+  m_Layer: 6
+  m_Name: StealthCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7677057415841593061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416226673266243034}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3238719513988401299}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &6320507177013503183
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416226673266243034}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &655220478846737925
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,6 +243,8 @@ GameObject:
   - component: {fileID: 2538106167411884877}
   - component: {fileID: 6481701089280577369}
   - component: {fileID: 7166657601331200534}
+  - component: {fileID: 2064154333712431666}
+  - component: {fileID: 7869366584272912734}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -215,6 +270,7 @@ Transform:
   - {fileID: 893941913310268293}
   - {fileID: 2928220297651680249}
   - {fileID: 9029358854267193617}
+  - {fileID: 7677057415841593061}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6998252883528382027
@@ -394,11 +450,40 @@ MonoBehaviour:
   stoppingForce: 3
   playerHeight: 1.2
   jumpHeight: 5
-  directionsToCheck: 8
   thrownObjPrefab: {fileID: 4781354563760337910, guid: f791dda7fedb38344b7e4fbc4869e774, type: 3}
   throwLocation: {fileID: 3646764263478511198}
   throwForce: 10
   lineRenderer: {fileID: 4654983748964475490}
+  snapDistance: 0.6
+  detectDistance: 1
+  stealthSpeedModifier: 0.5
+--- !u!114 &2064154333712431666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350591719694058521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9148a3050585ee4aa82b3942eb8bee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HideController
+  coverLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+--- !u!114 &7869366584272912734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350591719694058521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae8ed63fb8f1c54db4d1eb8e15128fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisibilityManager
 --- !u!1 &5923059040758238787
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,7 +1007,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2928220297651680249}
   - component: {fileID: 5100493330512659184}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ThrowCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
