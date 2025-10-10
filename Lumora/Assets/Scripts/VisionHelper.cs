@@ -13,6 +13,12 @@ public static class VisionHelper
 	/// <returns>True if visible.</returns>
 	public static bool CanSeeTarget(GameObject viewer, GameObject target, float viewAngle, float viewDistance, LayerMask layerMask)
 	{
+		//Make the target harder or easier to see if they have a visibility manager
+		if(target.TryGetComponent<VisibilityManager>(out VisibilityManager vm))
+		{
+			viewDistance *= vm.VisibilityLevel;
+		}
+
 		Vector3 origin = viewer.transform.position + Vector3.up * 1.5f;
 		Vector3 directionToTarget = target.transform.position - origin;
 		float distanceToTarget = directionToTarget.magnitude;
