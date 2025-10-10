@@ -22,4 +22,9 @@ public class NPCDialogue : MonoBehaviour
     {
         GameContext.Instance.RaisePlayDialogue(chapter, scene);
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Destroy(gameObject);
+    }
 }
