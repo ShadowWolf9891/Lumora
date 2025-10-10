@@ -15,9 +15,11 @@ public class ProjectileBehaviour : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Ground")
+        //checks if collision with ground layer
+        if(collision.gameObject.layer == 3)
         {
-            AudioManager.Instance.PlaySFX("");
+            Debug.Log("Playing SFX");
+            AudioManager.Instance.PlaySFX("ProjectileLanding");
         }
     }
 }

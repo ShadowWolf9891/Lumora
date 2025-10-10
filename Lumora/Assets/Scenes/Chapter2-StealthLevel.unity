@@ -7608,7 +7608,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7638397951505351790, guid: 0356c0d083b84d44b8f44c20c1924750, type: 3}
       propertyPath: sfxSounds.Array.size
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7638397951505351790, guid: 0356c0d083b84d44b8f44c20c1924750, type: 3}
+      propertyPath: sfxSounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: f334e61bfd2644040a8bb1805c220083, type: 3}
+    - target: {fileID: 7638397951505351790, guid: 0356c0d083b84d44b8f44c20c1924750, type: 3}
+      propertyPath: sfxSounds.Array.data[0].name
+      value: ProjectileLanding
       objectReference: {fileID: 0}
     - target: {fileID: 9141058174836311157, guid: 0356c0d083b84d44b8f44c20c1924750, type: 3}
       propertyPath: m_Name
@@ -21652,6 +21660,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 171929529}
+    - target: {fileID: 7166657601331200534, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: thrownObjPrefab
+      value: 
+      objectReference: {fileID: 2082604938133289944, guid: 210be6ef2525cde4ca11116bca0b7cf4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
