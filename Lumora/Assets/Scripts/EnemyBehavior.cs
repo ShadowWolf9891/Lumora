@@ -220,7 +220,6 @@ public class EnemyBehavior : MonoBehaviour
 	private void Attack()
 	{
 		Debug.Log("Tag! you're it");
-		endScreen.SetActive(true);
 	}
 	#endregion
 
@@ -397,9 +396,9 @@ public class EnemyBehavior : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if(searchPoints.Count > 0) 
+		if (searchPoints.Count > 0)
 		{
-			foreach (var point in searchPoints) 
+			foreach (var point in searchPoints)
 			{
 				Gizmos.color = Color.yellow;
 				Gizmos.DrawCube(point, Vector3.one * 0.1f);
