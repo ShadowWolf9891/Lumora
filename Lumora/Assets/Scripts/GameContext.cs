@@ -25,6 +25,9 @@ public class GameContext
 	public event Action OnLeaveHideState;
 	public event Action OnPlayerSpotted;
 
+	//Environmental Event Context
+	public event Action <Vector3, float>OnGenericNoise;
+
 	//Player Controls
 	public void RaiseMove(Vector3 move) {  OnMove?.Invoke(move); }
 	public void RaiseCameraMove(Transform cameraTransform) { OnCameraLook?.Invoke(cameraTransform); }
@@ -40,4 +43,7 @@ public class GameContext
 	public void RaiseEnterStealth() { OnEnterHideState?.Invoke(); }
     public void RaiseLeaveStealth() { OnLeaveHideState?.Invoke(); }
     public void RaisePlayerSpotted() { OnPlayerSpotted?.Invoke(); }
+
+	//Environmental Events
+	public void RaiseGenericNoise(Vector3 position, float maxSize) { OnGenericNoise?.Invoke(position, maxSize); }
 }

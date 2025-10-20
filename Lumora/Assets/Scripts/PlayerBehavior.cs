@@ -177,7 +177,7 @@ public class PlayerBehavior : MonoBehaviour
 	private void PrepareThrow()
 	{
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
-		Debug.Log("Preparing throw.");
+		//Debug.Log("Preparing throw.");
 		isThrowing = true;
 		CameraManager.SetCurrentCamera("ThrowCamera", 0.2f);
 		UpdateThrow(CameraManager.CurrentCamera.transform);
@@ -214,7 +214,7 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		//releasing the throw key will remove the line render and throw the projectile based on player location (cube attached to player atm)
 		//throw direction is based on camera position (forward)
-		Debug.Log("Release Throw");
+		//Debug.Log("Release Throw");
 		isThrowing = false;
 		lineRenderer.enabled = false;
 		if (!CameraManager.IsBlending())

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ProjectileBehaviour : MonoBehaviour
 {
+    [SerializeField]
+    float noiseMade = 5;
     void OnCollisionEnter(Collision collision)
     {
         //checks if collision with ground layer
@@ -15,5 +17,9 @@ public class ProjectileBehaviour : MonoBehaviour
             AudioManager.Instance.PlaySFX("ProjectileLanding");
             Destroy(gameObject);
         }
+    }
+    private void OnDestroy()
+    {
+        GameContext.Instance.RaiseGenericNoise(transform.position, noiseMade);
     }
 }
