@@ -8,19 +8,7 @@ public class HideController : MonoBehaviour
 	public  LayerMask coverLayerMask;
 	
 	List<Collider> nearbyWalls = new();
-	public Collider CurrentClosestWall { get; private set; }
-
-	public void UpdateClosestWall(Vector3 sourceLocation)
-	{
-		Collider bestWall = GetClosestCollider(sourceLocation);
-
-		// Only update if the wall truly changed
-		if (bestWall != CurrentClosestWall)
-		{
-			CurrentClosestWall = bestWall;
-		}
-	}
-	private Collider GetClosestCollider(Vector3 sourceLocation)
+	public Collider GetClosestCollider(Vector3 sourceLocation)
 	{
 		if (nearbyWalls == null || nearbyWalls.Count == 0)
 		{
