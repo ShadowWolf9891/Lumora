@@ -20,7 +20,10 @@ public class GameContext
 	public event Action<int, int> OnPlayDialogue;
 	public event Action OnDialogueNextLine;
 
-    //Player Event Context
+	public event Action OnPauseGame;
+	public event Action OnUnPauseGame;
+
+	//Player Event Context
 	public event Action OnEnterHideState;
 	public event Action OnLeaveHideState;
 	public event Action OnPlayerSpotted;
@@ -38,6 +41,9 @@ public class GameContext
 	public void RaiseThrowPressed() { OnThrowPressed?.Invoke(); }
 	public void RaiseThrowReleased() { OnThrowReleased?.Invoke(); }
 	public void RaisePlayDialogue(int chapter, int scene) { OnPlayDialogue?.Invoke(chapter,scene); }
+	public void RaiseNextDialogueLine() { OnDialogueNextLine?.Invoke(); }
+	public void RaisePauseGame() {  OnPauseGame?.Invoke(); }
+	public void RaiseUnPauseGame() { OnUnPauseGame?.Invoke(); }
 
 	//Player Events
 	public void RaiseEnterStealth() { OnEnterHideState?.Invoke(); }

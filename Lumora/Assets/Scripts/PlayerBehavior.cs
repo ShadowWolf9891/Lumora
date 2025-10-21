@@ -69,7 +69,6 @@ public class PlayerBehavior : MonoBehaviour
 
 	private void Move(Vector3 moveDirection)
 	{
-
 		if (isHiding)
 		{
 			CrouchMove(moveDirection);
@@ -283,5 +282,6 @@ public class PlayerBehavior : MonoBehaviour
 		isHiding = true;
 		// TODO: Add animation
     }
+	
 	
 }
