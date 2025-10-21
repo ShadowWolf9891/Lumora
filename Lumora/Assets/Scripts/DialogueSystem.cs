@@ -19,6 +19,7 @@ public class DialogueSystem : MonoBehaviour
 	private void Start()
 	{
 		 GameContext.Instance.OnPlayDialogue += BeginDialogue;
+        GameContext.Instance.OnDialogueNextLine += NextLine;
 	}
 
 	void Load()
@@ -69,6 +70,7 @@ public class DialogueSystem : MonoBehaviour
         currentLine = 0;
         currentDialogue = GetDialogueLines(ChapterID, SceneID);
 		DisplayDialogue(currentDialogue[currentLine]);
+		GameContext.Instance.RaisePauseGame();
 	}
     /// <summary>
     /// Display the dialogue line on the screen and show the dialogue panel if it is hidden.
@@ -97,11 +99,6 @@ public class DialogueSystem : MonoBehaviour
                 EndDialogue();
             }
         }
-        else
-        {
-            Debug.LogError("Tried to progress to the next line but the dialogue panel is not visible.");
-        }
-
     }
     /// <summary>
     /// End the dialogue by reseting values and hiding the dialogue panel.
@@ -113,6 +110,7 @@ public class DialogueSystem : MonoBehaviour
 		DialogueText.text = "";
         currentLine = 0;
         currentDialogue = null;
+		GameContext.Instance.RaiseUnPauseGame();
 	}
 
     

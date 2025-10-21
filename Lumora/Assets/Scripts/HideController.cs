@@ -22,7 +22,6 @@ public class HideController : MonoBehaviour
 		foreach (Collider c in nearbyWalls)
 		{
 			float tempDistance = Vector3.Distance(c.ClosestPoint(sourceLocation), sourceLocation);
-			Debug.Log($"Checking {c.name}: Distance={tempDistance}");
 
 			if (tempDistance < closestDistance)
 			{
@@ -44,7 +43,6 @@ public class HideController : MonoBehaviour
 			if (!nearbyWalls.Contains(other))
 			{
 				nearbyWalls.Add(other);
-				Debug.Log($"{other.name} entered trigger");
 			}
 			
 		}
