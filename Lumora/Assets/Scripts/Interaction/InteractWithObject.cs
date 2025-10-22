@@ -14,7 +14,15 @@ public class InteractWithObject : MonoBehaviour
 
     private void Start()
     {
-		GameContext.Instance.OnInteractPressed += OnInteract;
+		GameEvents<PlayerInputEvent>.Subscribe(e =>
+		{
+			if (e.ActionType == PlayerInputActionType.Interact && e.IsPressed) //Only check if the player presses the next dialogue button
+			{
+				OnInteract();
+			}
+		}
+	   );
+		//GameContext.Instance.OnInteractPressed += OnInteract;
     }
 
     void Update()

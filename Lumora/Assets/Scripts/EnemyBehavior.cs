@@ -71,8 +71,9 @@ public class EnemyBehavior : MonoBehaviour
 		curState = AlertStates.IDLE;
 		OnChangeState();
 
-		GameContext.Instance.OnPauseGame += FreezeEnemy;
-		GameContext.Instance.OnUnPauseGame += UnFreezeEnemy;
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeEnemy);
+		//GameContext.Instance.OnPauseGame += FreezeEnemy;
+		//GameContext.Instance.OnUnPauseGame += UnFreezeEnemy;
 	}
 
 	// Update is called once per frame
@@ -232,8 +233,18 @@ public class EnemyBehavior : MonoBehaviour
 		searchPoints.Clear();
 	}
 
-	private void FreezeEnemy() { agent.isStopped = true;}
-	private void UnFreezeEnemy() { agent.isStopped = false; }
+	private void FreezeEnemy(ChangeGameStateEvent e) 
+	{
+		if(e.State == GameStates.Running)
+		{
+			agent.isStopped = false;
+		}
+		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue) //Not sure what to do with cutscenes yet
+		{
+			agent.isStopped = true;
+		}
+
+	}
 
 	/// <summary>
 	/// Check if this object can see a target and the target is within a range.

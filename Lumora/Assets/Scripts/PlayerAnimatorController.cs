@@ -12,10 +12,13 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void Start()
     {
-        GameContext.Instance.OnMove += Move;
-        GameContext.Instance.OnEnterHideState += EnterHide;
-        GameContext.Instance.OnLeaveHideState += LeaveHide;
-        GameContext.Instance.OnThrowReleased += DoThrow;
+        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+        //GameContext.Instance.OnMove += Move;
+        //GameContext.Instance.OnEnterHideState += EnterHide;
+        //GameContext.Instance.OnLeaveHideState += LeaveHide;
+        //GameContext.Instance.OnThrowReleased += DoThrow;
         //onthrow GameContext.Instance.OnMove += Move;
 
         animator = GetComponent<Animator>(); 
@@ -23,7 +26,29 @@ public class PlayerAnimatorController : MonoBehaviour
         rb = behavior.gameObject.GetComponent<Rigidbody>();
     }
 
-    private void DoThrow()
+	private void HandleInput(PlayerInputEvent e)
+	{
+		switch(e.ActionType) 
+        {
+            case PlayerInputActionType.Move:
+                Move(e.MoveDirection);
+                break;
+			case PlayerInputActionType.Jump:
+                //Jump animation
+				break;
+			case PlayerInputActionType.Throw:
+                //Prepare throw animation?
+				break;
+			case PlayerInputActionType.ThrowRelease:
+                DoThrow();
+				break;
+
+
+
+		}
+	}
+
+	private void DoThrow()
     {
         animator.SetTrigger("doThrow");
     }
@@ -33,7 +58,7 @@ public class PlayerAnimatorController : MonoBehaviour
         animator.SetFloat("moveSpeed", rb.linearVelocity.normalized.magnitude);
     }
 
-    private void LeaveHide()
+    private void LeaveHide(LeaveStealthEvent e)
     {
         if (animator.GetBool("isHiding"))
         {
@@ -42,7 +67,7 @@ public class PlayerAnimatorController : MonoBehaviour
         }
     }
 
-    private void EnterHide()
+    private void EnterHide(EnterStealthEvent e)
     {
         if (!animator.GetBool("isHiding"))
         {

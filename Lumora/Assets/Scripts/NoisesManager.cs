@@ -9,13 +9,16 @@ public class NoisesManager : MonoBehaviour
     GameObject genericNoiseObject;
     private void Start()
     {
-        GameContext.Instance.OnGenericNoise += RaiseNoise;
+        GameEvents<SpawnVisibleNoiseEvent>.Subscribe(RaiseNoise);
+        //GameContext.Instance.OnGenericNoise += RaiseNoise;
     }
 
 
-    private void RaiseNoise(Vector3 position, float maxSize)
+    private void RaiseNoise(SpawnVisibleNoiseEvent e)
     {
-        GameObject newNoise = Instantiate(genericNoiseObject, position, new Quaternion(0, 0, 0, 0));
-        newNoise.GetComponent<NoiseBehaviors>().SpawnNoisePing(maxSize);
+       
+        //TODO: Use e.Noise instead of genericNoiseObject
+        GameObject newNoise = Instantiate(genericNoiseObject, e.Position, new Quaternion(0, 0, 0, 0));
+        newNoise.GetComponent<NoiseBehaviors>().SpawnNoisePing(e.MaxSize);
     }
 }
