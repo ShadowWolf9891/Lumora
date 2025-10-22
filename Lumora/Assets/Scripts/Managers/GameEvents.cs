@@ -161,6 +161,15 @@ public class SpawnVisibleNoiseEvent : GameEventType
     }
 }
 
+public class StartQuestEvent : GameEventType
+{
+	public StartQuestEvent(string id) : base(EventCategory.World, id){}
+}
+
+public class ProgressQuestEvent : GameEventType
+{
+	public ProgressQuestEvent(string id) : base(EventCategory.World, id) { }
+}
 
 
 

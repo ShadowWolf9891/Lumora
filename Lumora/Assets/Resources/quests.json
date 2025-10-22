@@ -1,0 +1,43 @@
+{
+    "id": "AllQuests",
+    "description":"A container for all of the quests in the game. All other quests should be subQuests of this one.",
+    "status":1,
+    "subQuests":
+    [
+        {
+            "id": "TestQuest",
+            "description": "A quest to check that everything is working.",
+            "status" : 0,
+            "subQuests" : 
+            [
+                {
+                    "id" : "SubQuest1",
+                    "description" :"A sub quest to check that everything is working."
+                },
+                {
+                    "id" : "SubQuest2",
+                    "description" :"A sub quest to check that everything is STILL working.",
+                    "status" : 0,
+                    "subQuests" :
+                    [
+                        {
+                            "id" : "SubmarineQuest1",
+                            "description" :"A test sub class of a test sub class.",
+                            "status" : 0
+                        }
+                    ]
+
+                }
+            ]
+            
+        },
+        {
+            "id" : "TestQuest2",
+            "description" : "The second quest, NOT a subquest.",
+            "status" : 0,
+            "subQuests" : []
+            
+        }
+
+    ]
+}

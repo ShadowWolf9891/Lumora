@@ -6,12 +6,9 @@ public class QuestData
 {
 	public string id;
 	public string description;
-	public QuestStatus status = QuestStatus.INCOMPLETE;
-	public QuestData parentQuest = null;
+	public int status = 0;
 	public QuestData[] subQuests = null;
 }
-[System.Serializable]
-public class AllQuests { public QuestData[] questData; }
 public enum QuestStatus
 {
 	INCOMPLETE = 0,
