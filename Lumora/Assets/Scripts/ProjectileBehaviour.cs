@@ -6,6 +6,9 @@ public class ProjectileBehaviour : MonoBehaviour
     float noiseMade = 5;
     void OnCollisionEnter(Collision collision)
     {
+        Vector3 targetLoc = new Vector3();
+        targetLoc = transform.position;
+        GameContext.Instance.RaiseGenericNoise(targetLoc, noiseMade);
         //checks if collision with ground layer
         if (collision.gameObject.layer == 3)
         {
@@ -17,9 +20,5 @@ public class ProjectileBehaviour : MonoBehaviour
             AudioManager.Instance.PlaySFX("ProjectileLanding");
             Destroy(gameObject);
         }
-    }
-    private void OnDestroy()
-    {
-        GameContext.Instance.RaiseGenericNoise(transform.position, noiseMade);
     }
 }
