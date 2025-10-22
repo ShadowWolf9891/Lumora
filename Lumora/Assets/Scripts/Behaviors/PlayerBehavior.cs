@@ -42,33 +42,71 @@ public class PlayerBehavior : MonoBehaviour
 	bool isHiding;
 	Rigidbody rb;
 	private GameObject coverObject;
-	
+	private Vector3 lastWallNormal = Vector3.zero;
+	private Transform cameraTransform;
+
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
-		GameContext.Instance.OnMove += Move;
-		GameContext.Instance.OnCameraLook += UpdateThrow;
-        GameContext.Instance.OnAttackPressed += Attack;
-        GameContext.Instance.OnInteractPressed += Interact;
-		GameContext.Instance.OnHidePressed += DoHide;
-		GameContext.Instance.OnJumpPressed += Jump;
-		GameContext.Instance.OnPlayerSpotted += GetSpotted;
-		GameContext.Instance.OnThrowPressed += PrepareThrow;
-		GameContext.Instance.OnThrowReleased += ReleaseThrow;
-		GameContext.Instance.OnEnterHideState += EnterHide;
-		GameContext.Instance.OnLeaveHideState += LeaveHide;
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+		//GameContext.Instance.OnMove += Move;
+		//GameContext.Instance.OnCameraLook += UpdateThrow;
+		//GameContext.Instance.OnAttackPressed += Attack;
+		// GameContext.Instance.OnInteractPressed += Interact;
+		//GameContext.Instance.OnHidePressed += DoHide;
+		//GameContext.Instance.OnJumpPressed += Jump;
+		//GameContext.Instance.OnPlayerSpotted += GetSpotted;
+		//GameContext.Instance.OnThrowPressed += PrepareThrow;
+		//GameContext.Instance.OnThrowReleased += ReleaseThrow;
+		//GameContext.Instance.OnEnterHideState += EnterHide;
+		//GameContext.Instance.OnLeaveHideState += LeaveHide;
 
 		rb = GetComponent<Rigidbody>();
 		hideController = GetComponent<HideController>();
+		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 		if (hideController == null)
 		{
 			Debug.LogError("HideController not found on player!");
 		}
 	}
 
+	private void HandleInput(PlayerInputEvent e)
+	{
+		switch (e.ActionType)
+		{
+			case PlayerInputActionType.Move:
+				Move(e.MoveDirection);
+				break;
+			case PlayerInputActionType.Look:
+				UpdateThrow(cameraTransform);
+				break;
+			case PlayerInputActionType.Attack:
+				Attack();
+				break;
+			case PlayerInputActionType.Interact:
+				Interact();
+				break;
+			case PlayerInputActionType.Jump:
+				Jump();
+				break;
+			case PlayerInputActionType.Hide:
+				DoHide();
+				break;
+			case PlayerInputActionType.Throw:
+				PrepareThrow();
+				break;
+			case PlayerInputActionType.ThrowRelease:
+				ReleaseThrow();
+				break;
+
+		}
+	}
+
 	private void Move(Vector3 moveDirection)
 	{
-
 		if (isHiding)
 		{
 			CrouchMove(moveDirection);
@@ -99,45 +137,36 @@ public class PlayerBehavior : MonoBehaviour
 	private void CrouchMove(Vector3 moveDirection)
 	{
 		Vector3 nextPosition = transform.position + moveDirection;
-		hideController.UpdateClosestWall(nextPosition);
+
 		if (coverObject == null) return;
 
-		Collider currentCollider = coverObject.GetComponent<Collider>();
+		Collider currentCollider = hideController.GetClosestCollider(transform.position)?.GetComponent<Collider>();
+		if (currentCollider == null) return;
 
-		if (Physics.Raycast(transform.position, (currentCollider.ClosestPoint(transform.position) - transform.position).normalized, out RaycastHit currentHit))
+		// Get wall contact point and normal
+		Vector3 wallPoint = currentCollider.ClosestPoint(transform.position);
+		Vector3 wallNormal = (transform.position - wallPoint).normalized;
+		if (wallNormal.sqrMagnitude > 0.0001f)
+			lastWallNormal = wallNormal; // Cache for stability
+
+		Vector3 projectedNextPosition = nextPosition - lastWallNormal * Vector3.Dot(nextPosition - wallPoint, lastWallNormal);
+
+		Vector3 movementAlongPlane = (projectedNextPosition - transform.position);
+		rb.AddForce(acceleration * Time.deltaTime * 60 * stealthSpeedModifier * movementAlongPlane, ForceMode.Acceleration);
+
+		float distanceToWall = Vector3.Dot(transform.position - wallPoint, lastWallNormal);
+		if (Mathf.Abs(distanceToWall - snapDistance) > 0.01f)
 		{
-			Vector3 currentNormal = currentHit.normal;
-			Vector3 currentPoint = currentHit.point;
-			
-			// Project move direction onto current plane
-			Vector3 projected = Vector3.ProjectOnPlane(moveDirection, currentNormal).normalized;
-
-			if (TryFindAdjacentCover(moveDirection, out RaycastHit forwardHit))
-			{
-				coverObject = forwardHit.collider.gameObject;
-				currentNormal = forwardHit.normal;
-				currentPoint = forwardHit.point;
-				projected = Vector3.ProjectOnPlane(moveDirection, currentNormal).normalized;
-			}
-
-			float distanceToCover = Vector3.Distance(transform.position, currentPoint);
-			if (distanceToCover > snapDistance + 0.01f)
-			{
-				Vector3 targetPos = transform.position + (currentNormal * (snapDistance - distanceToCover));
-				rb.MovePosition(Vector3.Lerp(transform.position, targetPos, 0.5f));
-			}
-			
-			rb.AddForce(acceleration * Time.deltaTime * 60 * stealthSpeedModifier* projected, ForceMode.Acceleration);
-
-			Debug.DrawLine(transform.position, transform.position + projected, Color.green);
-			Debug.DrawLine(transform.position, currentPoint , Color.red);
+			Vector3 snapTarget = transform.position - lastWallNormal * (distanceToWall - snapDistance);
+			rb.MovePosition(Vector3.Lerp(transform.position, snapTarget, 0.5f));
 		}
-		else
-		{
-			Debug.Log("Raycast blocked");
-		}
+
+		Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
+		Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
+		Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), Color.red);
+		Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), Color.orange);
+		Debug.DrawLine(transform.position,transform.position + wallNormal, Color.blue);
 	}
-
 
 	/// <summary>
 	/// Checks if the player is on the ground or not.
@@ -235,18 +264,19 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void TryHide()
 	{
-		hideController.UpdateClosestWall(transform.position);
-		Collider closest = hideController.CurrentClosestWall;
+		Collider closest = hideController.GetClosestCollider(transform.position);
 		coverObject = closest ? closest.gameObject : null;
 
 		if (coverObject != null)
         {
-            //Toggle hiding
-            GameContext.Instance.RaiseEnterStealth();
+			//Toggle hiding
+			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent());
+            //GameContext.Instance.RaiseEnterStealth();
         }
         else
 		{
-			GameContext.Instance.RaiseLeaveStealth();
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			//GameContext.Instance.RaiseLeaveStealth();
 		}
 	}
 
@@ -261,15 +291,18 @@ public class PlayerBehavior : MonoBehaviour
         }
         else
         {
-			GameContext.Instance.RaiseLeaveStealth();
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			//GameContext.Instance.RaiseLeaveStealth();
         }
     }
 	/// <summary>
 	/// behavior for when player is spotted. Runs via gamecontext event
 	/// </summary>
-	private void GetSpotted()
+	private void GetSpotted(PlayerSpottedEvent e)
     {
-        GameContext.Instance.RaiseLeaveStealth();
+		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id));
+
+        //GameContext.Instance.RaiseLeaveStealth();
 		//give player temporary movespeed buff? players should run away here, right?
     }
 
@@ -281,39 +314,17 @@ public class PlayerBehavior : MonoBehaviour
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
 	}
-    private void LeaveHide()
+    private void LeaveHide(LeaveStealthEvent e)
     {
 		isHiding = false;
 		// TODO: Add animation
     }
 
-    private void EnterHide()
+    private void EnterHide(EnterStealthEvent e)
     {
 		isHiding = true;
 		// TODO: Add animation
     }
-	private bool TryFindAdjacentCover(Vector3 moveDirection, out RaycastHit hit)
-	{
-		hit = new RaycastHit();
-		int rayCount = 8;
-		float spreadAngle = 180f; // how wide to check (in degrees)
-		Vector3 origin = transform.position;
-
-		for (int i = 0; i < rayCount; i++)
-		{
-			float t = i / (float)(rayCount - 1);
-			float angleOffset = Mathf.Lerp(-spreadAngle * 0.5f, spreadAngle * 0.5f, t);
-			Vector3 direction = Quaternion.Euler(0, angleOffset, 0) * moveDirection;
-
-			if (Physics.Raycast(origin, direction, out hit, detectDistance, hideController.coverLayerMask))
-			{
-				if (hit.collider != null && hit.collider.gameObject != coverObject)
-				{
-					Debug.DrawRay(origin, direction * hit.distance, Color.yellow, 0.1f);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	
+	
 }

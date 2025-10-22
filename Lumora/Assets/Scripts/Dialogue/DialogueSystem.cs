@@ -1,6 +1,7 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DialogueSystem : MonoBehaviour
 {
@@ -18,7 +19,17 @@ public class DialogueSystem : MonoBehaviour
 
 	private void Start()
 	{
-		 GameContext.Instance.OnPlayDialogue += BeginDialogue;
+        GameEvents<DialogueEvent>.Subscribe(BeginDialogue);
+        //GameContext.Instance.OnPlayDialogue += BeginDialogue;
+        GameEvents<PlayerInputEvent>.Subscribe(e => 
+        {
+            if (e.ActionType == PlayerInputActionType.NextDialogue) //Only check if the player presses the next dialogue button
+            {
+                NextLine();
+            }
+        }
+        );
+        //GameContext.Instance.OnDialogueNextLine += NextLine;
 	}
 
 	void Load()
@@ -64,11 +75,12 @@ public class DialogueSystem : MonoBehaviour
     /// </summary>
     /// <param name="ChapterID">The chapter to play the dialogue from</param>
     /// <param name="SceneID">The scene within the chapter to play the dialogue from</param>
-    public void BeginDialogue(int ChapterID, int SceneID)
+    public void BeginDialogue(DialogueEvent e)
     {
         currentLine = 0;
-        currentDialogue = GetDialogueLines(ChapterID, SceneID);
+        currentDialogue = GetDialogueLines(e.Chapter, e.Scene);
 		DisplayDialogue(currentDialogue[currentLine]);
+        GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent(GameStates.Dialogue));
 	}
     /// <summary>
     /// Display the dialogue line on the screen and show the dialogue panel if it is hidden.
@@ -97,11 +109,6 @@ public class DialogueSystem : MonoBehaviour
                 EndDialogue();
             }
         }
-        else
-        {
-            Debug.LogError("Tried to progress to the next line but the dialogue panel is not visible.");
-        }
-
     }
     /// <summary>
     /// End the dialogue by reseting values and hiding the dialogue panel.
@@ -113,6 +120,7 @@ public class DialogueSystem : MonoBehaviour
 		DialogueText.text = "";
         currentLine = 0;
         currentDialogue = null;
+		GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent(GameStates.Running));
 	}
 
     

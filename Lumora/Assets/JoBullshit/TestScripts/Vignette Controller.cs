@@ -18,10 +18,12 @@ public class VignetteController : MonoBehaviour
     private void Start()
     {
         volume = GetComponent<Volume>();
-        GameContext.Instance.OnEnterHideState += EnterHiding;
-        GameContext.Instance.OnLeaveHideState += LeaveHiding;
+        GameEvents<EnterStealthEvent>.Subscribe(EnterHiding);
+		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHiding);
+		//GameContext.Instance.OnEnterHideState += EnterHiding;
+        //GameContext.Instance.OnLeaveHideState += LeaveHiding;
     }
-    private void EnterHiding()
+    private void EnterHiding(EnterStealthEvent e)
     {
         if (!vignetteActive)
         {
@@ -30,7 +32,7 @@ public class VignetteController : MonoBehaviour
             volume.weight = Mathf.Lerp(minValue, maxValue, 3);
         }
     }
-    private void LeaveHiding()
+    private void LeaveHiding(LeaveStealthEvent e)
     {
         if (vignetteActive)
         {

@@ -8,19 +8,7 @@ public class HideController : MonoBehaviour
 	public  LayerMask coverLayerMask;
 	
 	List<Collider> nearbyWalls = new();
-	public Collider CurrentClosestWall { get; private set; }
-
-	public void UpdateClosestWall(Vector3 sourceLocation)
-	{
-		Collider bestWall = GetClosestCollider(sourceLocation);
-
-		// Only update if the wall truly changed
-		if (bestWall != CurrentClosestWall)
-		{
-			CurrentClosestWall = bestWall;
-		}
-	}
-	private Collider GetClosestCollider(Vector3 sourceLocation)
+	public Collider GetClosestCollider(Vector3 sourceLocation)
 	{
 		if (nearbyWalls == null || nearbyWalls.Count == 0)
 		{
@@ -34,7 +22,6 @@ public class HideController : MonoBehaviour
 		foreach (Collider c in nearbyWalls)
 		{
 			float tempDistance = Vector3.Distance(c.ClosestPoint(sourceLocation), sourceLocation);
-			Debug.Log($"Checking {c.name}: Distance={tempDistance}");
 
 			if (tempDistance < closestDistance)
 			{
@@ -56,7 +43,6 @@ public class HideController : MonoBehaviour
 			if (!nearbyWalls.Contains(other))
 			{
 				nearbyWalls.Add(other);
-				Debug.Log($"{other.name} entered trigger");
 			}
 			
 		}
@@ -67,7 +53,6 @@ public class HideController : MonoBehaviour
 		if (nearbyWalls.Contains(other))
 		{
 			nearbyWalls.Remove(other);
-			Debug.Log($"{other.name} left trigger");
 		}
 		
 	}
