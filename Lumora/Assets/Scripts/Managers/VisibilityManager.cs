@@ -8,8 +8,10 @@ public class VisibilityManager : MonoBehaviour
 
 	private void Start()
 	{
-		GameContext.Instance.OnEnterHideState += EnterStealth;
-		GameContext.Instance.OnLeaveHideState += ExitStealth;
+		GameEvents<EnterStealthEvent>.Subscribe(EnterStealth);
+		GameEvents<LeaveStealthEvent>.Subscribe(ExitStealth);
+		//GameContext.Instance.OnEnterHideState += EnterStealth;
+		//GameContext.Instance.OnLeaveHideState += ExitStealth;
 	}
 
 	/// <summary>
@@ -35,11 +37,11 @@ public class VisibilityManager : MonoBehaviour
 		}
 	}
 
-	private void EnterStealth()
+	private void EnterStealth(EnterStealthEvent e)
 	{
 		DecreaseVisibility(0.4f);
 	}
-	private void ExitStealth()
+	private void ExitStealth(LeaveStealthEvent e)
 	{
 		IncreaseVisibility(0.4f);
 	}

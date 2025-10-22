@@ -53,7 +53,6 @@ public class HideController : MonoBehaviour
 		if (nearbyWalls.Contains(other))
 		{
 			nearbyWalls.Remove(other);
-			Debug.Log($"{other.name} left trigger");
 		}
 		
 	}

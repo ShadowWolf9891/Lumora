@@ -16,9 +16,9 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
 	{
-
-		GameContext.Instance.OnPauseGame += FreezePlayer;
-		GameContext.Instance.OnUnPauseGame += UnFreezePlayer;
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezePlayer);
+		//GameContext.Instance.OnPauseGame += FreezePlayer;
+		//GameContext.Instance.OnUnPauseGame += UnFreezePlayer;
 
 		//TODO: Find correct action using a reference instead of a string
 		moveAction = InputSystem.actions.FindAction("Move");
@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour
 		{
 			if (interactAction.WasPressedThisFrame())
 			{
-				GameContext.Instance.RaiseNextDialogueLine();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.NextDialogue, true));
+				//GameContext.Instance.RaiseNextDialogueLine();
 			}
 		}
 		else
@@ -58,31 +59,37 @@ public class PlayerController : MonoBehaviour
 			}
 			if (lookAction.IsInProgress())
 			{
-				GameContext.Instance.RaiseCameraMove(cameraTransform);
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Look));
+				//GameContext.Instance.RaiseCameraMove(cameraTransform);
 			}
 			//if (attackAction.WasPressedThisFrame())
-			{
-				//GameContext.Instance.RaiseAttack();
-			}
+			//{
+			//	GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Attack, true));
+			//	//GameContext.Instance.RaiseAttack();
+			//}
 			if (interactAction.WasPressedThisFrame())
 			{
-				GameContext.Instance.RaiseInteract();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Interact, true));
 			}
 			if (crouchAction.WasPressedThisFrame())
 			{
-				GameContext.Instance.RaiseHidePressed();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Hide, true));
+				//GameContext.Instance.RaiseHidePressed();
 			}
 			if (jumpAction.WasPressedThisFrame())
 			{
-				GameContext.Instance.RaiseJumpPressed();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Jump, true));
+				//GameContext.Instance.RaiseJumpPressed();
 			}
 			if (throwAction.WasReleasedThisFrame())
 			{
-				GameContext.Instance.RaiseThrowReleased();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.ThrowRelease, false));
+				//GameContext.Instance.RaiseThrowReleased();
 			}
 			if (throwAction.WasPressedThisFrame())
 			{
-				GameContext.Instance.RaiseThrowPressed();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Throw, true));
+				//GameContext.Instance.RaiseThrowPressed();
 			}
 		}
 	}
@@ -97,9 +104,19 @@ public class PlayerController : MonoBehaviour
 		camRight.Normalize();
 		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
 
-		GameContext.Instance.RaiseMove(moveDirection);
+		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Move, default, moveDirection));
+		//GameContext.Instance.RaiseMove(moveDirection);
 
 	}
-	private void FreezePlayer() { canMove = false; }
-	private void UnFreezePlayer() { canMove = true; }
+	private void FreezePlayer(ChangeGameStateEvent e) 
+	{
+		if (e.State == GameStates.Running)
+		{
+			canMove = true;
+		}
+		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue) //Not sure what to do with cutscenes yet
+		{
+			canMove = false;
+		}
+	}
 }

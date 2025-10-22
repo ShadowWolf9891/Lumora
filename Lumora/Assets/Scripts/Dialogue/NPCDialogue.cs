@@ -20,7 +20,8 @@ public class NPCDialogue : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameContext.Instance.RaisePlayDialogue(chapter, scene);
+        GameEvents<DialogueEvent>.Raise(new DialogueEvent(chapter, scene));
+        //GameContext.Instance.RaisePlayDialogue(chapter, scene);
     }
 
     private void OnTriggerExit(Collider other)

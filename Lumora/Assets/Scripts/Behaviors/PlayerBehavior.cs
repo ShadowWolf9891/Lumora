@@ -43,27 +43,65 @@ public class PlayerBehavior : MonoBehaviour
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
+	private Transform cameraTransform;
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
-		GameContext.Instance.OnMove += Move;
-		GameContext.Instance.OnCameraLook += UpdateThrow;
-        GameContext.Instance.OnAttackPressed += Attack;
-        GameContext.Instance.OnInteractPressed += Interact;
-		GameContext.Instance.OnHidePressed += DoHide;
-		GameContext.Instance.OnJumpPressed += Jump;
-		GameContext.Instance.OnPlayerSpotted += GetSpotted;
-		GameContext.Instance.OnThrowPressed += PrepareThrow;
-		GameContext.Instance.OnThrowReleased += ReleaseThrow;
-		GameContext.Instance.OnEnterHideState += EnterHide;
-		GameContext.Instance.OnLeaveHideState += LeaveHide;
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+		//GameContext.Instance.OnMove += Move;
+		//GameContext.Instance.OnCameraLook += UpdateThrow;
+		//GameContext.Instance.OnAttackPressed += Attack;
+		// GameContext.Instance.OnInteractPressed += Interact;
+		//GameContext.Instance.OnHidePressed += DoHide;
+		//GameContext.Instance.OnJumpPressed += Jump;
+		//GameContext.Instance.OnPlayerSpotted += GetSpotted;
+		//GameContext.Instance.OnThrowPressed += PrepareThrow;
+		//GameContext.Instance.OnThrowReleased += ReleaseThrow;
+		//GameContext.Instance.OnEnterHideState += EnterHide;
+		//GameContext.Instance.OnLeaveHideState += LeaveHide;
 
 		rb = GetComponent<Rigidbody>();
 		hideController = GetComponent<HideController>();
+		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 		if (hideController == null)
 		{
 			Debug.LogError("HideController not found on player!");
+		}
+	}
+
+	private void HandleInput(PlayerInputEvent e)
+	{
+		switch (e.ActionType)
+		{
+			case PlayerInputActionType.Move:
+				Move(e.MoveDirection);
+				break;
+			case PlayerInputActionType.Look:
+				UpdateThrow(cameraTransform);
+				break;
+			case PlayerInputActionType.Attack:
+				Attack();
+				break;
+			case PlayerInputActionType.Interact:
+				Interact();
+				break;
+			case PlayerInputActionType.Jump:
+				Jump();
+				break;
+			case PlayerInputActionType.Hide:
+				DoHide();
+				break;
+			case PlayerInputActionType.Throw:
+				PrepareThrow();
+				break;
+			case PlayerInputActionType.ThrowRelease:
+				ReleaseThrow();
+				break;
+
 		}
 	}
 
@@ -231,12 +269,14 @@ public class PlayerBehavior : MonoBehaviour
 
 		if (coverObject != null)
         {
-            //Toggle hiding
-            GameContext.Instance.RaiseEnterStealth();
+			//Toggle hiding
+			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent());
+            //GameContext.Instance.RaiseEnterStealth();
         }
         else
 		{
-			GameContext.Instance.RaiseLeaveStealth();
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			//GameContext.Instance.RaiseLeaveStealth();
 		}
 	}
 
@@ -251,15 +291,18 @@ public class PlayerBehavior : MonoBehaviour
         }
         else
         {
-			GameContext.Instance.RaiseLeaveStealth();
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			//GameContext.Instance.RaiseLeaveStealth();
         }
     }
 	/// <summary>
 	/// behavior for when player is spotted. Runs via gamecontext event
 	/// </summary>
-	private void GetSpotted()
+	private void GetSpotted(PlayerSpottedEvent e)
     {
-        GameContext.Instance.RaiseLeaveStealth();
+		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id));
+
+        //GameContext.Instance.RaiseLeaveStealth();
 		//give player temporary movespeed buff? players should run away here, right?
     }
 
@@ -271,13 +314,13 @@ public class PlayerBehavior : MonoBehaviour
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
 	}
-    private void LeaveHide()
+    private void LeaveHide(LeaveStealthEvent e)
     {
 		isHiding = false;
 		// TODO: Add animation
     }
 
-    private void EnterHide()
+    private void EnterHide(EnterStealthEvent e)
     {
 		isHiding = true;
 		// TODO: Add animation
