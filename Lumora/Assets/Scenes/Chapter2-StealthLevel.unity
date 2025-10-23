@@ -726,6 +726,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -14.374, z: 0}
+--- !u!1 &43906756 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4633161546808840930, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+  m_PrefabInstance: {fileID: 1556416109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &43906759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43906756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: OEBIF::cakeslice.Outline
+  <Renderer>k__BackingField: {fileID: 0}
+  <SpriteRenderer>k__BackingField: {fileID: 0}
+  <SkinnedMeshRenderer>k__BackingField: {fileID: 0}
+  <MeshFilter>k__BackingField: {fileID: 0}
+  color: 1
+  eraseRenderer: 0
+  _SharedMaterials: []
 --- !u!1 &53600729
 GameObject:
   m_ObjectHideFlags: 0
@@ -22955,7 +22979,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4633161546808840930, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 43906759}
+    - targetCorrespondingSourceObject: {fileID: 8506716433184371947, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1651086597}
   m_SourcePrefab: {fileID: 100100000, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
 --- !u!1001 &1560329002
 PrefabInstance:
@@ -24447,6 +24477,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 178188238944745465, guid: a89288d05164ef34da18b38197719a04, type: 3}
   m_PrefabInstance: {fileID: 1650644197}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1651086594 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8506716433184371947, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+  m_PrefabInstance: {fileID: 1556416109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1651086597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651086594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: OEBIF::cakeslice.Outline
+  <Renderer>k__BackingField: {fileID: 0}
+  <SpriteRenderer>k__BackingField: {fileID: 0}
+  <SkinnedMeshRenderer>k__BackingField: {fileID: 0}
+  <MeshFilter>k__BackingField: {fileID: 0}
+  color: 1
+  eraseRenderer: 0
+  _SharedMaterials: []
 --- !u!1 &1661281310
 GameObject:
   m_ObjectHideFlags: 0

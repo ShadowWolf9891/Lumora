@@ -20,11 +20,11 @@ public class NoiseBehaviors : MonoBehaviour
     [SerializeField]
     ParticleSystem sys;
 
-    ParticleSystem.MainModule sysMain;
+    ParticleSystem.ShapeModule sysShape;
 
     public void Awake()
     {
-        sysMain = sys.main;
+        sysShape = sys.shape;
     }
     /// <summary>
     /// to be caled on spawn. can be overloaded to set max size on function call 
@@ -32,7 +32,7 @@ public class NoiseBehaviors : MonoBehaviour
     public void SpawnNoisePing()
     {
         anim.SetTrigger("NoisePing");
-        sysMain.startSize = maxSize;
+        sysShape.radius = 0;
     }
     public void SpawnNoisePing(float newMaxSize, bool setPlayerDetectionNoise)
     {
@@ -43,6 +43,7 @@ public class NoiseBehaviors : MonoBehaviour
     private void Update()
     {
         col.radius = maxSize * sizeCurrentWeight;
+        sysShape.radius = maxSize * sizeCurrentWeight;
     }
 
     private void OnTriggerEnter(Collider other)
