@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
         WaypointManager.GetComponent<WaypointManager>().LoadWaypoint(0);
         GameEvents<StartQuestEvent>.Raise(new StartQuestEvent("TestQuest"));
 		GameEvents<ProgressQuestEvent>.Raise(new ProgressQuestEvent("AllQuests"));
+       
+       
 	}
 
     // Update is called once per frame
