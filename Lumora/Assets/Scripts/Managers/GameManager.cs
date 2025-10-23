@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         GameEvents<StartQuestEvent>.Raise(new StartQuestEvent("TestQuest"));
-        EventDispatcher.DispatchForCurrentQuest("SubQuest1");
+        //EventDispatcher.DispatchForCurrentQuest("SubQuest1");
        
 	}
 
