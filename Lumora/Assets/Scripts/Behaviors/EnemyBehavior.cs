@@ -109,7 +109,6 @@ public class EnemyBehavior : MonoBehaviour
 			if (bb.Get<bool>(bb_CanSeePlayer))
 			{
 				bb.Set<bool>(bb_CanSeePlayer, false);
-				Debug.Log($"{this.name} cannot see the player. Distance {distance}, Cansee = {canSee}");
 			}
 				
 		}

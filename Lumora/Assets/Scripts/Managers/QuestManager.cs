@@ -1,49 +1,176 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class QuestManager
 {
-    private static AllQuests data = null;
-    public static void LoadQuests()
+    private static QuestData data = null;
+
+	/// <summary>
+	/// Load the quests from the json file
+	/// </summary>
+    private static void LoadQuests()
     {
-		TextAsset jsonFile = Resources.Load<TextAsset>("quests");
-		data = JsonUtility.FromJson<AllQuests>(jsonFile.text);
-		Debug.Log($"Loaded json file.");
+        TextAsset jsonFile = Resources.Load<TextAsset>("quests");
+        data = JsonUtility.FromJson<QuestData>(jsonFile.text);
+		Debug.Log($"Loaded quests json file. Root ID: {data.id}");
 	}
-   
-    public static void CompleteQuest(string id)
-    {
-        if(data == null) { LoadQuests();}
 
-        //Check top level quests, i.e. parentQuest is null
-        foreach(var quest in data.questData)
-        {
-            if(CheckSubquests(id, quest))
-            {
-                //TODO: Write to Json file if the quest was found
-                return;
-			}
-        }
-    }
-
-    private static bool CheckSubquests(string id, QuestData quest)
-    { 
-        if(quest.id == id) //Found quest 
-        {
-            quest.status = QuestStatus.COMPLETED;
-            return true;
-        }
-
-        if(quest.subQuests == null) //No subquests to check
-        {
-            return false;
-        }
-		foreach (var subQuest in quest.subQuests)
+	public static void DebugPrintData(QuestData curData)
+	{
+		Debug.Log($"{curData.id} is {(QuestStatus)curData.status} ");
+		if (curData.subQuests != null && curData.subQuests.Length > 0)
 		{
-			if (CheckSubquests(id, subQuest)) //Recursively check subquests
-                return true;
+			foreach (var quest in curData.subQuests)
+			{
+				DebugPrintData(quest);
+			}
 		}
-        return false; //False if no subquests match id
+	}
+
+	/// <summary>
+	/// Start a quest or quest chain 
+	/// </summary>
+	/// <param name="questChainID">The quest id to start. If it has a child, that one becomes in progress.</param>
+    public static void StartQuest(string questChainID)
+    {
+		if (data == null) { LoadQuests(); }
+		
+		QuestData qData = GetQuest(data, questChainID);
+		if(qData == null)
+		{
+			Debug.LogError($"There is no quest with the id {questChainID}");
+			return;
+		}
+		StartQuestChain(qData);
+	}
+	/// <summary>
+	/// Progress the current quest in the chain to the next one, or complete the chain.
+	/// </summary>
+	/// <param name="questChainID">The quest id to progress the children of.</param>
+	public static void ProgressQuest(string questChainID) 
+	{
+		QuestData qData = GetQuest(data, questChainID);
+		ProgressQuest(qData);
+		//DebugPrintData(data);
+	}
+	private static QuestData ProgressQuest(QuestData curQuest)
+	{
+		// Sanity check
+		if (curQuest == null)
+			return null;
+
+		// If current quest has subquests, go deeper first
+		if (curQuest.subQuests != null && curQuest.subQuests.Length > 0)
+		{
+			foreach (var sub in curQuest.subQuests)
+			{
+				if (sub.status == (int)QuestStatus.INPROGRESS)
+				{
+					// Recurse into subquest
+					var completedQuest = ProgressQuest(sub);
+
+					// If something was completed deeper, handle next sibling logic here
+					if (completedQuest != null)
+					{
+						// Find next sibling
+						var siblings = curQuest.subQuests;
+						int index = Array.IndexOf(siblings, completedQuest);
+
+						if (index + 1 < siblings.Length)
+						{
+							var next = siblings[index + 1];
+							// Mark next sibling and its entire first child path as INPROGRESS
+							var leaf = MarkFirstChildBranchInProgress(next);
+							return leaf;
+						}
+						else
+						{
+							// No more siblings complete parent
+							curQuest.status = (int)QuestStatus.COMPLETED;
+							return curQuest;
+						}
+					}
+				}
+			}
+		}
+
+		//If this is a leaf and in progress, mark as completed
+		if (curQuest.status == (int)QuestStatus.INPROGRESS)
+		{
+			curQuest.status = (int)QuestStatus.COMPLETED;
+			return curQuest;
+		}
+
+		return null; // Nothing to do
+	}
+	/// <summary>
+	/// Convert string id to QuestData
+	/// </summary>
+	/// <param name="id"></param>
+	/// <returns></returns>
+	private static QuestData GetQuest(QuestData parent, string id)
+	{
+		if (parent == null)
+			return null;
+
+		if (parent.id == id)
+			return parent;
+
+		if (parent.subQuests == null)
+			return null;
+
+		foreach (var sub in parent.subQuests)
+		{
+			var result = GetQuest(sub, id);
+			if (result != null)
+				return result;
+		}
+
+		return null;
+	}
+	private static void StartQuestChain(QuestData parentQuest)
+	{
+		if (parentQuest == null)
+		{
+			Debug.LogWarning("Tried to start quest chain but parent quest is null.");
+			return;
+		}
+
+		// If it’s already started, no need to restart
+		if (parentQuest.status == (int)QuestStatus.INPROGRESS)
+			return;
+
+		// Mark the parent as active
+		parentQuest.status = (int)QuestStatus.INPROGRESS;
+
+		// If there are no subquests, just start the parent
+		if (parentQuest.subQuests == null || parentQuest.subQuests.Length == 0)
+			return;
+
+		// Unlock and start the first subquest only
+		StartQuestChain(parentQuest.subQuests[0]);
+
+		Debug.Log($"Started quest chain: {parentQuest.id}. First quest: {parentQuest.subQuests[0].id}");
+	}
+	private static QuestData MarkFirstChildBranchInProgress(QuestData quest)
+	{
+		if (quest == null)
+			return null;
+
+		// Mark this node as INPROGRESS if not completed
+		if (quest.status != (int)QuestStatus.COMPLETED)
+			quest.status = (int)QuestStatus.INPROGRESS;
+		// If it has subquests, recurse into the first child
+		if (quest.subQuests != null && quest.subQuests.Length > 0)
+		{
+			return MarkFirstChildBranchInProgress(quest.subQuests[0]);
+		}
+
+		// Leaf node
+		return quest;
 	}
 }
