@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -12,6 +14,10 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     [SerializeField] GameObject activeCanvas;
     public GameObject endScreen;
+    void Start()
+    {
+        //QuestManager.GetInProgress();
+    }
     /*
     void Awake()
     {
