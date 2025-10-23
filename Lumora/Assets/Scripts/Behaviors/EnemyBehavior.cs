@@ -47,6 +47,7 @@ public class EnemyBehavior : MonoBehaviour
 	float waitTimer = 0; //Amount of time to wait at each patrol point.
 	List<Vector3> searchPoints = new(); //List of points generated when lost sight of player
 	int curPatrolPoint = 0;
+	Vector3 previousVelocity;
 
 	string bb_CanSeePlayer = "CanSeePlayer";
 	string bb_IsAlerted = "IsAlerted";
@@ -236,10 +237,13 @@ public class EnemyBehavior : MonoBehaviour
 	{
 		if(e.State == GameStates.Running)
 		{
+			agent.velocity = previousVelocity;
 			agent.isStopped = false;
 		}
 		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue) //Not sure what to do with cutscenes yet
 		{
+			previousVelocity = agent.velocity;
+			agent.velocity = Vector3.zero;
 			agent.isStopped = true;
 		}
 

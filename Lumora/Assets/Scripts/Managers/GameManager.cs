@@ -15,10 +15,8 @@ public class GameManager : MonoBehaviour
 	void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        WaypointManager.GetComponent<WaypointManager>().LoadWaypoint(0);
         GameEvents<StartQuestEvent>.Raise(new StartQuestEvent("TestQuest"));
-		GameEvents<ProgressQuestEvent>.Raise(new ProgressQuestEvent("AllQuests"));
-       
+        EventDispatcher.DispatchForCurrentQuest("SubQuest1");
        
 	}
 
@@ -26,5 +24,5 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 		WaypointManager.GetComponent<WaypointManager>().UpdateDistance(playerRef);
-    }
+	}
 }

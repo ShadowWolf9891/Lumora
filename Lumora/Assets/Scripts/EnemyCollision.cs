@@ -9,6 +9,7 @@ public class EnemyCollision : MonoBehaviour
         {
             Debug.Log("Collided with player");
         	endScreen.SetActive(true);
+            GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent(GameStates.Paused));
         }
     }
 }
