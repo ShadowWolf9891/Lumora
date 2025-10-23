@@ -32,7 +32,7 @@ public class NoiseBehaviors : MonoBehaviour
     public void SpawnNoisePing()
     {
         anim.SetTrigger("NoisePing");
-        sysMain.startSize = maxSize * 3.14f;
+        sysMain.startSize = maxSize;
     }
     public void SpawnNoisePing(float newMaxSize, bool setPlayerDetectionNoise)
     {
