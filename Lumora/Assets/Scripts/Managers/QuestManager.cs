@@ -8,6 +8,7 @@ using UnityEngine;
 public static class QuestManager
 {
     private static QuestData data = null;
+	private static List<QuestData> inProgressQuests;
 
 	/// <summary>
 	/// Load the quests from the json file
@@ -16,6 +17,7 @@ public static class QuestManager
     {
         TextAsset jsonFile = Resources.Load<TextAsset>("quests");
         data = JsonUtility.FromJson<QuestData>(jsonFile.text);
+		inProgressQuests = new List<QuestData>();
 		Debug.Log($"Loaded quests json file. Root ID: {data.id}");
 	}
 
@@ -30,12 +32,16 @@ public static class QuestManager
 			}
 		}
 	}
+	public static List<QuestData> GetInProgress()
+	{
+		return inProgressQuests;
+	}
 
 	/// <summary>
 	/// Start a quest or quest chain 
 	/// </summary>
 	/// <param name="questChainID">The quest id to start. If it has a child, that one becomes in progress.</param>
-    public static void StartQuest(string questChainID)
+	public static void StartQuest(string questChainID)
     {
 		if (data == null) { LoadQuests(); }
 		
@@ -91,6 +97,10 @@ public static class QuestManager
 						{
 							// No more siblings complete parent
 							curQuest.status = (int)QuestStatus.COMPLETED;
+							if (!inProgressQuests.Contains(curQuest))
+							{
+								inProgressQuests.Add(curQuest);
+							}
 							return curQuest;
 						}
 					}
@@ -102,6 +112,10 @@ public static class QuestManager
 		if (curQuest.status == (int)QuestStatus.INPROGRESS)
 		{
 			curQuest.status = (int)QuestStatus.COMPLETED;
+			if (inProgressQuests.Contains(curQuest))
+			{
+				inProgressQuests.Remove(curQuest);
+			}
 			return curQuest;
 		}
 
@@ -146,6 +160,10 @@ public static class QuestManager
 
 		// Mark the parent as active
 		parentQuest.status = (int)QuestStatus.INPROGRESS;
+		if (!inProgressQuests.Contains(parentQuest))
+		{
+			inProgressQuests.Add(parentQuest);
+		}
 
 		// If there are no subquests, just start the parent
 		if (parentQuest.subQuests == null || parentQuest.subQuests.Length == 0)
@@ -163,7 +181,14 @@ public static class QuestManager
 
 		// Mark this node as INPROGRESS if not completed
 		if (quest.status != (int)QuestStatus.COMPLETED)
+		{
 			quest.status = (int)QuestStatus.INPROGRESS;
+			if (!inProgressQuests.Contains(quest))
+			{
+				inProgressQuests.Add(quest);
+			}
+		}
+			
 		// If it has subquests, recurse into the first child
 		if (quest.subQuests != null && quest.subQuests.Length > 0)
 		{
