@@ -1,8 +1,11 @@
+using UnityEditorInternal;
 using UnityEngine;
 
 public class NoiseBehaviors : MonoBehaviour
 {
+    [SerializeField]
     Animator anim;
+    [SerializeField]
     SphereCollider col;
 
     [SerializeField]
@@ -11,10 +14,17 @@ public class NoiseBehaviors : MonoBehaviour
     [SerializeField]
     float sizeCurrentWeight = 0f;
 
+    [SerializeField]
+    bool isPlayerDetectionNoise = false;
+
+    [SerializeField]
+    ParticleSystem sys;
+
+    ParticleSystem.MainModule sysMain;
+
     public void Awake()
     {
-        anim = GetComponent<Animator>();
-        col = GetComponent<SphereCollider>();
+        sysMain = sys.main;
     }
     /// <summary>
     /// to be caled on spawn. can be overloaded to set max size on function call 
@@ -22,55 +32,27 @@ public class NoiseBehaviors : MonoBehaviour
     public void SpawnNoisePing()
     {
         anim.SetTrigger("NoisePing");
+        sysMain.startSize = maxSize * 3.14f;
     }
-    public void SpawnNoisePing(float newMaxSize)
+    public void SpawnNoisePing(float newMaxSize, bool setPlayerDetectionNoise)
     {
         maxSize = newMaxSize;
-        anim.SetTrigger("NoisePing");
+        isPlayerDetectionNoise = setPlayerDetectionNoise;
+        SpawnNoisePing();
     }
     private void Update()
     {
         col.radius = maxSize * sizeCurrentWeight;
     }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log($"Noise OnTriggerEnter {other.name}");
-    //}
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Enemy"))
-    //    {
-    //        Debug.Log($"Noise Hit {collision.gameObject.name}");
-    //    }
-    //    else
-    //    {
-    //        Debug.Log($"Noise tagged trigger: {collision.gameObject.name}");
-    //    }
-    //}
-    //private void OnCollisionStay(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Enemy"))
-    //    {
-    //        Debug.Log($"Noise Hit {collision.gameObject.name}");
-    //    }
-    //    else
-    //    {
-    //        Debug.Log($"Noise tagged trigger: {collision.gameObject.name}");
-    //    }
-    //}
-    private void OnTriggerStay(Collider other)
-    {
-        Debug.Log($"Noise Hit {other.gameObject.name}");
-        //if (other.gameObject.CompareTag("Enemy"))
-        //{
-           
-        //}
-        //else
-        //{
-        //    Debug.Log($"Noise tagged trigger: {other.gameObject.name}");
-        //}
-    }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //NOTE: Ensure enemies have an object with a working collider, rigidbody, AND enemy tag for detection! 
+        if (other.CompareTag("Enemy"))
+        {
+            other.GetComponentInParent<EnemyBehavior>().OnHearNoise(transform.position, isPlayerDetectionNoise);
+        }
+    }
 
     private void DestroySelf()
     {

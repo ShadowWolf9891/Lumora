@@ -410,6 +410,33 @@ public class EnemyBehavior : MonoBehaviour
 		return newTree;
 	}
 
+	/// <summary>
+	/// To be called from NoiseBehavior upon collision with a noise ping. 
+	/// Dependent on ping info, causes enemy to alert and investigate, or chase the player.
+	/// </summary>
+	public void OnHearNoise(Vector3 noiseLocation, bool isPlayerDetectionNoise)
+	{
+		//enemies should ignore noises if they're already chasing you
+		if (curState == AlertStates.CHASING)
+		{
+			return;
+		}
+		else if(isPlayerDetectionNoise)
+        {
+            bb.Set<bool>("IsChasing", true);
+            curState = AlertStates.CHASING;
+			
+
+            //do i need to do all this?
+            lastKnownPlayerLocation = noiseLocation;
+            agent.SetDestination(noiseLocation);
+        }
+		else
+		{
+            bb.Set<bool>("IsAlerted", true);
+            agent.SetDestination(noiseLocation);
+        }
+	}
 	private void OnDrawGizmos()
 	{
 		if (searchPoints.Count > 0)
