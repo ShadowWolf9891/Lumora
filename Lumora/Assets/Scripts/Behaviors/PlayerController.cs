@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
 
 	//Private variables
-	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
+	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
 	private Vector2 moveInput;
     private Transform cameraTransform;
 	private bool canMove;
@@ -24,11 +24,10 @@ public class PlayerController : MonoBehaviour
 		moveAction = InputSystem.actions.FindAction("Move");
 		throwAction = InputSystem.actions.FindAction("Right Trigger");
 		interactAction = InputSystem.actions.FindAction("North");
+		sprintAction = InputSystem.actions.FindAction("West");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
 		lookAction = InputSystem.actions.FindAction("Look");
-		//Add attack back if needed, function is commented out to account for throw mechanic
-		//attackAction = InputSystem.actions.FindAction("");
 		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 	}
 

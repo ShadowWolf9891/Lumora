@@ -6,12 +6,17 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
-	[Header("Player Settings")]
+    #region Properties
+    [Header("Player Settings")]
 	[SerializeField, Tooltip("How fast the player accelerates to max speed in m/s^2")]
 	private float acceleration = 10;
 	[SerializeField, Tooltip("The maximum speed of the player in m/s")]
-	private float maxSpeed = 10;
-	[SerializeField, Tooltip("How quickly the player stops moving in m/s")]
+	private float maxSpeed = 4;
+    [SerializeField, Tooltip("Acceleration multiplier for sprinting, applies directly to acceleration")]
+    private float sprintForce = 1.3f;
+    [SerializeField, Tooltip("FOR SPRINTING: The maximum speed of the player in m/s")]
+    private float sprintMaxSpeed = 6;
+    [SerializeField, Tooltip("How quickly the player stops moving in m/s")]
 	float stoppingForce = 3;
 	[SerializeField, Tooltip("Height of the player for jumping in m")]
 	float playerHeight = 1.2f;
@@ -40,14 +45,17 @@ public class PlayerBehavior : MonoBehaviour
 	//Private properties
 	private HideController hideController;
 	bool isHiding;
+	bool isSprinting;
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
 	private Transform cameraTransform;
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
-    {
+    #endregion
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+	{
 		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
 		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
 		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
@@ -72,8 +80,7 @@ public class PlayerBehavior : MonoBehaviour
 			Debug.LogError("HideController not found on player!");
 		}
 	}
-
-	private void HandleInput(PlayerInputEvent e)
+    private void HandleInput(PlayerInputEvent e)
 	{
 		switch (e.ActionType)
 		{
@@ -83,11 +90,11 @@ public class PlayerBehavior : MonoBehaviour
 			case PlayerInputActionType.Look:
 				UpdateThrow(cameraTransform);
 				break;
-			case PlayerInputActionType.Attack:
-				Attack();
-				break;
 			case PlayerInputActionType.Interact:
 				Interact();
+				break;
+			case PlayerInputActionType.Sprint:
+				DoSprint();
 				break;
 			case PlayerInputActionType.Jump:
 				Jump();
@@ -105,11 +112,19 @@ public class PlayerBehavior : MonoBehaviour
 		}
 	}
 
-	private void Move(Vector3 moveDirection)
+
+
+    //Contains basic movement, crouched movement, jumping, and all helpers associated
+    #region Movement
+    private void Move(Vector3 moveDirection)
 	{
 		if (isHiding)
 		{
 			CrouchMove(moveDirection);
+		}
+		else if (isSprinting)
+		{
+			SprintMove(moveDirection);
 		}
 		else
 		{
@@ -129,12 +144,27 @@ public class PlayerBehavior : MonoBehaviour
 		if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
 
 	}
-
-	private void DefaultMove(Vector3 moveDirection)
+    private void DoSprint()
+    {
+		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
+		if (isHiding)
+		{
+            GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+        }
+        if (!isSprinting)
+		{
+			isSprinting = true;
+		}
+    }
+    private void DefaultMove(Vector3 moveDirection)
 	{
 		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
 	}
-	private void CrouchMove(Vector3 moveDirection)
+    private void SprintMove(Vector3 moveDirection)
+    {
+		rb.AddForce(acceleration * sprintForce * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
+    }
+    private void CrouchMove(Vector3 moveDirection)
 	{
 		Vector3 nextPosition = transform.position + moveDirection;
 
@@ -161,11 +191,12 @@ public class PlayerBehavior : MonoBehaviour
 			rb.MovePosition(Vector3.Lerp(transform.position, snapTarget, 0.5f));
 		}
 
-		Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
-		Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
-		Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), Color.red);
-		Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), Color.orange);
-		Debug.DrawLine(transform.position,transform.position + wallNormal, Color.blue);
+		////Debug for crouch movement, uncomment to re-enable.
+		//Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
+		//Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
+		//Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), Color.red);
+		//Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), Color.orange);
+		//Debug.DrawLine(transform.position,transform.position + wallNormal, Color.blue);
 	}
 
 	/// <summary>
@@ -198,12 +229,20 @@ public class PlayerBehavior : MonoBehaviour
 			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
 		}
 	}
-	private void Attack()
-	{
-		Debug.Log("Attack Pressed.");
-	}
-	
-	private void PrepareThrow()
+
+    private void Jump()
+    {
+        if (IsGrounded())
+        {
+            Debug.Log("Jump Action!");
+            rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
+        }
+    }
+
+    #endregion
+
+    #region Throwing
+    private void PrepareThrow()
 	{
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		//Debug.Log("Preparing throw.");
@@ -254,15 +293,17 @@ public class PlayerBehavior : MonoBehaviour
 		}
 		CameraManager.ReturnToPreviousCamera(0.5f);
 	}
-	private void Interact()
+    #endregion
+    private void Interact()
 	{
 		//TODO: Raycast to see if the player is interacting with something
 	}
 
-	/// <summary>
-	/// Checks the area for gameobjects with colliders and enters hiding state
-	/// </summary>
-	private void TryHide()
+    #region Stealth
+    /// <summary>
+    /// Checks the area for gameobjects with colliders and enters hiding state
+    /// </summary>
+    private void TryHide()
 	{
 		Collider closest = hideController.GetClosestCollider(transform.position);
 		coverObject = closest ? closest.gameObject : null;
@@ -303,28 +344,20 @@ public class PlayerBehavior : MonoBehaviour
 		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id));
 
         //GameContext.Instance.RaiseLeaveStealth();
-		//give player temporary movespeed buff? players should run away here, right?
+        //give player temporary movespeed buff? players should run away here, right?
     }
-
-	private void Jump()
-	{
-		if (IsGrounded())
-		{
-			Debug.Log("Jump Action!");
-			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
-		}
-	}
     private void LeaveHide(LeaveStealthEvent e)
     {
-		isHiding = false;
-		// TODO: Add animation
+        isHiding = false;
+        // TODO: Add animation
     }
 
     private void EnterHide(EnterStealthEvent e)
     {
-		isHiding = true;
-		// TODO: Add animation
+        isHiding = true;
+        // TODO: Add animation
     }
-	
+    #endregion
+
 	
 }

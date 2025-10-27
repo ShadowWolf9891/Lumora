@@ -86,9 +86,9 @@ public enum PlayerInputActionType
 {
     Move,
     Look,
-	Attack,
 	Interact,
 	Hide,
+    Sprint,
 	Jump,
 	Throw,
 	ThrowRelease,
