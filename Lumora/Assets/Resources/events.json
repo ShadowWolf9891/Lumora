@@ -1,0 +1,32 @@
+{
+    "allEvents":
+    [
+        {
+            "type" : "ChangeGameStateEvent",
+            "id" : "Resume_Game",
+            "parameters" : 
+            { "state":"0"}
+        },
+        {
+            "type" : "ChangeGameStateEvent",
+            "id" : "Pause_Game",
+            "parameters" : 
+            { "state":"1"}
+        },
+        {
+            "type" : "ChangeGameStateEvent",
+            "id" : "Pause_For_Dialogue",
+            "parameters" : 
+            {"state":"2"}
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Chapter2_Intro",
+            "parameters" :
+            {
+                "chapter":"2",
+                "scene":"1"
+            }
+        }
+    ]
+}

@@ -3,9 +3,7 @@ using UnityEngine;
 public class NPCDialogue : MonoBehaviour
 {
     [SerializeField]
-    int chapter;
-    [SerializeField]
-    int scene;
+    string dialogueID;
 
     void Start()
     {
@@ -20,7 +18,8 @@ public class NPCDialogue : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameEvents<DialogueEvent>.Raise(new DialogueEvent(chapter, scene));
+        EventManager.Raise(dialogueID);
+      // GameEvents<DialogueEvent>.Raise(new DialogueEvent(chapter, scene));
         
         //GameContext.Instance.RaisePlayDialogue(chapter, scene);
     }

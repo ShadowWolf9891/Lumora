@@ -5,37 +5,48 @@
     "subQuests":
     [
         {
-            "id": "TestQuest",
-            "description": "A quest to check that everything is working.",
+            "id": "Chapter2",
+            "description": "Find Mrs. Watts.",
             "status" : 0,
             "subQuests" : 
             [
                 {
-                    "id" : "SubQuest1",
-                    "description" :"A sub quest to check that everything is working."
+                    "id" : "FindWatts",
+                    "description" :"Find Mrs. Watts' house.",
+                    "subQuests" :
+                    [
+                        {
+                            "id" : "WattsSub1",
+                            "description" : "Don't get caught."
+                        },
+                        {
+                            "id" : "ArriveAtWattsHouse"
+                        }
+                    ]
                 },
                 {
-                    "id" : "SubQuest2",
-                    "description" :"A sub quest to check that everything is STILL working.",
+                    "id" : "CheckBack",
+                    "description" :"Check the back of the house.",
                     "status" : 0,
                     "subQuests" :
                     [
                         {
-                            "id" : "SubmarineQuest1",
-                            "description" :"A test sub class of a test sub class.",
-                            "status" : 0
+                            "id": "ArriveAtBackOfWattsHouse"
                         }
                     ]
-
+                },
+                {
+                    "id" : "CrossStreet",
+                    "description" :"Cross the street to the shop.",
+                    "status" : 0,
+                    "subQuests" :
+                    [
+                        {
+                            "id": "ArriveAtShop"
+                        }
+                    ]
                 }
             ]
-            
-        },
-        {
-            "id" : "TestQuest2",
-            "description" : "The second quest, NOT a subquest.",
-            "status" : 0,
-            "subQuests" : []
             
         }
 

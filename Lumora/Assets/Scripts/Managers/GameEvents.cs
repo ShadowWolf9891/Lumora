@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,11 +14,9 @@ using UnityEngine.InputSystem;
 ///             int chapter = e.Chapter;
 ///             int scene = e.Scene;
 ///         }
-/// There are also three ways to identify a specific event. Use Id if you need to know a specific entity raised event.
+/// There are also two ways to identify a specific event. Use Id if you need to know a specific entity raised event.
 /// if (e is DialogueEvent)
 ///    // type-based handling
-/// else if (e.Category == EventCategory.Dialogue)
-///   // category-based fallback
 /// else if (e.Id == "dialogue_intro")
 ///    // data-driven matching
 /// 
@@ -35,27 +34,38 @@ public static class GameEvents<T> where T : GameEventType
 	public static void Unsubscribe(Action<T> listener)
 	{
 		OnEventRaised -= listener;
-	}
+    }
 }
 
 /// <summary>
-/// The different event types for debugging specific GameEventTypes children
+/// Intermediate class for converting json file data to game events.
 /// </summary>
-public enum EventCategory { None, GameState, Input, Dialogue, NPCMovement, Enemy, Player, World, UI  }
-
+[System.Serializable]
+public class GameEventDefinition
+{
+    public string type;
+    public string id;
+    public bool isCompleted = false;
+    public string requireCompletedID;
+    public string[] eventsToFire;
+	public Dictionary<string, string> parameters { get; set; } = new Dictionary<string, string>();
+}
 
 /// <summary>
-/// Base class for all GameEventTypes. Inherited classes must assign an EventCategory and may assign a string Id 
-/// if you care about the specific instance of the event.
+/// Base class for all GameEventTypes. Inherited classes must assign a string Id to keep track of the event.
 /// </summary>
 public abstract class GameEventType
 {
-    public EventCategory Category { get; private set; }
-	public string Id { get; private set; } // optional, can be null or data-driven
-    protected GameEventType(EventCategory category, string id = null)
+	public string Id { get; private set; }
+    public bool IsCompleted;
+    public string RequireCompletedID;
+    public string[] EventsToFire;
+    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, string[] eventsToFire = null)
     {
-        Category = category;
         Id = id;
+        RequireCompletedID = requiredID;
+        IsCompleted = isCompleted;
+        EventsToFire = eventsToFire;
     }
 }
 
@@ -66,7 +76,7 @@ public class DialogueEvent : GameEventType
     public int Chapter { get; private set; }
     public int Scene { get; private set;}
 
-    public DialogueEvent(int chapter, int scene, string id = null) : base(EventCategory.Dialogue, id)
+    public DialogueEvent(string id, int chapter, int scene) : base(id)
     {
         Chapter = chapter;
         Scene = scene;
@@ -74,12 +84,14 @@ public class DialogueEvent : GameEventType
 }
 public class NPCMovementEvent : GameEventType
 { 
-    public GameObject NPCToMove {  get; private set; }
-    public Transform TargetLocation { get; private set; }
-	public NPCMovementEvent(GameObject npc, Transform target, string id = null) : base(EventCategory.NPCMovement, id)
+    public string NPCToMove {  get; private set; }
+    public Vector3 TargetLocation { get; private set; }
+    public Vector3 TargetRotation { get; private set; }
+	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
 	{
 		NPCToMove = npc;
-		TargetLocation = target;
+		TargetLocation = targetLocation;
+        TargetRotation = targetRotation;
     }
 }
 public enum PlayerInputActionType
@@ -99,7 +111,7 @@ public class PlayerInputEvent : GameEventType
     public PlayerInputActionType ActionType { get; private set; }
     public bool IsPressed { get; private set; } //For buttons
     public Vector3 MoveDirection { get; private set; } //For movement
-    public PlayerInputEvent(PlayerInputActionType actionType, bool isPressed = false, Vector3 moveDirection = default, string id = null) : base (EventCategory.Input, id)
+    public PlayerInputEvent(string id, PlayerInputActionType actionType, bool isPressed = false, Vector3 moveDirection = default) : base (id)
 	{
 		ActionType = actionType;
         IsPressed = isPressed;
@@ -110,23 +122,23 @@ public enum GameStates {Running, Paused, Dialogue,Cutscene}
 public class ChangeGameStateEvent : GameEventType
 {
     public GameStates State { get; private set; }
-	public ChangeGameStateEvent(GameStates state, string id = null) : base(EventCategory.GameState, id)
+	public ChangeGameStateEvent(string id, GameStates state) : base(id)
 	{
 		State = state;
     }
 }
 public class EnterStealthEvent : GameEventType
 { 
-    public EnterStealthEvent(string id = null) : base(EventCategory.Player, id){}
+    public EnterStealthEvent(string id) : base(id){}
 }
 public class LeaveStealthEvent : GameEventType
 {
-	public LeaveStealthEvent(string id = null) : base(EventCategory.Player, id){ }
+	public LeaveStealthEvent(string id) : base(id){ }
 }
 public class PlayerSpottedEvent : GameEventType
 {
     public GameObject Spotter { get; private set; } 
-    public PlayerSpottedEvent(GameObject spotter, string id = null) : base(EventCategory.Enemy, id)
+    public PlayerSpottedEvent(string id,GameObject spotter) : base(id)
     {
         Spotter = spotter;
     }
@@ -136,14 +148,16 @@ public class SpawnTriggerEvent : GameEventType
 	public Vector3 Position { get; private set; }
 	public float Radius { get; private set; } // optional for spherical triggers
     public bool IsRepeatable { get; private set; }
+    public int LayerMask { get; private set; }
 	public GameEventType EventToRaiseOnTrigger { get; private set; }
-	public SpawnTriggerEvent(Vector3 position, GameEventType eventToRaiseOnTrigger, float radius = 1f, 
-        bool isRepeatable = false, string id = null) : base(EventCategory.World, id)
+	public SpawnTriggerEvent(string id,Vector3 position, GameEventType eventToRaiseOnTrigger, int layerMask = ~0,
+        float radius = 1f, bool isRepeatable = false) : base(id)
 	{
 		Position = position;
 		Radius = radius;
         IsRepeatable = isRepeatable;
 		EventToRaiseOnTrigger = eventToRaiseOnTrigger;
+        LayerMask = layerMask;
     }
 }
 
@@ -152,8 +166,8 @@ public class SpawnVisibleNoiseEvent : GameEventType
     public Vector3 Position { get; private set; }
     public float MaxSize { get; private set; }
     public GameObject Noise { get; private set; }
-    public SpawnVisibleNoiseEvent(GameObject noise, Vector3 position, float maxSize, string id = null) 
-        : base(EventCategory.World, id) 
+    public SpawnVisibleNoiseEvent(string id, GameObject noise, Vector3 position, float maxSize) 
+        : base(id) 
     {
         Position = position;
         MaxSize = maxSize;
@@ -163,12 +177,12 @@ public class SpawnVisibleNoiseEvent : GameEventType
 
 public class StartQuestEvent : GameEventType
 {
-	public StartQuestEvent(string id) : base(EventCategory.World, id){}
+	public StartQuestEvent(string id) : base(id){}
 }
 
 public class ProgressQuestEvent : GameEventType
 {
-	public ProgressQuestEvent(string id) : base(EventCategory.World, id) { }
+	public ProgressQuestEvent(string id) : base(id) { }
 }
 
 
