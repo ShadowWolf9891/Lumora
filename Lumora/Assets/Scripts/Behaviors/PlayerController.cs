@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
 
 	//Private variables
-	private InputAction moveAction, attackAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
+	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
 	private Vector2 moveInput;
     private Transform cameraTransform;
 	private bool canMove;
@@ -24,11 +24,10 @@ public class PlayerController : MonoBehaviour
 		moveAction = InputSystem.actions.FindAction("Move");
 		throwAction = InputSystem.actions.FindAction("Right Trigger");
 		interactAction = InputSystem.actions.FindAction("North");
+		sprintAction = InputSystem.actions.FindAction("West");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
 		lookAction = InputSystem.actions.FindAction("Look");
-		//Add attack back if needed, function is commented out to account for throw mechanic
-		//attackAction = InputSystem.actions.FindAction("");
 		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
 	}
 
@@ -45,7 +44,7 @@ public class PlayerController : MonoBehaviour
 		{
 			if (interactAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.NextDialogue, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("dialogueInteract", PlayerInputActionType.NextDialogue, true));
 				//GameContext.Instance.RaiseNextDialogueLine();
 			}
 		}
@@ -59,36 +58,40 @@ public class PlayerController : MonoBehaviour
 			}
 			if (lookAction.IsInProgress())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Look));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look));
 				//GameContext.Instance.RaiseCameraMove(cameraTransform);
 			}
-			//if (attackAction.WasPressedThisFrame())
-			//{
-			//	GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Attack, true));
-			//	//GameContext.Instance.RaiseAttack();
-			//}
-			if (interactAction.WasPressedThisFrame())
+            //if (attackAction.WasPressedThisFrame())
+            //{
+            //	GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Attack, true));
+            //	//GameContext.Instance.RaiseAttack();
+            //}
+			if (sprintAction.WasPressedThisFrame())
+            {
+                GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("sprint", PlayerInputActionType.Sprint, true));
+            }
+            if (interactAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Interact, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("interact", PlayerInputActionType.Interact, true));
 			}
 			if (crouchAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Hide, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Hide, true));
 				//GameContext.Instance.RaiseHidePressed();
 			}
 			if (jumpAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Jump, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("jump", PlayerInputActionType.Jump, true));
 				//GameContext.Instance.RaiseJumpPressed();
 			}
 			if (throwAction.WasReleasedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.ThrowRelease, false));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throwRelease", PlayerInputActionType.ThrowRelease, false));
 				//GameContext.Instance.RaiseThrowReleased();
 			}
 			if (throwAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Throw, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throw", PlayerInputActionType.Throw, true));
 				//GameContext.Instance.RaiseThrowPressed();
 			}
 		}
@@ -104,7 +107,7 @@ public class PlayerController : MonoBehaviour
 		camRight.Normalize();
 		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
 
-		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Move, default, moveDirection));
+		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
 		//GameContext.Instance.RaiseMove(moveDirection);
 
 	}

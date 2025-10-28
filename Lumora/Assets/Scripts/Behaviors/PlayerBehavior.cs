@@ -6,12 +6,15 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
-	[Header("Player Settings")]
+    #region Properties
+    [Header("Player Settings")]
 	[SerializeField, Tooltip("How fast the player accelerates to max speed in m/s^2")]
 	private float acceleration = 10;
 	[SerializeField, Tooltip("The maximum speed of the player in m/s")]
-	private float maxSpeed = 10;
-	[SerializeField, Tooltip("How quickly the player stops moving in m/s")]
+	private float maxSpeed = 4;
+    [SerializeField, Tooltip("Acceleration multiplier for sprinting, applies directly to acceleration")]
+    private float sprintMaxSpeed = 6;
+    [SerializeField, Tooltip("How quickly the player stops moving in m/s")]
 	float stoppingForce = 3;
 	[SerializeField, Tooltip("Height of the player for jumping in m")]
 	float playerHeight = 1.2f;
@@ -33,47 +36,69 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] private float snapDistance = 0.6f;
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
+    [SerializeField] private float sprintNoiseMade = 5f;
+    [SerializeField] private float timebetweenFootsteps = 0.75f;
 
 
-	Vector3 startVelocity = Vector3.zero;
+    Vector3 startVelocity = Vector3.zero;
 
 	//Private properties
 	private HideController hideController;
 	bool isHiding;
+	bool isSprinting;
+	bool shouldSprintTriggerNoise;
+	float timeSinceLastSprintNoise;
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
 	private Transform cameraTransform;
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
+    #endregion
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
-		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
-		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
-		//GameContext.Instance.OnMove += Move;
-		//GameContext.Instance.OnCameraLook += UpdateThrow;
-		//GameContext.Instance.OnAttackPressed += Attack;
-		// GameContext.Instance.OnInteractPressed += Interact;
-		//GameContext.Instance.OnHidePressed += DoHide;
-		//GameContext.Instance.OnJumpPressed += Jump;
-		//GameContext.Instance.OnPlayerSpotted += GetSpotted;
-		//GameContext.Instance.OnThrowPressed += PrepareThrow;
-		//GameContext.Instance.OnThrowReleased += ReleaseThrow;
-		//GameContext.Instance.OnEnterHideState += EnterHide;
-		//GameContext.Instance.OnLeaveHideState += LeaveHide;
+        SubscribeToEvents();
+        GetComponentReferences();
+    }
 
-		rb = GetComponent<Rigidbody>();
-		hideController = GetComponent<HideController>();
-		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
-		if (hideController == null)
-		{
-			Debug.LogError("HideController not found on player!");
-		}
-	}
+    private void SubscribeToEvents()
+    {
+        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+        GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+        //GameContext.Instance.OnMove += Move;
+        //GameContext.Instance.OnCameraLook += UpdateThrow;
+        //GameContext.Instance.OnAttackPressed += Attack;
+        // GameContext.Instance.OnInteractPressed += Interact;
+        //GameContext.Instance.OnHidePressed += DoHide;
+        //GameContext.Instance.OnJumpPressed += Jump;
+        //GameContext.Instance.OnPlayerSpotted += GetSpotted;
+        //GameContext.Instance.OnThrowPressed += PrepareThrow;
+        //GameContext.Instance.OnThrowReleased += ReleaseThrow;
+        //GameContext.Instance.OnEnterHideState += EnterHide;
+        //GameContext.Instance.OnLeaveHideState += LeaveHide;
 
-	private void HandleInput(PlayerInputEvent e)
+    }
+
+    private void GetComponentReferences()
+    {
+        rb = GetComponent<Rigidbody>();
+        hideController = GetComponent<HideController>();
+        cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
+        if (hideController == null)
+        {
+            Debug.LogError("HideController not found on player!");
+        }
+    }
+
+    private void Update()
+    {//i stg if we're trying to remove this specific Update() im gonna crash out -jo
+        HandleSpeedControl();
+        if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
+    }
+    private void HandleInput(PlayerInputEvent e)
 	{
 		switch (e.ActionType)
 		{
@@ -83,11 +108,11 @@ public class PlayerBehavior : MonoBehaviour
 			case PlayerInputActionType.Look:
 				UpdateThrow(cameraTransform);
 				break;
-			case PlayerInputActionType.Attack:
-				Attack();
-				break;
 			case PlayerInputActionType.Interact:
 				Interact();
+				break;
+			case PlayerInputActionType.Sprint:
+				DoSprint();
 				break;
 			case PlayerInputActionType.Jump:
 				Jump();
@@ -105,36 +130,65 @@ public class PlayerBehavior : MonoBehaviour
 		}
 	}
 
-	private void Move(Vector3 moveDirection)
+    //Contains basic movement, crouched movement, jumping, and all helpers associated
+    #region Movement
+    private void Move(Vector3 moveDirection)
 	{
 		if (isHiding)
 		{
 			CrouchMove(moveDirection);
 		}
 		else
+        {
+            if (isSprinting)
+            {
+                SprintMove(moveDirection);
+            }
+			else
+            DefaultMove(moveDirection);
+
+            FaceMoveDirection(moveDirection);
+            //adding drag while grounded
+        }
+    }
+    private void DoSprint()
+    {
+		print("Triggered DoSprint");
+		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
+		if (isHiding)
 		{
-			DefaultMove(moveDirection);
-
-			if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
-			{
-				rb.AddForce(-stoppingForce * Time.deltaTime * 60 * transform.forward, ForceMode.Acceleration);
-				//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
-			}
+            GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
+        }
+		if (!isSprinting)
+		{
+			isSprinting = true;
 		}
-
-		FaceMoveDirection(moveDirection);
-		//adding drag while grounded
-
-		HandleSpeedControl();
-		if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
-
-	}
-
-	private void DefaultMove(Vector3 moveDirection)
+		else isSprinting = false;
+    }
+    private void DefaultMove(Vector3 moveDirection)
 	{
 		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
 	}
-	private void CrouchMove(Vector3 moveDirection)
+    private void SprintMove(Vector3 moveDirection)
+    {
+		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
+		Invoke("TriggerSprintNoise", 0.5f);
+    }
+	private void TriggerSprintNoise()
+	{
+		if (shouldSprintTriggerNoise)
+		{
+			timeSinceLastSprintNoise = 0;
+			shouldSprintTriggerNoise = false;
+            GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
+        }
+		else
+		{
+			timeSinceLastSprintNoise += Time.deltaTime;
+			if (timeSinceLastSprintNoise > timebetweenFootsteps) shouldSprintTriggerNoise = true;
+		}
+	}
+    private void CrouchMove(Vector3 moveDirection)
 	{
 		Vector3 nextPosition = transform.position + moveDirection;
 
@@ -161,11 +215,12 @@ public class PlayerBehavior : MonoBehaviour
 			rb.MovePosition(Vector3.Lerp(transform.position, snapTarget, 0.5f));
 		}
 
-		Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
-		Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
-		Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), Color.red);
-		Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), Color.orange);
-		Debug.DrawLine(transform.position,transform.position + wallNormal, Color.blue);
+		////Debug for crouch movement, uncomment to re-enable.
+		//Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
+		//Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
+		//Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), Color.red);
+		//Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), Color.orange);
+		//Debug.DrawLine(transform.position,transform.position + wallNormal, Color.blue);
 	}
 
 	/// <summary>
@@ -192,18 +247,37 @@ public class PlayerBehavior : MonoBehaviour
 		float speedMod = isHiding ? stealthSpeedModifier : 1f;
 
 		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-		if (groundSpeed.magnitude > maxSpeed * speedMod)
+		if (isSprinting && groundSpeed.magnitude > sprintMaxSpeed)
+        {
+            Vector3 limitedVelocity = groundSpeed.normalized * sprintMaxSpeed;
+            rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
+        }
+		else if (!isSprinting && groundSpeed.magnitude > maxSpeed * speedMod)
 		{
-			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed *speedMod;
+			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed * speedMod;
 			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
 		}
-	}
-	private void Attack()
-	{
-		Debug.Log("Attack Pressed.");
-	}
-	
-	private void PrepareThrow()
+
+        if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
+        {
+            rb.AddForce(-stoppingForce * Time.deltaTime * 60 * transform.forward, ForceMode.Acceleration);
+            //Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+        }
+    }
+
+    private void Jump()
+    {
+        if (IsGrounded())
+        {
+            Debug.Log("Jump Action!");
+            rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
+        }
+    }
+
+    #endregion
+
+    #region Throwing
+    private void PrepareThrow()
 	{
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		//Debug.Log("Preparing throw.");
@@ -254,15 +328,17 @@ public class PlayerBehavior : MonoBehaviour
 		}
 		CameraManager.ReturnToPreviousCamera(0.5f);
 	}
-	private void Interact()
+    #endregion
+    private void Interact()
 	{
 		//TODO: Raycast to see if the player is interacting with something
 	}
 
-	/// <summary>
-	/// Checks the area for gameobjects with colliders and enters hiding state
-	/// </summary>
-	private void TryHide()
+    #region Stealth
+    /// <summary>
+    /// Checks the area for gameobjects with colliders and enters hiding state
+    /// </summary>
+    private void TryHide()
 	{
 		Collider closest = hideController.GetClosestCollider(transform.position);
 		coverObject = closest ? closest.gameObject : null;
@@ -270,12 +346,12 @@ public class PlayerBehavior : MonoBehaviour
 		if (coverObject != null)
         {
 			//Toggle hiding
-			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent());
+			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent("enter_Stealth"));
             //GameContext.Instance.RaiseEnterStealth();
         }
         else
 		{
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
 			//GameContext.Instance.RaiseLeaveStealth();
 		}
 	}
@@ -291,7 +367,7 @@ public class PlayerBehavior : MonoBehaviour
         }
         else
         {
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
 			//GameContext.Instance.RaiseLeaveStealth();
         }
     }
@@ -300,31 +376,24 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void GetSpotted(PlayerSpottedEvent e)
     {
-		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id));
+		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id)); //Inproper use of id, fix later
 
         //GameContext.Instance.RaiseLeaveStealth();
-		//give player temporary movespeed buff? players should run away here, right?
+        //give player temporary movespeed buff? players should run away here, right?
     }
-
-	private void Jump()
-	{
-		if (IsGrounded())
-		{
-			Debug.Log("Jump Action!");
-			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
-		}
-	}
     private void LeaveHide(LeaveStealthEvent e)
     {
-		isHiding = false;
-		// TODO: Add animation
+        isHiding = false;
+        // TODO: Add animation
     }
 
     private void EnterHide(EnterStealthEvent e)
     {
-		isHiding = true;
-		// TODO: Add animation
+        isSprinting = false;
+        isHiding = true;
+        // TODO: Add animation
     }
-	
+    #endregion
+
 	
 }
