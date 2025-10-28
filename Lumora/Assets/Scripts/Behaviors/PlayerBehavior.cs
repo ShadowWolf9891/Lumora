@@ -221,6 +221,7 @@ public class PlayerBehavior : MonoBehaviour
 	private void HandleSpeedControl()
 	{
 		float speedMod = isHiding ? stealthSpeedModifier : 1f;
+		speedMod = isSprinting ? sprintMaxSpeed : 1f;
 
 		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 		if (groundSpeed.magnitude > maxSpeed * speedMod)

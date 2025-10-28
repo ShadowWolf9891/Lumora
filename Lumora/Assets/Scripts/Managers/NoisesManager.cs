@@ -7,6 +7,8 @@ public class NoisesManager : MonoBehaviour
 
     [SerializeField]
     GameObject genericNoiseObject;
+    [SerializeField]
+    GameObject sprintNoiseObject;
     private void Start()
     {
         GameEvents<SpawnVisibleNoiseEvent>.Subscribe(RaiseNoise);
@@ -19,5 +21,11 @@ public class NoisesManager : MonoBehaviour
         //TODO: Use e.Noise instead of genericNoiseObject
         GameObject newNoise = Instantiate(genericNoiseObject, e.Position, new Quaternion(0, 0, 0, 0));
         newNoise.GetComponent<NoiseBehaviors>().SpawnNoisePing(e.MaxSize, false);
+    }
+
+    private void RaiseSprintNoise()
+    {
+        //GameObject newNoise = Instantiate(genericNoiseObject, e.Position, new Quaternion(0, 0, 0, 0));
+        //newNoise.GetComponent<NoiseBehaviors>().SpawnNoisePing(e.MaxSize, false);
     }
 }
