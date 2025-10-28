@@ -23371,10 +23371,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 302538084605099721, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -552.91
@@ -23415,33 +23411,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4654983748964475490, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 4654983748964475490, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.09015274
-      objectReference: {fileID: 0}
-    - target: {fileID: 5100493330512659184, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: Priority.m_Value
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7166657601331200534, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 171929529}
-    - target: {fileID: 7166657601331200534, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: thrownObjPrefab
-      value: 
-      objectReference: {fileID: 2082604938133289944, guid: 210be6ef2525cde4ca11116bca0b7cf4, type: 3}
-    - target: {fileID: 7166657601331200534, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: directionsToCheck
-      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24316,6 +24288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoisesManager
   genericNoiseObject: {fileID: 5749062812100023720, guid: b8b1a822564691a4da6bb276c41441a7, type: 3}
+  sprintNoiseObject: {fileID: 371399878816197337, guid: 59c28fa82c212104c8d97dfd45977658, type: 3}
 --- !u!1001 &1623950084
 PrefabInstance:
   m_ObjectHideFlags: 0

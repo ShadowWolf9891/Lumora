@@ -165,13 +165,13 @@ public class SpawnVisibleNoiseEvent : GameEventType
 {
     public Vector3 Position { get; private set; }
     public float MaxSize { get; private set; }
-    public GameObject Noise { get; private set; }
-    public SpawnVisibleNoiseEvent(string id, GameObject noise, Vector3 position, float maxSize) 
+    public bool IsPlayerSpecificNoise{ get; private set; }
+    public SpawnVisibleNoiseEvent(string id, bool isPlayerSpecificNoise, Vector3 position, float maxSize) 
         : base(id) 
     {
         Position = position;
         MaxSize = maxSize;
-        Noise = noise;
+        IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
 

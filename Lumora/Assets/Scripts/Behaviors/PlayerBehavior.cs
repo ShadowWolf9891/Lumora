@@ -13,8 +13,6 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField, Tooltip("The maximum speed of the player in m/s")]
 	private float maxSpeed = 4;
     [SerializeField, Tooltip("Acceleration multiplier for sprinting, applies directly to acceleration")]
-    private float sprintForce = 1.3f;
-    [SerializeField, Tooltip("FOR SPRINTING: The maximum speed of the player in m/s")]
     private float sprintMaxSpeed = 6;
     [SerializeField, Tooltip("How quickly the player stops moving in m/s")]
 	float stoppingForce = 3;
@@ -38,14 +36,18 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] private float snapDistance = 0.6f;
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
+    [SerializeField] private float sprintNoiseMade = 5f;
+    [SerializeField] private float timebetweenFootsteps = 0.75f;
 
 
-	Vector3 startVelocity = Vector3.zero;
+    Vector3 startVelocity = Vector3.zero;
 
 	//Private properties
 	private HideController hideController;
 	bool isHiding;
 	bool isSprinting;
+	bool shouldSprintTriggerNoise;
+	float timeSinceLastSprintNoise;
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
@@ -55,31 +57,47 @@ public class PlayerBehavior : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-	{
-		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
-		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
-		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
-		//GameContext.Instance.OnMove += Move;
-		//GameContext.Instance.OnCameraLook += UpdateThrow;
-		//GameContext.Instance.OnAttackPressed += Attack;
-		// GameContext.Instance.OnInteractPressed += Interact;
-		//GameContext.Instance.OnHidePressed += DoHide;
-		//GameContext.Instance.OnJumpPressed += Jump;
-		//GameContext.Instance.OnPlayerSpotted += GetSpotted;
-		//GameContext.Instance.OnThrowPressed += PrepareThrow;
-		//GameContext.Instance.OnThrowReleased += ReleaseThrow;
-		//GameContext.Instance.OnEnterHideState += EnterHide;
-		//GameContext.Instance.OnLeaveHideState += LeaveHide;
+    {
+        SubscribeToEvents();
+        GetComponentReferences();
+    }
 
-		rb = GetComponent<Rigidbody>();
-		hideController = GetComponent<HideController>();
-		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
-		if (hideController == null)
-		{
-			Debug.LogError("HideController not found on player!");
-		}
-	}
+    private void SubscribeToEvents()
+    {
+        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+        GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+        //GameContext.Instance.OnMove += Move;
+        //GameContext.Instance.OnCameraLook += UpdateThrow;
+        //GameContext.Instance.OnAttackPressed += Attack;
+        // GameContext.Instance.OnInteractPressed += Interact;
+        //GameContext.Instance.OnHidePressed += DoHide;
+        //GameContext.Instance.OnJumpPressed += Jump;
+        //GameContext.Instance.OnPlayerSpotted += GetSpotted;
+        //GameContext.Instance.OnThrowPressed += PrepareThrow;
+        //GameContext.Instance.OnThrowReleased += ReleaseThrow;
+        //GameContext.Instance.OnEnterHideState += EnterHide;
+        //GameContext.Instance.OnLeaveHideState += LeaveHide;
+
+    }
+
+    private void GetComponentReferences()
+    {
+        rb = GetComponent<Rigidbody>();
+        hideController = GetComponent<HideController>();
+        cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
+        if (hideController == null)
+        {
+            Debug.LogError("HideController not found on player!");
+        }
+    }
+
+    private void Update()
+    {//i stg if we're trying to remove this specific Update() im gonna crash out -jo
+        HandleSpeedControl();
+        if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
+    }
     private void HandleInput(PlayerInputEvent e)
 	{
 		switch (e.ActionType)
@@ -112,8 +130,6 @@ public class PlayerBehavior : MonoBehaviour
 		}
 	}
 
-
-
     //Contains basic movement, crouched movement, jumping, and all helpers associated
     #region Movement
     private void Move(Vector3 moveDirection)
@@ -122,39 +138,32 @@ public class PlayerBehavior : MonoBehaviour
 		{
 			CrouchMove(moveDirection);
 		}
-		else if (isSprinting)
-		{
-			SprintMove(moveDirection);
-		}
 		else
-		{
-			DefaultMove(moveDirection);
+        {
+            if (isSprinting)
+            {
+                SprintMove(moveDirection);
+            }
+			else
+            DefaultMove(moveDirection);
 
-			if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
-			{
-				rb.AddForce(-stoppingForce * Time.deltaTime * 60 * transform.forward, ForceMode.Acceleration);
-				//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
-			}
-		}
-
-		FaceMoveDirection(moveDirection);
-		//adding drag while grounded
-
-		HandleSpeedControl();
-		if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
-
-	}
+            FaceMoveDirection(moveDirection);
+            //adding drag while grounded
+        }
+    }
     private void DoSprint()
     {
+		print("Triggered DoSprint");
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
 		if (isHiding)
 		{
-            GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+            GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
         }
-        if (!isSprinting)
+		if (!isSprinting)
 		{
 			isSprinting = true;
 		}
+		else isSprinting = false;
     }
     private void DefaultMove(Vector3 moveDirection)
 	{
@@ -162,8 +171,23 @@ public class PlayerBehavior : MonoBehaviour
 	}
     private void SprintMove(Vector3 moveDirection)
     {
-		rb.AddForce(acceleration * sprintForce * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
+		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
+		Invoke("TriggerSprintNoise", 0.5f);
     }
+	private void TriggerSprintNoise()
+	{
+		if (shouldSprintTriggerNoise)
+		{
+			timeSinceLastSprintNoise = 0;
+			shouldSprintTriggerNoise = false;
+            GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
+        }
+		else
+		{
+			timeSinceLastSprintNoise += Time.deltaTime;
+			if (timeSinceLastSprintNoise > timebetweenFootsteps) shouldSprintTriggerNoise = true;
+		}
+	}
     private void CrouchMove(Vector3 moveDirection)
 	{
 		Vector3 nextPosition = transform.position + moveDirection;
@@ -221,15 +245,25 @@ public class PlayerBehavior : MonoBehaviour
 	private void HandleSpeedControl()
 	{
 		float speedMod = isHiding ? stealthSpeedModifier : 1f;
-		speedMod = isSprinting ? sprintMaxSpeed : 1f;
 
 		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-		if (groundSpeed.magnitude > maxSpeed * speedMod)
+		if (isSprinting && groundSpeed.magnitude > sprintMaxSpeed)
+        {
+            Vector3 limitedVelocity = groundSpeed.normalized * sprintMaxSpeed;
+            rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
+        }
+		else if (!isSprinting && groundSpeed.magnitude > maxSpeed * speedMod)
 		{
-			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed *speedMod;
+			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed * speedMod;
 			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
 		}
-	}
+
+        if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
+        {
+            rb.AddForce(-stoppingForce * Time.deltaTime * 60 * transform.forward, ForceMode.Acceleration);
+            //Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+        }
+    }
 
     private void Jump()
     {
@@ -355,6 +389,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private void EnterHide(EnterStealthEvent e)
     {
+        isSprinting = false;
         isHiding = true;
         // TODO: Add animation
     }

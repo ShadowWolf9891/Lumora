@@ -61,12 +61,16 @@ public class PlayerController : MonoBehaviour
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look));
 				//GameContext.Instance.RaiseCameraMove(cameraTransform);
 			}
-			//if (attackAction.WasPressedThisFrame())
-			//{
-			//	GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Attack, true));
-			//	//GameContext.Instance.RaiseAttack();
-			//}
-			if (interactAction.WasPressedThisFrame())
+            //if (attackAction.WasPressedThisFrame())
+            //{
+            //	GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Attack, true));
+            //	//GameContext.Instance.RaiseAttack();
+            //}
+			if (sprintAction.WasPressedThisFrame())
+            {
+                GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("sprint", PlayerInputActionType.Sprint, true));
+            }
+            if (interactAction.WasPressedThisFrame())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("interact", PlayerInputActionType.Interact, true));
 			}
