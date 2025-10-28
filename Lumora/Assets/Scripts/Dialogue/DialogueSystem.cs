@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class DialogueSystem : MonoBehaviour
     DialogueLine[] currentDialogue; //The current chapter / scene dialogue
 	int currentLine = 0; //The current line in the dialogue
 
-	private void Start()
+	private void Awake()
 	{
         GameEvents<DialogueEvent>.Subscribe(BeginDialogue);
         //GameContext.Instance.OnPlayDialogue += BeginDialogue;
@@ -35,7 +36,7 @@ public class DialogueSystem : MonoBehaviour
 	void Load()
     {
 		TextAsset jsonFile = Resources.Load<TextAsset>("dialogue");
-		data = JsonUtility.FromJson<DialogueData>(jsonFile.text);
+		data = JsonConvert.DeserializeObject<DialogueData>(jsonFile.text);
 		Debug.Log($"Loaded json file.");
 
        
@@ -80,7 +81,8 @@ public class DialogueSystem : MonoBehaviour
         currentLine = 0;
         currentDialogue = GetDialogueLines(e.Chapter, e.Scene);
 		DisplayDialogue(currentDialogue[currentLine]);
-        GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent(GameStates.Dialogue));
+
+        EventManager.Raise("Pause_For_Dialogue");
 	}
     /// <summary>
     /// Display the dialogue line on the screen and show the dialogue panel if it is hidden.
@@ -120,7 +122,7 @@ public class DialogueSystem : MonoBehaviour
 		DialogueText.text = "";
         currentLine = 0;
         currentDialogue = null;
-		GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent(GameStates.Running));
+        EventManager.Raise("Resume_Game");
 	}
 
     

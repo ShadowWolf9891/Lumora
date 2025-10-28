@@ -312,12 +312,12 @@ public class PlayerBehavior : MonoBehaviour
 		if (coverObject != null)
         {
 			//Toggle hiding
-			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent());
+			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent("enter_Stealth"));
             //GameContext.Instance.RaiseEnterStealth();
         }
         else
 		{
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
 			//GameContext.Instance.RaiseLeaveStealth();
 		}
 	}
@@ -333,7 +333,7 @@ public class PlayerBehavior : MonoBehaviour
         }
         else
         {
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent());
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
 			//GameContext.Instance.RaiseLeaveStealth();
         }
     }
@@ -342,7 +342,7 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void GetSpotted(PlayerSpottedEvent e)
     {
-		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id));
+		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id)); //Inproper use of id, fix later
 
         //GameContext.Instance.RaiseLeaveStealth();
         //give player temporary movespeed buff? players should run away here, right?

@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
 		{
 			if (interactAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.NextDialogue, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("dialogueInteract", PlayerInputActionType.NextDialogue, true));
 				//GameContext.Instance.RaiseNextDialogueLine();
 			}
 		}
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 			}
 			if (lookAction.IsInProgress())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Look));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look));
 				//GameContext.Instance.RaiseCameraMove(cameraTransform);
 			}
 			//if (attackAction.WasPressedThisFrame())
@@ -68,26 +68,26 @@ public class PlayerController : MonoBehaviour
 			//}
 			if (interactAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Interact, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("interact", PlayerInputActionType.Interact, true));
 			}
 			if (crouchAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Hide, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Hide, true));
 				//GameContext.Instance.RaiseHidePressed();
 			}
 			if (jumpAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Jump, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("jump", PlayerInputActionType.Jump, true));
 				//GameContext.Instance.RaiseJumpPressed();
 			}
 			if (throwAction.WasReleasedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.ThrowRelease, false));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throwRelease", PlayerInputActionType.ThrowRelease, false));
 				//GameContext.Instance.RaiseThrowReleased();
 			}
 			if (throwAction.WasPressedThisFrame())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Throw, true));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throw", PlayerInputActionType.Throw, true));
 				//GameContext.Instance.RaiseThrowPressed();
 			}
 		}
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
 		camRight.Normalize();
 		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
 
-		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Move, default, moveDirection));
+		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
 		//GameContext.Instance.RaiseMove(moveDirection);
 
 	}
