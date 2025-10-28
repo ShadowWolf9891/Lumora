@@ -21,7 +21,7 @@ public class ProjectileBehaviour : MonoBehaviour
     private void OnDestroy()
     {
         //TODO: Use something other than gameObject for the spawned noise.
-		//GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent(gameObject, transform.position, noiseMade));
+		GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise",gameObject, transform.position, noiseMade));
 		//GameContext.Instance.RaiseGenericNoise(transform.position, noiseMade);
     }
 }
