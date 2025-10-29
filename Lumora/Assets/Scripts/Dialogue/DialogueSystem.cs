@@ -17,7 +17,7 @@ public class DialogueSystem : MonoBehaviour
 	DialogueData data; //All dialogue json file
     DialogueLine[] currentDialogue; //The current chapter / scene dialogue
 	int currentLine = 0; //The current line in the dialogue
-
+    string currentDialogueID;
 	private void Awake()
 	{
         GameEvents<DialogueEvent>.Subscribe(BeginDialogue);
@@ -37,7 +37,7 @@ public class DialogueSystem : MonoBehaviour
     {
 		TextAsset jsonFile = Resources.Load<TextAsset>("dialogue");
 		data = JsonConvert.DeserializeObject<DialogueData>(jsonFile.text);
-		Debug.Log($"Loaded json file.");
+		Debug.Log($"Loaded dialogue json file.");
 
        
 	}
@@ -81,7 +81,7 @@ public class DialogueSystem : MonoBehaviour
         currentLine = 0;
         currentDialogue = GetDialogueLines(e.Chapter, e.Scene);
 		DisplayDialogue(currentDialogue[currentLine]);
-
+        currentDialogueID = e.Id;
         EventManager.Raise("Pause_For_Dialogue");
 	}
     /// <summary>
@@ -123,6 +123,8 @@ public class DialogueSystem : MonoBehaviour
         currentLine = 0;
         currentDialogue = null;
         EventManager.Raise("Resume_Game");
+        EventManager.MarkEventCompleted(currentDialogueID);
+        currentDialogueID = "";
 	}
 
     

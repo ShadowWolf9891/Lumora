@@ -8970,6 +8970,7 @@ GameObject:
   - component: {fileID: 574576437}
   - component: {fileID: 574576436}
   - component: {fileID: 574576435}
+  - component: {fileID: 574576439}
   m_Layer: 0
   m_Name: MrsWatts
   m_TagString: Untagged
@@ -9065,12 +9066,34 @@ Transform:
   m_GameObject: {fileID: 574576434}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -455.61, y: 0.99, z: -567.61}
+  m_LocalPosition: {x: -571, y: 0.99, z: -652.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &574576439
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574576434}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1001 &579854974
 PrefabInstance:
   m_ObjectHideFlags: 0

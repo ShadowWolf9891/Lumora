@@ -86,14 +86,13 @@ public class NPCMovementEvent : GameEventType
 { 
     public string NPCToMove {  get; private set; }
     public Vector3 TargetLocation { get; private set; }
-    public Vector3 TargetRotation { get; private set; }
-	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
+	public NPCMovementEvent(string id, string npc, Vector3 targetLocation) : base(id)
 	{
 		NPCToMove = npc;
 		TargetLocation = targetLocation;
-        TargetRotation = targetRotation;
     }
 }
+
 public enum PlayerInputActionType
 {
     Move,
@@ -143,6 +142,20 @@ public class PlayerSpottedEvent : GameEventType
         Spotter = spotter;
     }
 }
+public class SpawnObjectEvent : GameEventType
+{
+    public string PrefabName { get; private set; }
+	public Vector3 Position { get; private set; }
+	public Vector3 Rotation { get; private set; }
+
+    public SpawnObjectEvent(string id, string prefabName, Vector3 position, Vector3 rotation = new Vector3()) : base(id)
+    {
+        PrefabName = prefabName;
+        Position = position;
+        Rotation = rotation;
+    }
+}
+
 public class SpawnTriggerEvent : GameEventType
 {
 	public Vector3 Position { get; private set; }

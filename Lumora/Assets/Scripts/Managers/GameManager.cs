@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 
 	private void Awake()
 	{
+        NPCManager.Load();
 
 	}
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -14,13 +15,13 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         EventManager.Raise("Chapter2_Intro");
-        //EventDispatcher.DispatchForCurrentQuest("SubQuest1");
-       
+		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
+
 	}
 
     // Update is called once per frame
     void Update()
     {
-		
+
 	}
 }
