@@ -22,11 +22,28 @@
         {
             "type": "DialogueEvent",
             "id": "Chapter2_Intro",
+            "eventsToFire":
+            [
+                "MoveWattsForward"
+            ],
             "parameters" :
             {
                 "chapter":"2",
                 "scene":"1"
             }
+        },
+        {
+            "type" : "NPCMovementEvent",
+            "id" : "MoveWattsForward",
+            "parameters" : 
+            { 
+                "npcToMove" : "MrsWatts",
+                "targetLocation": "10,0,0"
+            }
+        },
+        {
+            
         }
+
     ]
 }
