@@ -142,6 +142,16 @@ public class PlayerSpottedEvent : GameEventType
         Spotter = spotter;
     }
 }
+
+public class EnemyDropsAlert : GameEventType
+{
+    public GameObject Enemy {  get ; private set; }
+    public EnemyDropsAlert(string id, GameObject enemy) : base(id)
+    {
+        Enemy = enemy;
+    }
+}
+
 public class SpawnObjectEvent : GameEventType
 {
     public string PrefabName { get; private set; }

@@ -168,6 +168,7 @@ public class EnemyBehavior : MonoBehaviour
 		if (searchPoints.Count <= 0 && bb.Get<bool>(bb_LostPlayer)) 
 		{
 			curState = AlertStates.ALERT;
+			GameEvents<EnemyDropsAlert>.Raise(new EnemyDropsAlert($"EnemyDropsAlert: {gameObject.name}", this.gameObject));
 			OnChangeState();
 			GenerateSearchPoints();
 			if(searchPoints.Count <= 0)
