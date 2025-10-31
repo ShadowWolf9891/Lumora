@@ -206,6 +206,7 @@ public class EnemyBehavior : MonoBehaviour
 		if (curState != AlertStates.CHASING)
 		{
 			curState = AlertStates.CHASING;
+			GameEvents<PlayerSpottedEvent>.Raise(new PlayerSpottedEvent("PlayerSpottedEvent", this.gameObject));
 			OnChangeState();
 		}
 

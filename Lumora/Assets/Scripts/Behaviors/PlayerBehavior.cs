@@ -153,7 +153,6 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void DoSprint()
     {
-		print("Triggered DoSprint");
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
 		if (isHiding)
 		{
