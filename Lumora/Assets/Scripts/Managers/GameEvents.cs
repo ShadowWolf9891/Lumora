@@ -196,14 +196,6 @@ public class SpawnVisibleNoiseEvent : GameEventType
         IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
-public class EnemyDropsAlert : GameEventType
-{
-	public GameObject Enemy { get; private set; }
-	public EnemyDropsAlert(string id, GameObject enemy) : base(id)
-	{
-		Enemy = enemy;
-	}
-}
 public class StartQuestEvent : GameEventType
 {
 	public StartQuestEvent(string id) : base(id){}
