@@ -50,9 +50,9 @@ public static class EventManager
 				break;
 			case "NPCMovementEvent":
 
-				if (def.parameters.ContainsKey("npcToMove") && TryParseVector3(def.parameters["targetLocation"], out Vector3 location) && TryParseVector3(def.parameters["targetRotation"], out Vector3 rotation))
+				if (def.parameters.ContainsKey("npcToMove") && TryParseVector3(def.parameters["targetLocation"], out Vector3 location))
 				{
-					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location, rotation);
+					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location);
 				}
 				else
 				{
@@ -145,7 +145,11 @@ public static class EventManager
 		}
 
 	}
-	public static void MarkEventCompleted(string eventID) 
+	/// <summary>
+	/// Call this to mark an event as completed.
+	/// </summary>
+	/// <param name="eventID"></param>
+	public static void MarkEventCompleted(string eventID)
 	{
 		if (_events == null) LoadEvents();
 
@@ -158,7 +162,12 @@ public static class EventManager
 		evt.IsCompleted = true;
 	}
 
-
+	/// <summary>
+	/// Helper to convert a sting in the format 0,0,0 to a vector 3.
+	/// </summary>
+	/// <param name="vector3AsString">The string to parse from the json file</param>
+	/// <param name="parsedVec">The parsed vector3 passed back out if successful, 0,0,0 if not.</param>
+	/// <returns>If the vector3 was successfully parsed</returns>
 	private static bool TryParseVector3(string vector3AsString, out Vector3 parsedVec)
 	{
 		parsedVec = new Vector3();
