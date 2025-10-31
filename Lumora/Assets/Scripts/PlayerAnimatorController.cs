@@ -42,16 +42,12 @@ public class PlayerAnimatorController : MonoBehaviour
 			case PlayerInputActionType.ThrowRelease:
                 DoThrow();
 				break;
-
-
-
+            case PlayerInputActionType.Sprint:
+                DoSprintToggle();
+                break;
 		}
 	}
 
-	private void DoThrow()
-    {
-        animator.SetTrigger("doThrow");
-    }
 
     private void Update()
     {
@@ -80,5 +76,14 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         animator.SetTrigger("doMovement");
         animator.SetFloat("moveSpeed", moveDir.normalized.magnitude);
+    }
+    private void DoThrow()
+    {
+        animator.SetTrigger("doThrow");
+    }
+    private void DoSprintToggle()
+    {
+        if (animator.GetBool("isSprinting")) { animator.SetBool("isSprinting", false); }
+        else { animator.SetBool("isSprinting", true); }
     }
 }
