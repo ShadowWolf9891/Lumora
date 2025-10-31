@@ -83,6 +83,7 @@ public class PlayerAnimatorController : MonoBehaviour
     }
     private void DoSprintToggle()
     {
+        Debug.Log("Did sprint toggle animator");
         if (animator.GetBool("isSprinting")) { animator.SetBool("isSprinting", false); }
         else { animator.SetBool("isSprinting", true); }
     }
