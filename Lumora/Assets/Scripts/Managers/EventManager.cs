@@ -101,7 +101,7 @@ public static class EventManager
 					{
 						mask = LayerMask.GetMask(def.parameters["layerMask"]);
 					}
-					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["evnetToRaiseOnTrigger"], mask, triggerRadius);
+					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["eventToRaiseOnTrigger"], mask, triggerRadius);
 					
 				}
 				break;

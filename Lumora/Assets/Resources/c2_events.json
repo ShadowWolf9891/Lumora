@@ -53,23 +53,94 @@
             "id" : "Mrs_Watts_Front_Arrive_Trigger",
             "parameters" : 
             {
-                "worldLocation" : "0,0,0",
-                "radius" : "10",
+                "worldLocation" : "-504.63,0.36,-708.80",
+                "radius" : "1",
                 "layerMask" : "6",
-                "eventToRaiseOnTrigger" : "Chapter2_Arrive_Watts_House"
+                "eventToRaiseOnTrigger" : "C2_Arrive_Watts_Front"
 
             }
 
         },
         {
             "type" : "DialogueEvent",
-            "id" : "Chapter2_Arrive_Watts_House",
+            "id" : "C2_Arrive_Watts_Front",
+            "eventsOnComplete" :
+            [
+                "Watts_Back_Trigger"
+            ],
             "parameters" :
             {
                 "chapter":"2",
                 "scene":"2"
             }
 
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-505.007, 0.36, -6976.118",
+                "radius": "1",
+                "layerMask": "6",
+                "eventToRaiseOnTrigger": "C2_Arrive_Watts_Back"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "C2_Arrive_Watts_Back",
+            "eventsOnComplete" :
+            [
+                "C2_Lira_Looking_Left"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "3"
+            }
+        },
+        {
+            "type": "CameraPanEvent",
+            "id": "C2_Lira_Looking_Left",
+            "eventsOnComplete" :
+            [
+                "C2_Lira_Looking_Right"
+            ],
+            "parameters":
+            {
+                "targetRotation": "0,-80,0",
+                "rotationSpeed": "1.5",
+                "autoReturn": "true"
+            }
+        },
+        {
+            "type": "CameraPanEvent",
+            "id": "C2_Lira_Looking_Right",
+            "parameters":
+            {
+                "targetRotation": "0,80,0",
+                "rotationSpeed": "1.5",
+                "autoReturn": "true"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "C2_Watts_Back",
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "4"
+            }
+        },
+        {
+            "type": "SpawnObjectEvent",
+            "id": "C2_Spawn_Watts",
+            "parameters":
+            {
+                "prefabName": "Mrs_Watts",
+                "worldLocation": "-504.66,1.04,-699.2"
+                
+            }
         }
 
 
