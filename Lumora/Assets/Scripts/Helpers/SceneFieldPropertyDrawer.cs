@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+[System.Serializable]
 public class SceneField
 {
     [SerializeField]
@@ -23,7 +26,7 @@ public class SceneField
 
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(SceneField))]
-public class SerializableScenesHelper: PropertyDrawer
+public class SceneFieldPropertyDrawer: PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -38,8 +41,8 @@ public class SerializableScenesHelper: PropertyDrawer
             {
                 sceneName.stringValue = (sceneAsset.objectReferenceValue as SceneAsset).name;
             }
-            EditorGUI.EndProperty();
         }
+        EditorGUI.EndProperty();
     }
 }
 #endif

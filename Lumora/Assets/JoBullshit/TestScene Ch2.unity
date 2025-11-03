@@ -1572,8 +1572,9 @@ GameObject:
   m_Component:
   - component: {fileID: 108306329}
   - component: {fileID: 108306328}
+  - component: {fileID: 108306330}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: LoadZoneTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1615,6 +1616,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &108306330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108306327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8835e1816bb5b3e47a2a9688a0c60be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoadZoneTrigger
+  ScenesToLoad: []
+  ScenesToUnload: []
 --- !u!4 &110004248 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1db4cf5123a1317478193dc8675c6df5, type: 3}
