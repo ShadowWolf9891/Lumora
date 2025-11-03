@@ -1,0 +1,77 @@
+{
+    "allEvents":
+    [
+        {
+            "type" : "TestEvent",
+            "id" : "All_Events_Template",
+            "isCompleted" : false,
+            "isRepeatable" : false,
+            "requireCompletedID" : "",
+            "eventsToFire" : 
+            [
+                "TestEvent2",
+                "TestEvent3"
+            ],
+            "eventsOnComplete" : 
+            [
+                "TestEvent4",
+                "TestEvent5"
+            ],
+            "parameters" :
+            {
+                "state" : "0",
+                "chapter" : "0",
+                "scene":"0",
+                "npcToMove" : "npcObjectName",
+                "prefabName" : "prefabName",
+                "targetLocation": "0,0,0",
+                "targetRotation": "0,0,0",
+                "worldLocation" : "0,0,0",
+                "worldRotation" : "0,0,0",
+                "radius" : "0",
+                "layerMask" : "~0",
+                "eventToRaiseOnTrigger" : "eventID",
+                "moveSpeed" : "0",
+                "autoReturn" : false
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Chapter2_Intro",
+            "eventsOnComplete" :
+            [
+                "Mrs_Watts_Front_Arrive_Trigger"
+            ],
+            "parameters" :
+            {
+                "chapter":"2",
+                "scene":"1"
+            }
+        },
+        {
+            "type" : "SpawnTriggerEvent",
+            "id" : "Mrs_Watts_Front_Arrive_Trigger",
+            "parameters" : 
+            {
+                "worldLocation" : "0,0,0",
+                "radius" : "10",
+                "layerMask" : "6",
+                "eventToRaiseOnTrigger" : "Chapter2_Arrive_Watts_House"
+
+            }
+
+        },
+        {
+            "type" : "DialogueEvent",
+            "id" : "Chapter2_Arrive_Watts_House",
+            "parameters" :
+            {
+                "chapter":"2",
+                "scene":"2"
+            }
+
+        }
+
+
+    ]
+}
