@@ -96,7 +96,6 @@ public class PlayerBehavior : MonoBehaviour
     private void Update()
     {//i stg if we're trying to remove this specific Update() im gonna crash out -jo
         HandleSpeedControl();
-        if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
     }
     private void HandleInput(PlayerInputEvent e)
 	{
@@ -150,6 +149,8 @@ public class PlayerBehavior : MonoBehaviour
             FaceMoveDirection(moveDirection);
             //adding drag while grounded
         }
+
+        if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
     }
     private void DoSprint()
     {
