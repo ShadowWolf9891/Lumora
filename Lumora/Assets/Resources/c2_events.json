@@ -36,29 +36,12 @@
             }
         },
         {
-            "type" : "ChangeGameStateEvent",
-            "id" : "Resume_Game",
-            "isRepeatable" : true,
-            "parameters" : 
-            { "state":"0"}
-        },
-        {
-            "type" : "ChangeGameStateEvent",
-            "id" : "Pause_Game",
-            "isRepeatable" : true,
-            "parameters" : 
-            { "state":"1"}
-        },
-        {
-            "type" : "ChangeGameStateEvent",
-            "id" : "Pause_For_Dialogue",
-            "isRepeatable" : true,
-            "parameters" : 
-            {"state":"2"}
-        },
-        {
             "type": "DialogueEvent",
             "id": "Chapter2_Intro",
+            "eventsOnComplete" :
+            [
+                "Mrs_Watts_Front_Arrive_Trigger"
+            ],
             "parameters" :
             {
                 "chapter":"2",
@@ -66,25 +49,29 @@
             }
         },
         {
-            "type" : "NPCMovementEvent",
-            "id" : "MoveWattsForward",
+            "type" : "SpawnTriggerEvent",
+            "id" : "Mrs_Watts_Front_Arrive_Trigger",
             "parameters" : 
-            { 
-                "npcToMove" : "MrsWatts",
-                "targetLocation": "10,0,0"
+            {
+                "worldLocation" : "0,0,0",
+                "radius" : "10",
+                "layerMask" : "6",
+                "eventToRaiseOnTrigger" : "Chapter2_Arrive_Watts_House"
+
             }
+
         },
         {
-            "type" : "SpawnObjectEvent",
-            "id" : "Spawn_Test",
-            "parameters":
+            "type" : "DialogueEvent",
+            "id" : "Chapter2_Arrive_Watts_House",
+            "parameters" :
             {
-                "prefabName" : "TestBall",
-                "worldLocation" : "-571,10,-653",
-                "worldRotation" : "0,0,0"
+                "chapter":"2",
+                "scene":"2"
             }
 
         }
+
 
     ]
 }

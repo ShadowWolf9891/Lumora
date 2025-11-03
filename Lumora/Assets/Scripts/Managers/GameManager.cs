@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameObject playerRef;
+	[SerializeField] GameObject playerRef;
+	[SerializeField] SpawnableObjects spawnableObjects;
 
 	private void Awake()
 	{
         NPCManager.Load();
+		SpawnerManager.Load(spawnableObjects);
 
 	}
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,6 +17,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         EventManager.Raise("Chapter2_Intro");
+		EventManager.Raise("Spawn_Test");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 
 	}

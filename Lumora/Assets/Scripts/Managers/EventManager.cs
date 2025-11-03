@@ -37,6 +37,20 @@ public static class EventManager
 
 		switch (def.type)
 		{
+			case "TestEvent":
+				return;
+			case "ChangeGameStateEvent":
+
+				if (int.TryParse(def.parameters["state"], out int state))
+				{
+					e = new ChangeGameStateEvent(def.id, (GameStates)state);
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys} or state cannot be parsed.");
+				}
+
+				break;
 			case "DialogueEvent":
 
 				if (int.TryParse(def.parameters["chapter"], out int chapter) && int.TryParse(def.parameters["scene"], out int scene))
@@ -59,18 +73,14 @@ public static class EventManager
 					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
 				}
 				break;
-			case "ChangeGameStateEvent":
-
-				if (int.TryParse(def.parameters["state"], out int state))
-				{
-					e = new ChangeGameStateEvent(def.id, (GameStates)state);
+			case "SpawnObjectEvent":
+				if(def.parameters.ContainsKey("prefabName") && TryParseVector3(def.parameters["worldLocation"], out Vector3 spawnLocation))
+				{ 
+					if(!TryParseVector3(def.parameters["worldRotation"], out Vector3 spawnRotation)){spawnRotation = Vector3.zero;}
+					e = new SpawnObjectEvent(def.id, def.parameters["prefabName"], spawnLocation, spawnRotation);
 				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys} or state cannot be parsed.");
-				}
-
 				break;
+				
 			default:
 				Debug.LogError($"Invalid type {def.type}");
 				return;

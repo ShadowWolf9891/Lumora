@@ -58,9 +58,10 @@ public abstract class GameEventType
 {
 	public string Id { get; private set; }
     public bool IsCompleted;
+    public bool IsRepeatable;
     public string RequireCompletedID;
     public string[] EventsToFire;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, string[] eventsToFire = null)
+    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
@@ -170,15 +171,13 @@ public class SpawnTriggerEvent : GameEventType
 {
 	public Vector3 Position { get; private set; }
 	public float Radius { get; private set; } // optional for spherical triggers
-    public bool IsRepeatable { get; private set; }
     public int LayerMask { get; private set; }
 	public GameEventType EventToRaiseOnTrigger { get; private set; }
 	public SpawnTriggerEvent(string id,Vector3 position, GameEventType eventToRaiseOnTrigger, int layerMask = ~0,
-        float radius = 1f, bool isRepeatable = false) : base(id)
+        float radius = 1f) : base(id)
 	{
 		Position = position;
 		Radius = radius;
-        IsRepeatable = isRepeatable;
 		EventToRaiseOnTrigger = eventToRaiseOnTrigger;
         LayerMask = layerMask;
     }
@@ -197,7 +196,6 @@ public class SpawnVisibleNoiseEvent : GameEventType
         IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
-
 public class StartQuestEvent : GameEventType
 {
 	public StartQuestEvent(string id) : base(id){}
