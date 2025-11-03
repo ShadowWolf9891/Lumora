@@ -13,17 +13,24 @@ public class AllEvents
 
 public static class EventManager
 {
-	private static AllEvents allEventsDefs;
+	private static AllEvents allEventsDefs, c2EventsDefs;
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
 
 	private static void LoadEvents()
 	{
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
+		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
 		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
+		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
-
+		
 		foreach (GameEventDefinition eventDef in allEventsDefs.allEvents)
+		{
+			CreateEvent(eventDef);
+			Debug.Log($"Created event {eventDef.id}");
+		}
+		foreach (GameEventDefinition eventDef in c2EventsDefs.allEvents)
 		{
 			CreateEvent(eventDef);
 			Debug.Log($"Created event {eventDef.id}");
@@ -80,7 +87,25 @@ public static class EventManager
 					e = new SpawnObjectEvent(def.id, def.parameters["prefabName"], spawnLocation, spawnRotation);
 				}
 				break;
-				
+			case "SpawnTriggerEvent":
+				if (def.parameters.ContainsKey("eventToRaiseOnTrigger") && TryParseVector3(def.parameters["worldLocation"], out Vector3 triggerSpawnLocation))
+				{
+					float triggerRadius = 1f;
+					LayerMask mask = ~0; //Everything
+					if (def.parameters.ContainsKey("radius"))
+					{
+						 triggerRadius = float.TryParse(def.parameters["radius"], out float radius) ? radius : 1f;
+					}
+					
+					if(def.parameters.ContainsKey("layerMask"))
+					{
+						mask = LayerMask.GetMask(def.parameters["layerMask"]);
+					}
+					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["evnetToRaiseOnTrigger"], mask, triggerRadius);
+					
+				}
+				break;
+
 			default:
 				Debug.LogError($"Invalid type {def.type}");
 				return;

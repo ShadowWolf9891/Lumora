@@ -172,8 +172,8 @@ public class SpawnTriggerEvent : GameEventType
 	public Vector3 Position { get; private set; }
 	public float Radius { get; private set; } // optional for spherical triggers
     public int LayerMask { get; private set; }
-	public GameEventType EventToRaiseOnTrigger { get; private set; }
-	public SpawnTriggerEvent(string id,Vector3 position, GameEventType eventToRaiseOnTrigger, int layerMask = ~0,
+	public string EventToRaiseOnTrigger { get; private set; }
+	public SpawnTriggerEvent(string id,Vector3 position, string eventToRaiseOnTrigger, int layerMask = ~0,
         float radius = 1f) : base(id)
 	{
 		Position = position;

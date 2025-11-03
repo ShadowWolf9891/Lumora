@@ -34,6 +34,14 @@ public static class SpawnerManager
 	}
 	private static void SpawnTrigger(SpawnTriggerEvent e)
 	{
-		
+		GameObject triggerSpawn = allSpawnables.objectList.Find(obj => obj.name == "Spawnable_Trigger");
+
+		if (triggerSpawn != null) 
+		{
+			triggerSpawn.GetComponent<SpawnableTriggerBehavior>().Initialize(e.Id, e.EventToRaiseOnTrigger, e.LayerMask, e.Radius, e.IsRepeatable);
+			GameObject.Instantiate(triggerSpawn, e.Position, Quaternion.identity);
+		}
+
+
 	}
 }
