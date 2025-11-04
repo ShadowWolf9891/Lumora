@@ -157,19 +157,19 @@ public class EnemyDropsAlert : GameEventType
 public class LoadedScene : GameEventType
 {
     //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.
-    public SceneField SceneField { get; private set; }
-    public LoadedScene (string id, SceneField sceneField) : base(id)
+    public string SceneName{ get; private set; }
+    public LoadedScene (string id, string sceneName) : base(id)
     {
-        SceneField = sceneField;
+        SceneName = sceneName;
     }
 }
 public class UnloadedScene : GameEventType
 {
     //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.
-    public SceneField SceneField { get; private set; }
-    public UnloadedScene(string id, SceneField sceneField) : base(id)
+    public string SceneName { get; private set; }
+    public UnloadedScene(string id, string sceneName) : base(id)
     {
-        SceneField = sceneField;
+        SceneName = sceneName;
     }
 }
 

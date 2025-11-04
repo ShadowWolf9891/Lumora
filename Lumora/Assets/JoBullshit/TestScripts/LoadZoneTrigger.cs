@@ -7,40 +7,40 @@ using UnityEngine.SceneManagement;
 public class LoadZoneTrigger : MonoBehaviour
 {
     [SerializeField]
-    SceneField[] ScenesToLoad;
+    string[] ScenesToLoad;
     [SerializeField]
-    SceneField[] ScenesToUnload;
+    string[] ScenesToUnload;
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            LoadScenes();
-            UnloadScenes();
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        LoadScenes();
+    //        UnloadScenes();
+    //    }
+    //}
 
-    private void LoadScenes()
-    {
-        foreach (SceneField scene in ScenesToLoad)
-        {
-            if (!SceneManager.GetSceneByName(scene.SceneName()).isLoaded)
-            {
-                SceneManager.LoadSceneAsync(scene.SceneName());
-                GameEvents<LoadedScene>.Raise(new LoadedScene($"Loaded Scene: {scene.SceneName()}", scene));
-            }
-        }
-    }
-    private void UnloadScenes()
-    {
-        foreach (SceneField scene in ScenesToUnload)
-        {
-            if (SceneManager.GetSceneByName(scene.SceneName()).isLoaded)
-            {
-                SceneManager.UnloadSceneAsync(scene.SceneName());
-                GameEvents<UnloadedScene>.Raise(new UnloadedScene($"Unloaded Scene: {scene.SceneName()}", scene));
-            }
-        }
-    }
+    //private void LoadScenes()
+    //{
+    //    foreach (string scene in ScenesToLoad)
+    //    {
+    //        if (!SceneManager.GetSceneByName(scene).isLoaded)
+    //        {
+    //            SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+    //            GameEvents<LoadedScene>.Raise(new LoadedScene($"Loaded Scene: {scene}", scene));
+    //        }
+    //    }
+    //}
+    //private void UnloadScenes()
+    //{
+    //    foreach (string scene in ScenesToUnload)
+    //    {
+    //        if (SceneManager.GetSceneByName(scene).isLoaded)
+    //        {
+    //            SceneManager.UnloadSceneAsync(scene, UnloadSceneOptions.None);
+    //            GameEvents<UnloadedScene>.Raise(new UnloadedScene($"Unloaded Scene: {scene}", scene));
+    //        }
+    //    }
+    //}
 }
