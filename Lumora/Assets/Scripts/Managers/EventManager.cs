@@ -169,6 +169,7 @@ public static class EventManager
 			}
 			e.IsCompleted = def.isCompleted;
 			e.EventsToFire = def.eventsToFire;
+			e.EventsOnComplete = def.eventsOnComplete;
 			_events.Add(def.id, e);
 		}
 	}
@@ -243,7 +244,19 @@ public static class EventManager
 			return;
 		}
 
+		if (evt.EventsOnComplete != null && evt.EventsOnComplete.Length > 0)
+		{
+			foreach (var e in evt.EventsOnComplete)
+			{
+				Raise(e);
+
+				Debug.Log($"Raised event {e}");
+
+			}
+		}
+
 		evt.IsCompleted = true;
+		Debug.Log($"Completed event {eventID}");
 	}
 
 	/// <summary>
