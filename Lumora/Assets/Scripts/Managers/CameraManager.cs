@@ -13,6 +13,14 @@ public class CameraManager
 	public static CinemachineCamera PreviousCamera { get; private set; }
 
 	/// <summary>
+	/// Setup the camera manager. Make sure to call this during awake to correctly subscribe to events.
+	/// </summary>
+	public static void Load()
+	{
+		GameEvents<CameraMoveEvent>.Subscribe(MoveCinematicCamera);
+		GameEvents<CameraPanEvent>.Subscribe(PanCinematicCamera);
+	}
+	/// <summary>
 	/// Load all of the cinemachine cameras in the scene into the list. 
 	/// No need to call this unless you add your own cameras during runtime.
 	/// </summary>
@@ -35,6 +43,8 @@ public class CameraManager
 			Debug.LogWarning($"Cannot set camera to cameraIndex: {cameraIndex}. IndexOutOfRangeException.");
 			return;
 		}
+
+		if (CurrentCamera == _cameraList[cameraIndex]) return;
 
 		PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
 		CurrentCamera = _cameraList[cameraIndex];
@@ -84,5 +94,43 @@ public class CameraManager
 	{
 		if(_brain == null) return false;
 		return _brain.IsBlending;
+	}
+
+	private static void MoveCinematicCamera(CameraMoveEvent e)
+	{
+		SetCurrentCamera("Cinematic_Camera", 0);
+		CurrentCamera.ForceCameraPosition(e.WorldLocation, CurrentCamera.transform.rotation);
+		Vector3 target = CurrentCamera.transform.position + e.TargetLocation;
+		CurrentCamera.transform.position = Vector3.Slerp(CurrentCamera.transform.position, target, e.MoveSpeed);
+
+		if(e.AutoReturn && CurrentCamera.transform.position.magnitude - target.magnitude <= 0.1f) 
+		{
+			GameEvents<CameraMoveEvent>.Raise(new CameraMoveEvent(e.Id, e.WorldLocation, target, e.MoveSpeed, false));
+		}
+
+		if(!e.AutoReturn)
+		{
+			ReturnToPreviousCamera(0);
+			EventManager.MarkEventCompleted(e.Id);
+		}
+	}
+
+	private static void PanCinematicCamera(CameraPanEvent e)
+	{
+		SetCurrentCamera("Cinematic_Camera", 0);
+		CurrentCamera.ForceCameraPosition(CurrentCamera.transform.position, Quaternion.Euler(e.WorldRotation));
+		Vector3 target = CurrentCamera.transform.rotation.eulerAngles + e.TargetRotation;
+		CurrentCamera.transform.Rotate(Vector3.Slerp(CurrentCamera.transform.rotation.eulerAngles, target, e.RotationSpeed));
+
+		if (e.AutoReturn && CurrentCamera.transform.rotation.eulerAngles.magnitude - e.TargetRotation.magnitude <= 0.1f)
+		{
+			GameEvents<CameraPanEvent>.Raise(new CameraPanEvent(e.Id, e.WorldRotation, target, e.RotationSpeed, false));
+		}
+
+		if (!e.AutoReturn)
+		{
+			ReturnToPreviousCamera(0);
+			EventManager.MarkEventCompleted(e.Id);
+		}
 	}
 }
