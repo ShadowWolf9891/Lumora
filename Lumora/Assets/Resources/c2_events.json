@@ -90,40 +90,12 @@
             "id": "C2_Arrive_Watts_Back",
             "eventsOnComplete" :
             [
-                "C2_Lira_Looking_Left"
+                "C2_Watts_Back"
             ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "3"
-            }
-        },
-        {
-            "type": "CameraPanEvent",
-            "id": "C2_Lira_Looking_Left",
-            "eventsOnComplete" :
-            [
-                "C2_Lira_Looking_Right"
-            ],
-            "parameters":
-            {
-                "targetRotation": "0,-80,0",
-                "rotationSpeed": "1.5",
-                "autoReturn": "true"
-            }
-        },
-        {
-            "type": "CameraPanEvent",
-            "id": "C2_Lira_Looking_Right",
-            "eventsOnComplete":
-            [
-                "C2_Watts_Back"
-            ],
-            "parameters":
-            {
-                "targetRotation": "0,80,0",
-                "rotationSpeed": "1.5",
-                "autoReturn": "true"
             }
         },
         {
@@ -321,6 +293,34 @@
             "parameters":
             {
                 "targetLocation": "-503.77,0,0"
+            }
+        },
+           {
+            "type": "CameraPanEvent",
+            "id": "C2_Lira_Looking_Left",
+            "eventsOnComplete" :
+            [
+                "C2_Lira_Looking_Right"
+            ],
+            "parameters":
+            {
+                "targetRotation": "0,-80,0",
+                "rotationSpeed": "1.5",
+                "autoReturn": "true"
+            }
+        },
+        {
+            "type": "CameraPanEvent",
+            "id": "C2_Lira_Looking_Right",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Back"
+            ],
+            "parameters":
+            {
+                "targetRotation": "0,80,0",
+                "rotationSpeed": "1.5",
+                "autoReturn": "true"
             }
         }
 
