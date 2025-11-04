@@ -3,6 +3,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Static class for handling events related to NPC's in the game. Load must be called in awake to subscribe properly.
+/// </summary>
 public static class NPCManager
 {
     private static Dictionary<string, GameObject> _npcCache = new();

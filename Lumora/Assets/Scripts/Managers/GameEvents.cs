@@ -196,19 +196,46 @@ public class SpawnVisibleNoiseEvent : GameEventType
         IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
+
+public class CameraMoveEvent : GameEventType 
+{
+    public Vector3 TargetLocation { get; private set; }
+    public Vector3 WorldLocation { get; private set; }
+    public float MoveSpeed { get; private set; }
+    public bool AutoReturn { get; private set; }
+
+    public CameraMoveEvent(string id, Vector3 targetLocation, Vector3 worldLocation, float moveSpeed = 1, bool autoReturn = false) : base(id)
+	{
+		TargetLocation = targetLocation;
+		WorldLocation = worldLocation;
+		MoveSpeed = moveSpeed;
+		AutoReturn = autoReturn;
+	}
+}
+public class CameraPanEvent : GameEventType
+{
+	public Vector3 TargetRotation { get; private set; }
+	public Vector3 WorldRotation { get; private set; }
+	public float RotationSpeed { get; private set; }
+	public bool AutoReturn { get; private set; }
+
+	public CameraPanEvent(string id, Vector3 targetRotation, Vector3 worldRotation, float rotationSpeed = 1, bool autoReturn = false) : base(id)
+	{
+		TargetRotation = targetRotation;
+		WorldRotation = worldRotation;
+		RotationSpeed = rotationSpeed;
+		AutoReturn = autoReturn;
+	}
+}
 public class StartQuestEvent : GameEventType
 {
-	public StartQuestEvent(string id) : base(id){}
+	public StartQuestEvent(string id) : base(id) { }
 }
 
 public class ProgressQuestEvent : GameEventType
 {
 	public ProgressQuestEvent(string id) : base(id) { }
 }
-
-
-
-
 
 
 

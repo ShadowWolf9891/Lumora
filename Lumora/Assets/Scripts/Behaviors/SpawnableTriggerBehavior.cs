@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// This script should only be attached to the Spawnable_Trigger prefab. 
+/// It raises the desired event when the player enters the spawned trigger.
+/// </summary>
 [RequireComponent (typeof(BoxCollider))]
 public class SpawnableTriggerBehavior : MonoBehaviour
 {
