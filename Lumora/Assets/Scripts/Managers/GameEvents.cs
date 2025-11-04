@@ -90,11 +90,13 @@ public class NPCMovementEvent : GameEventType
 { 
     public string NPCToMove {  get; private set; }
     public Vector3 TargetLocation { get; private set; }
-	public NPCMovementEvent(string id, string npc, Vector3 targetLocation) : base(id)
+	public Vector3 TargetRotation { get; private set; }
+	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
 	{
 		NPCToMove = npc;
 		TargetLocation = targetLocation;
-    }
+		TargetRotation = targetRotation;
+	}
 }
 
 public enum PlayerInputActionType

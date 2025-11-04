@@ -74,7 +74,12 @@ public static class EventManager
 
 				if (def.parameters.ContainsKey("npcToMove") && TryParseVector3(def.parameters["targetLocation"], out Vector3 location))
 				{
-					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location);
+					Vector3 rotation = Vector3.zero;
+					if(def.parameters.ContainsKey("targetRotation"))
+					{
+						TryParseVector3(def.parameters["targetRotation"], out rotation);
+					}
+					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location, rotation);
 				}
 				else
 				{
