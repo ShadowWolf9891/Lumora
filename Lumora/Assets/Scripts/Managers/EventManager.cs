@@ -83,8 +83,12 @@ public static class EventManager
 				break;
 			case "SpawnObjectEvent":
 				if(def.parameters.ContainsKey("prefabName") && TryParseVector3(def.parameters["worldLocation"], out Vector3 spawnLocation))
-				{ 
-					if(!TryParseVector3(def.parameters["worldRotation"], out Vector3 spawnRotation)){spawnRotation = Vector3.zero;}
+				{
+					Vector3 spawnRotation = Vector3.zero;
+					if (def.parameters.ContainsKey("worldRotation"))
+					{
+						TryParseVector3(def.parameters["worldRotation"], out spawnRotation);
+					}
 					e = new SpawnObjectEvent(def.id, def.parameters["prefabName"], spawnLocation, spawnRotation);
 				}
 				else
@@ -117,7 +121,11 @@ public static class EventManager
 			case "CameraMoveEvent": 
 				if(TryParseVector3(def.parameters["targetLocation"], out Vector3 cameraMoveLocation))
 				{
-					Vector3 cameraWorldLocation = TryParseVector3(def.parameters["worldLocation"], out cameraWorldLocation) ? cameraWorldLocation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
+					Vector3 cameraWorldLocation = CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
+					if(def.parameters.ContainsKey("worldLocation"))
+					{
+						cameraWorldLocation = TryParseVector3(def.parameters["worldLocation"], out cameraWorldLocation) ? cameraWorldLocation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
+					}
 					float moveSpeed = def.parameters.ContainsKey("moveSpeed") ? float.TryParse(def.parameters["moveSpeed"], out float mSpeed) ? mSpeed : 1f : 1f;
 					bool autoReturn = def.parameters.ContainsKey("autoReturn") ? bool.TryParse(def.parameters["autoReturn"], out bool aReturn) ? aReturn : false : false;
 
@@ -131,7 +139,12 @@ public static class EventManager
 			case "CameraPanEvent":
 				if (TryParseVector3(def.parameters["targetRotation"], out Vector3 cameraPanRotation))
 				{
-					Vector3 cameraWorldRotation = TryParseVector3(def.parameters["worldRotation"], out cameraWorldRotation) ? cameraWorldRotation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles;
+					Vector3 cameraWorldRotation = CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles; ;
+					if (def.parameters.ContainsKey("worldRotation"))
+					{
+						cameraWorldRotation = TryParseVector3(def.parameters["worldRotation"], out cameraWorldRotation) ? cameraWorldRotation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles;
+					}
+					
 					float rotationSpeed = def.parameters.ContainsKey("rotationSpeed") ? float.TryParse(def.parameters["rotationSpeed"], out float rSpeed) ? rSpeed : 30f : 30f;
 					bool autoReturn = def.parameters.ContainsKey("autoReturn") ? bool.TryParse(def.parameters["autoReturn"], out bool aReturn) ? aReturn : false : false;
 
