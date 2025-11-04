@@ -42,6 +42,13 @@ public static class NPCManager
         {
             Vector3 targetLoc = _npcCache[e.NPCToMove].transform.position + e.TargetLocation;
             agent.SetDestination(targetLoc);
+
+            if(agent.remainingDistance < agent.stoppingDistance)
+            {
+                agent.transform.Rotate(e.TargetRotation);
+                EventManager.MarkEventCompleted(e.Id);
+            }
+
         }
 	}
 
