@@ -74,7 +74,12 @@ public static class EventManager
 
 				if (def.parameters.ContainsKey("npcToMove") && TryParseVector3(def.parameters["targetLocation"], out Vector3 location))
 				{
-					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location);
+					Vector3 rotation = Vector3.zero;
+					if(def.parameters.ContainsKey("targetRotation"))
+					{
+						TryParseVector3(def.parameters["targetRotation"], out rotation);
+					}
+					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location, rotation);
 				}
 				else
 				{
@@ -108,7 +113,8 @@ public static class EventManager
 					
 					if(def.parameters.ContainsKey("layerMask"))
 					{
-						mask = LayerMask.GetMask(def.parameters["layerMask"]);
+						string layerMaskName = def.parameters["layerMask"];
+						mask = LayerMask.GetMask(layerMaskName);
 					}
 					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["eventToRaiseOnTrigger"], mask, triggerRadius);
 					
@@ -187,7 +193,7 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		if( evt.IsCompleted) 
+		if(evt.IsCompleted) 
 		{
 			Debug.LogWarning($"Event {eventID} has already been completed. Skipping...");
 			return;

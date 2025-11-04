@@ -8,26 +8,29 @@ using UnityEngine;
 public class SpawnableTriggerBehavior : MonoBehaviour
 {
     private string EventToTrigger;
-	private int LayerMask;
+	private LayerMask layerMask;
 	private bool IsRepeatable;
     private string Id;
-    public void Initialize(string id, string eventToTrigger, int layerMask, float radius, bool isRepeatable)
+    public void Initialize(string id, string eventToTrigger, LayerMask layerMask, float radius, bool isRepeatable)
     {
         EventToTrigger = eventToTrigger;
-        LayerMask = layerMask;
+        this.layerMask = layerMask;
         IsRepeatable = isRepeatable;
         Id = id;
 
         BoxCollider collider = GetComponent<BoxCollider>();
         collider.size = new Vector3(radius,radius,radius);
-        collider.includeLayers = LayerMask;
-    }
+
+		Debug.Log($"[SpawnTriggerBehavior] Initialized with mask={layerMask.value}");
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-        if(other.gameObject.layer == LayerMask) 
-        {
-            EventManager.Raise(EventToTrigger);
+		Debug.Log($"[Trigger] mask.value={layerMask.value}");
+		if (((1 << other.gameObject.layer) & layerMask.value) != 0)
+		{
+			Debug.Log($"{other.gameObject.name} entered the trigger.");
+			EventManager.Raise(EventToTrigger);
             if(!IsRepeatable)
             {
                 EventManager.MarkEventCompleted(Id);
