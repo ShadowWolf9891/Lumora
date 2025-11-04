@@ -79,9 +79,9 @@
             "id": "Watts_Back_Trigger",
             "parameters":
             {
-                "worldLocation": "-505.007, 0.36, -6976.118",
+                "worldLocation": "-504.99, 0.473, -697.118",
                 "radius": "1",
-                "layerMask": "6",
+                "layerMask": "Player",
                 "eventToRaiseOnTrigger": "C2_Arrive_Watts_Back"
             }
         },
@@ -115,6 +115,10 @@
         {
             "type": "CameraPanEvent",
             "id": "C2_Lira_Looking_Right",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Back"
+            ],
             "parameters":
             {
                 "targetRotation": "0,80,0",
@@ -309,6 +313,14 @@
             {
                 "npcToMove": "Blueprint",
                 "targetLocation": "-503.766.1.1,-693.7007"
+            }
+        },
+        {
+            "type": "CameraMoveEvent",
+            "id": "C2_Cam_Table",
+            "parameters":
+            {
+                "targetLocation": "-503.77"
             }
         }
 
