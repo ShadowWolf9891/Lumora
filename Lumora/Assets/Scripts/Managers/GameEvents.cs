@@ -48,6 +48,7 @@ public class GameEventDefinition
     public bool isCompleted = false;
     public string requireCompletedID;
     public string[] eventsToFire;
+    public string[] eventsOnComplete;
 	public Dictionary<string, string> parameters { get; set; } = new Dictionary<string, string>();
 }
 
@@ -61,12 +62,14 @@ public abstract class GameEventType
     public bool IsRepeatable;
     public string RequireCompletedID;
     public string[] EventsToFire;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null)
+    public string[] EventsOnComplete;
+    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
         IsCompleted = isCompleted;
         EventsToFire = eventsToFire;
+        EventsOnComplete = eventsOnComplete;
     }
 }
 
