@@ -1,27 +1,34 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyAnimatorController : MonoBehaviour
 {
     Animator animator;
-    EnemyBehavior enemyBehavior;
-    Rigidbody rb;
-    void Start()
+    void Awake()
     {
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
-        enemyBehavior = GetComponent<EnemyBehavior>();
     }
-
-    void EnterRunState()
+    public void CheckEnemyState(AlertStates alertState)
     {
-
-    }
-    void EnterPatrolState()
-    {
-
-    }
-    void EnterIdleState()
-    {
-        
+        if (animator == null) Debug.Log("BAD");
+        if (alertState == AlertStates.IDLE)
+        {
+            animator.SetBool("IsAlerted", false);
+            animator.SetBool("IsPartol", false);
+            if (!animator.GetBool("IsIdle")) animator.SetBool("IsIdle", true);
+        }
+        if (alertState == AlertStates.ALERT)
+        {
+            animator.SetBool("IsAlerted", false);
+            animator.SetBool("IsIdle", false);
+            if (!animator.GetBool("IsPatrol")) animator.SetBool("IsPatrol", true);
+        }
+        if(alertState == AlertStates.CHASING)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsPartol", false);
+            if (!animator.GetBool("IsAlerted")) animator.SetBool("IsAlerted", true);
+        }
     }
 }
