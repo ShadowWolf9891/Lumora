@@ -108,7 +108,8 @@ public static class EventManager
 					
 					if(def.parameters.ContainsKey("layerMask"))
 					{
-						mask = LayerMask.GetMask(def.parameters["layerMask"]);
+						string layerMaskName = def.parameters["layerMask"];
+						mask = LayerMask.GetMask(layerMaskName);
 					}
 					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["eventToRaiseOnTrigger"], mask, triggerRadius);
 					
@@ -187,7 +188,7 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		if( evt.IsCompleted) 
+		if(evt.IsCompleted) 
 		{
 			Debug.LogWarning($"Event {eventID} has already been completed. Skipping...");
 			return;
