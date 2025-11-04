@@ -48,6 +48,7 @@ public class GameEventDefinition
     public bool isCompleted = false;
     public string requireCompletedID;
     public string[] eventsToFire;
+    public string[] eventsOnComplete;
 	public Dictionary<string, string> parameters { get; set; } = new Dictionary<string, string>();
 }
 
@@ -61,12 +62,14 @@ public abstract class GameEventType
     public bool IsRepeatable;
     public string RequireCompletedID;
     public string[] EventsToFire;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null)
+    public string[] EventsOnComplete;
+    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
         IsCompleted = isCompleted;
         EventsToFire = eventsToFire;
+        EventsOnComplete = eventsOnComplete;
     }
 }
 
@@ -171,15 +174,15 @@ public class SpawnTriggerEvent : GameEventType
 {
 	public Vector3 Position { get; private set; }
 	public float Radius { get; private set; } // optional for spherical triggers
-    public int LayerMask { get; private set; }
+    public LayerMask layerMask { get; private set; }
 	public string EventToRaiseOnTrigger { get; private set; }
-	public SpawnTriggerEvent(string id,Vector3 position, string eventToRaiseOnTrigger, int layerMask = ~0,
+	public SpawnTriggerEvent(string id,Vector3 position, string eventToRaiseOnTrigger, LayerMask layerMask,
         float radius = 1f) : base(id)
 	{
 		Position = position;
 		Radius = radius;
 		EventToRaiseOnTrigger = eventToRaiseOnTrigger;
-        LayerMask = layerMask;
+        this.layerMask = layerMask;
     }
 }
 
