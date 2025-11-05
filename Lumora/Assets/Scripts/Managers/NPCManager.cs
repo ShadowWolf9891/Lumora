@@ -46,6 +46,7 @@ public static class NPCManager
             if(agent.remainingDistance < agent.stoppingDistance)
             {
                 agent.transform.Rotate(e.TargetRotation);
+                EventManager.MarkEventCompleted(e.Id);
             }
 
         }
