@@ -90,11 +90,13 @@ public class NPCMovementEvent : GameEventType
 { 
     public string NPCToMove {  get; private set; }
     public Vector3 TargetLocation { get; private set; }
-	public NPCMovementEvent(string id, string npc, Vector3 targetLocation) : base(id)
+	public Vector3 TargetRotation { get; private set; }
+	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
 	{
 		NPCToMove = npc;
 		TargetLocation = targetLocation;
-    }
+		TargetRotation = targetRotation;
+	}
 }
 
 public enum PlayerInputActionType
@@ -174,15 +176,15 @@ public class SpawnTriggerEvent : GameEventType
 {
 	public Vector3 Position { get; private set; }
 	public float Radius { get; private set; } // optional for spherical triggers
-    public int LayerMask { get; private set; }
+    public LayerMask layerMask { get; private set; }
 	public string EventToRaiseOnTrigger { get; private set; }
-	public SpawnTriggerEvent(string id,Vector3 position, string eventToRaiseOnTrigger, int layerMask = ~0,
+	public SpawnTriggerEvent(string id,Vector3 position, string eventToRaiseOnTrigger, LayerMask layerMask,
         float radius = 1f) : base(id)
 	{
 		Position = position;
 		Radius = radius;
 		EventToRaiseOnTrigger = eventToRaiseOnTrigger;
-        LayerMask = layerMask;
+        this.layerMask = layerMask;
     }
 }
 

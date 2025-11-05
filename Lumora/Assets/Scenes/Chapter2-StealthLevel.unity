@@ -3830,6 +3830,10 @@ PrefabInstance:
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
       objectReference: {fileID: 446132009}
+    - target: {fileID: 1542053904733956834, guid: 4333b01f9c1bb4c429efc1ba7594abd5, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
     - target: {fileID: 5516940199162863807, guid: 4333b01f9c1bb4c429efc1ba7594abd5, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -20539,7 +20543,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 316.92, y: 201.97}
-  m_SizeDelta: {x: 109.021, y: 15.498}
+  m_SizeDelta: {x: 125, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1292930907
 MonoBehaviour:
@@ -20588,11 +20592,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
+  m_fontSize: 12.2
   m_fontSizeBase: 15
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 0
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
