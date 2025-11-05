@@ -155,11 +155,11 @@ public class PlayerBehavior : MonoBehaviour
     private void DoSprint()
     {
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
-		if (isHiding)
-		{
-            GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-        }
-		if (!isSprinting)
+		//if (isHiding)
+		//{
+  //          GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
+  //      }
+		if (!isSprinting && !isHiding)
 		{
 			isSprinting = true;
 		}
@@ -175,7 +175,7 @@ public class PlayerBehavior : MonoBehaviour
 		Invoke("TriggerSprintNoise", 0.5f);
     }
 	private void TriggerSprintNoise()
-	{
+    {
 		if (shouldSprintTriggerNoise)
 		{
 			timeSinceLastSprintNoise = 0;

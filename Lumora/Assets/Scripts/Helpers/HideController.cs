@@ -5,7 +5,9 @@ using UnityEngine;
 public class HideController : MonoBehaviour
 {
 	[Header("Stealth Variables")]
-	public  LayerMask coverLayerMask;
+	public LayerMask coverLayerMask;
+	[SerializeField]
+	public string tagToIgnore;
 	
 	List<Collider> nearbyWalls = new();
 	public Collider GetClosestCollider(Vector3 sourceLocation)
@@ -18,9 +20,10 @@ public class HideController : MonoBehaviour
 
 		float closestDistance = float.MaxValue;
 		Collider tempObject = null;
-
+		Debug.Log($"Running find distance on: {nearbyWalls.Count} objects");
 		foreach (Collider c in nearbyWalls)
 		{
+			Debug.Log($"Running Find Distance on {c.gameObject.name}");
 			float tempDistance = Vector3.Distance(c.ClosestPoint(sourceLocation), sourceLocation);
 
 			if (tempDistance < closestDistance)
@@ -40,7 +43,7 @@ public class HideController : MonoBehaviour
 	{
 		if (((1 << other.gameObject.layer) & coverLayerMask) != 0)
 		{
-			if (!nearbyWalls.Contains(other))
+			if (!nearbyWalls.Contains(other) && !other.gameObject.CompareTag("NoiseTag"))
 			{
 				nearbyWalls.Add(other);
 			}
