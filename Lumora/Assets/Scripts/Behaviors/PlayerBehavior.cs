@@ -139,13 +139,14 @@ public class PlayerBehavior : MonoBehaviour
 		}
 		else
         {
-            if (isSprinting)
-            {
-                SprintMove(moveDirection);
-            }
+			if (isSprinting)
+			{
+				SprintMove(moveDirection);
+			}
 			else
-            DefaultMove(moveDirection);
-
+			{
+				DefaultMove(moveDirection);
+			}
             FaceMoveDirection(moveDirection);
             //adding drag while grounded
         }
