@@ -90,12 +90,40 @@
             "id": "C2_Arrive_Watts_Back",
             "eventsOnComplete" :
             [
-                "C2_Watts_Back"
+                "C2_Lira_Looking_Left"
             ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "3"
+            }
+        },
+        {
+            "type": "CameraPanEvent",
+            "id": "C2_Lira_Looking_Left",
+            "eventsOnComplete" :
+            [
+                "C2_Lira_Looking_Right"
+            ],
+            "parameters":
+            {
+                "targetRotation": "0,-80,0",
+                "rotationSpeed": "1.5",
+                "autoReturn": "true"
+            }
+        },
+        {
+            "type": "CameraPanEvent",
+            "id": "C2_Lira_Looking_Right",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Back"
+            ],
+            "parameters":
+            {
+                "targetRotation": "0,80,0",
+                "rotationSpeed": "1.5",
+                "autoReturn": "true"
             }
         },
         {
@@ -132,7 +160,7 @@
             "parameters": 
             {
                 "npcToMove": "Cube.002",
-                "targetLocation":"0,0,0"
+                "targetLocation":""
             }
 
         },
@@ -181,7 +209,7 @@
             "parameters":
             {
                 "npcToMove": "Cube.002",
-                "targetLocation" :"0,0,0"
+                "targetLocation" :""
             }
         },
         {
@@ -220,7 +248,7 @@
             "parameters":
             {
                 "npcToMove": "Cube.002",
-                "targetLocation": "0,0,0"
+                "targetLocation": ""
             }
         },
         {
@@ -284,7 +312,7 @@
             "parameters": 
             {
                 "npcToMove": "Blueprint",
-                "targetLocation": "-503.766.1.1,-693.7007"
+                "targetLocation": "-503.766,1.1,-693.7007"
             }
         },
         {
@@ -292,35 +320,7 @@
             "id": "C2_Cam_Table",
             "parameters":
             {
-                "targetLocation": "-503.77,0,0"
-            }
-        },
-           {
-            "type": "CameraPanEvent",
-            "id": "C2_Lira_Looking_Left",
-            "eventsOnComplete" :
-            [
-                "C2_Lira_Looking_Right"
-            ],
-            "parameters":
-            {
-                "targetRotation": "0,-80,0",
-                "rotationSpeed": "1.5",
-                "autoReturn": "true"
-            }
-        },
-        {
-            "type": "CameraPanEvent",
-            "id": "C2_Lira_Looking_Right",
-            "eventsOnComplete":
-            [
-                "C2_Watts_Back"
-            ],
-            "parameters":
-            {
-                "targetRotation": "0,80,0",
-                "rotationSpeed": "1.5",
-                "autoReturn": "true"
+                "targetLocation": "-503.77, 1,1"
             }
         }
 
