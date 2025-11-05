@@ -30,7 +30,10 @@ public class CameraManager
 	{
 		_cameraList = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsSortMode.InstanceID).ToList();
 		_brain = CinemachineBrain.GetActiveBrain(0);
-		if(CurrentCamera ==null) CurrentCamera = _cameraList.Last();
+		if(CurrentCamera ==null)
+		{
+			SetCurrentCamera("3rd Person Camera");
+		}
 	}
 
 	public static void UpdateCameraEvents()
