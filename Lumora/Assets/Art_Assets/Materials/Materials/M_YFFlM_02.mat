@@ -13,10 +13,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
-<<<<<<< Updated upstream
-=======
   - _EMISSIVE_COLOR_MAP
->>>>>>> Stashed changes
+  - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
   m_InvalidKeywords: []
@@ -52,7 +50,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 2a9f02e7af68f874a819a831fe6eb13d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6c5ea2e30779ed8479867e9a444a1868, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CoatMaskMap:
@@ -80,11 +78,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveColorMap:
-<<<<<<< Updated upstream
-        m_Texture: {fileID: 0}
-=======
         m_Texture: {fileID: 2800000, guid: 0ce21eb488a6ee949a6ded06031151c4, type: 3}
->>>>>>> Stashed changes
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightMap:
@@ -104,7 +98,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9f6599c9e4a723d41af0d344fd2373b7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -112,7 +106,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 2a9f02e7af68f874a819a831fe6eb13d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6c5ea2e30779ed8479867e9a444a1868, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -128,7 +122,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 2800000, guid: 7f301c36ac56e1f458627dfa8fb0de5a, type: 3}
+        m_Texture: {fileID: 2800000, guid: c8e275870de13fd478bce42657e24873, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecularColorMap:
@@ -174,7 +168,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AORemapMax: 1
-    - _AORemapMin: 0
+    - _AORemapMin: 0.16699809
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
@@ -237,10 +231,10 @@ Material:
     - _MaterialID: 1
     - _Metallic: 0
     - _MetallicRemapMax: 0
-    - _MetallicRemapMin: 0
+    - _MetallicRemapMin: 0.26640168
     - _Mode: 0
     - _NormalMapSpace: 0
-    - _NormalScale: 1
+    - _NormalScale: 5.5
     - _ObjectSpaceUVMapping: 0
     - _ObjectSpaceUVMappingEmissive: 0
     - _OcclusionStrength: 1
@@ -257,8 +251,8 @@ Material:
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _Smoothness: 0.5
-    - _SmoothnessRemapMax: 1
-    - _SmoothnessRemapMin: 0
+    - _SmoothnessRemapMax: 0.5506959
+    - _SmoothnessRemapMin: 0.44930425
     - _SmoothnessTextureChannel: 0
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
@@ -304,7 +298,7 @@ Material:
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
@@ -317,7 +311,7 @@ Material:
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &2714575137812683425
+--- !u!114 &2604867330147464975
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
