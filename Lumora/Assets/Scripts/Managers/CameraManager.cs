@@ -12,6 +12,8 @@ public class CameraManager
 	public static CinemachineCamera CurrentCamera { get; private set; }
 	public static CinemachineCamera PreviousCamera { get; private set; }
 
+	private static Queue<GameEventType> inProgressEvents = new Queue<GameEventType>();
+
 	/// <summary>
 	/// Setup the camera manager. Make sure to call this during awake to correctly subscribe to events.
 	/// </summary>
@@ -28,8 +30,54 @@ public class CameraManager
 	{
 		_cameraList = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsSortMode.InstanceID).ToList();
 		_brain = CinemachineBrain.GetActiveBrain(0);
-		if(CurrentCamera ==null) CurrentCamera = _cameraList.First();
+		if(CurrentCamera ==null) CurrentCamera = _cameraList.Last();
 	}
+
+	public static void UpdateCameraEvents()
+	{
+		if (_cameraList == null) { LoadCameras(); }
+		if (CurrentCamera.name == "Cinematic_Camera")
+		{
+			if (inProgressEvents.Count > 0)
+			{
+				GameEventType currentEvent = inProgressEvents.Peek();
+				if (currentEvent is CameraMoveEvent cameraEvent)
+				{
+					CurrentCamera.transform.position = Vector3.Slerp(CurrentCamera.transform.position, cameraEvent.WorldLocation + cameraEvent.TargetLocation, cameraEvent.MoveSpeed);
+
+					if (CurrentCamera.transform.position.magnitude - (cameraEvent.WorldLocation + cameraEvent.TargetLocation).magnitude <= 0.1f)
+					{
+						EventManager.MarkEventCompleted(currentEvent.Id);
+						inProgressEvents.Dequeue();
+					}
+				}
+				if (currentEvent is CameraPanEvent cameraPanEvent)
+				{
+					Quaternion currentRot = CurrentCamera.transform.rotation;
+					Quaternion targetRot = Quaternion.Euler(cameraPanEvent.WorldRotation + cameraPanEvent.TargetRotation);
+
+					CurrentCamera.transform.rotation = Quaternion.Slerp(
+						currentRot,
+						targetRot,
+						cameraPanEvent.RotationSpeed * Time.deltaTime
+					);
+
+					if (Quaternion.Angle(currentRot, targetRot) <= 0.5f)
+					{
+						EventManager.MarkEventCompleted(currentEvent.Id);
+						inProgressEvents.Dequeue();
+					}
+				}
+			}
+			else
+			{
+				ReturnToPreviousCamera(0);
+			}
+		}
+	}
+
+
+
 	/// <summary>
 	/// Set the current cinemachine camera based on its index, ordered by instance ID.
 	/// </summary>
@@ -99,38 +147,26 @@ public class CameraManager
 	private static void MoveCinematicCamera(CameraMoveEvent e)
 	{
 		SetCurrentCamera("Cinematic_Camera", 0);
-		CurrentCamera.ForceCameraPosition(e.WorldLocation, CurrentCamera.transform.rotation);
-		Vector3 target = CurrentCamera.transform.position + e.TargetLocation;
-		CurrentCamera.transform.position = Vector3.Slerp(CurrentCamera.transform.position, target, e.MoveSpeed);
+		CurrentCamera.transform.SetPositionAndRotation(e.WorldLocation, PreviousCamera.transform.rotation);
+		inProgressEvents.Enqueue(e);
 
-		if(e.AutoReturn && CurrentCamera.transform.position.magnitude - target.magnitude <= 0.1f) 
+		if(e.AutoReturn) 
 		{
-			GameEvents<CameraMoveEvent>.Raise(new CameraMoveEvent(e.Id, e.WorldLocation, target, e.MoveSpeed, false));
-		}
-
-		if(!e.AutoReturn)
-		{
-			ReturnToPreviousCamera(0);
-			EventManager.MarkEventCompleted(e.Id);
+			GameEvents<CameraMoveEvent>.Raise(new CameraMoveEvent(e.Id, - e.TargetLocation, e.WorldLocation + e.TargetLocation, e.MoveSpeed, false));
 		}
 	}
 
 	private static void PanCinematicCamera(CameraPanEvent e)
 	{
 		SetCurrentCamera("Cinematic_Camera", 0);
-		CurrentCamera.ForceCameraPosition(CurrentCamera.transform.position, Quaternion.Euler(e.WorldRotation));
-		Vector3 target = CurrentCamera.transform.rotation.eulerAngles + e.TargetRotation;
-		CurrentCamera.transform.Rotate(Vector3.Slerp(CurrentCamera.transform.rotation.eulerAngles, target, e.RotationSpeed));
+		CurrentCamera.transform.SetPositionAndRotation(PreviousCamera.transform.position, Quaternion.Euler(e.WorldRotation));
+		inProgressEvents.Enqueue(e);
 
-		if (e.AutoReturn && CurrentCamera.transform.rotation.eulerAngles.magnitude - e.TargetRotation.magnitude <= 0.1f)
+		if (e.AutoReturn)
 		{
-			GameEvents<CameraPanEvent>.Raise(new CameraPanEvent(e.Id, e.WorldRotation, target, e.RotationSpeed, false));
+			GameEvents<CameraPanEvent>.Raise(new CameraPanEvent(e.Id, -e.TargetRotation, e.WorldRotation + e.TargetRotation, e.RotationSpeed, false));
 		}
 
-		if (!e.AutoReturn)
-		{
-			ReturnToPreviousCamera(0);
-			EventManager.MarkEventCompleted(e.Id);
-		}
+		
 	}
 }
