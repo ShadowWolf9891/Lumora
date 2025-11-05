@@ -14,6 +14,10 @@ Material:
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _DISABLE_SSR_TRANSPARENT
+<<<<<<< Updated upstream
+=======
+  - _EMISSIVE_COLOR_MAP
+>>>>>>> Stashed changes
   - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
@@ -38,6 +42,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 314fc2085c4fab84da6f47c964059220, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _EmissiveColorMap:
+        m_Texture: {fileID: 2800000, guid: 43a7b65d61bc0334d802018cd858aba3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 43a7b65d61bc0334d802018cd858aba3, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -48,8 +56,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+<<<<<<< Updated upstream
     - _MetallicRemapMax: 0.01
     m_Colors: []
+=======
+    - _AORemapMax: 0.7097416
+    - _AORemapMin: 0.6799207
+    - _MetallicRemapMax: 0.01
+    - _SmoothnessRemapMax: 0.26441348
+    - _SmoothnessRemapMin: 0.26441348
+    m_Colors:
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
+>>>>>>> Stashed changes
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &1907803900628296890
