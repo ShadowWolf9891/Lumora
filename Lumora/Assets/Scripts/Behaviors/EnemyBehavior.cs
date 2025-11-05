@@ -60,7 +60,7 @@ public class EnemyBehavior : MonoBehaviour
 	{
 		agent = GetComponent<NavMeshAgent>();
 		playerRef = GameObject.FindGameObjectWithTag("Player");
-		animController = GetComponent<EnemyAnimatorController>();
+		animController = GetComponentInChildren<EnemyAnimatorController>();
 
 		bb = ScriptableObject.CreateInstance<BTBlackboard>();
 		bt = DeepCloneBehaviorTree(btAsset);
@@ -84,6 +84,7 @@ public class EnemyBehavior : MonoBehaviour
 	{
 		CheckVision();
 		bt.Tick(gameObject);
+		animController.CheckEnemyState();
 	}
 
 	#region Vision
@@ -235,7 +236,6 @@ public class EnemyBehavior : MonoBehaviour
 	{
 		alertController.ChangeImage(curState);
 		searchPoints.Clear();
-		animController.CheckEnemyState(curState);
 	}
 
 	private void FreezeEnemy(ChangeGameStateEvent e) 
