@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 using Newtonsoft.Json;
+using Unity.Cinemachine;
 
 [System.Serializable]
 public class AllEvents
@@ -13,17 +14,24 @@ public class AllEvents
 
 public static class EventManager
 {
-	private static AllEvents allEventsDefs;
+	private static AllEvents allEventsDefs, c2EventsDefs;
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
 
 	private static void LoadEvents()
 	{
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
+		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
 		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
+		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
-
+		
 		foreach (GameEventDefinition eventDef in allEventsDefs.allEvents)
+		{
+			CreateEvent(eventDef);
+			Debug.Log($"Created event {eventDef.id}");
+		}
+		foreach (GameEventDefinition eventDef in c2EventsDefs.allEvents)
 		{
 			CreateEvent(eventDef);
 			Debug.Log($"Created event {eventDef.id}");
@@ -66,7 +74,12 @@ public static class EventManager
 
 				if (def.parameters.ContainsKey("npcToMove") && TryParseVector3(def.parameters["targetLocation"], out Vector3 location))
 				{
-					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location);
+					Vector3 rotation = Vector3.zero;
+					if(def.parameters.ContainsKey("targetRotation"))
+					{
+						TryParseVector3(def.parameters["targetRotation"], out rotation);
+					}
+					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location, rotation);
 				}
 				else
 				{
@@ -75,12 +88,79 @@ public static class EventManager
 				break;
 			case "SpawnObjectEvent":
 				if(def.parameters.ContainsKey("prefabName") && TryParseVector3(def.parameters["worldLocation"], out Vector3 spawnLocation))
-				{ 
-					if(!TryParseVector3(def.parameters["worldRotation"], out Vector3 spawnRotation)){spawnRotation = Vector3.zero;}
+				{
+					Vector3 spawnRotation = Vector3.zero;
+					if (def.parameters.ContainsKey("worldRotation"))
+					{
+						TryParseVector3(def.parameters["worldRotation"], out spawnRotation);
+					}
 					e = new SpawnObjectEvent(def.id, def.parameters["prefabName"], spawnLocation, spawnRotation);
 				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
+				}
 				break;
-				
+			case "SpawnTriggerEvent":
+				if (def.parameters.ContainsKey("eventToRaiseOnTrigger") && TryParseVector3(def.parameters["worldLocation"], out Vector3 triggerSpawnLocation))
+				{
+					float triggerRadius = 1f;
+					LayerMask mask = ~0; //Everything
+					if (def.parameters.ContainsKey("radius"))
+					{
+						 triggerRadius = float.TryParse(def.parameters["radius"], out float radius) ? radius : 1f;
+					}
+					
+					if(def.parameters.ContainsKey("layerMask"))
+					{
+						string layerMaskName = def.parameters["layerMask"];
+						mask = LayerMask.GetMask(layerMaskName);
+					}
+					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["eventToRaiseOnTrigger"], mask, triggerRadius);
+					
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
+				}
+				break;
+			case "CameraMoveEvent": 
+				if(TryParseVector3(def.parameters["targetLocation"], out Vector3 cameraMoveLocation))
+				{
+					Vector3 cameraWorldLocation = CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
+					if(def.parameters.ContainsKey("worldLocation"))
+					{
+						cameraWorldLocation = TryParseVector3(def.parameters["worldLocation"], out cameraWorldLocation) ? cameraWorldLocation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
+					}
+					float moveSpeed = def.parameters.ContainsKey("moveSpeed") ? float.TryParse(def.parameters["moveSpeed"], out float mSpeed) ? mSpeed : 1f : 1f;
+					bool autoReturn = def.parameters.ContainsKey("autoReturn") ? bool.TryParse(def.parameters["autoReturn"], out bool aReturn) ? aReturn : false : false;
+
+					e = new CameraMoveEvent(def.id, cameraMoveLocation, cameraWorldLocation, moveSpeed, autoReturn);
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
+				}
+				break;
+			case "CameraPanEvent":
+				if (TryParseVector3(def.parameters["targetRotation"], out Vector3 cameraPanRotation))
+				{
+					Vector3 cameraWorldRotation = CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles; ;
+					if (def.parameters.ContainsKey("worldRotation"))
+					{
+						cameraWorldRotation = TryParseVector3(def.parameters["worldRotation"], out cameraWorldRotation) ? cameraWorldRotation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles;
+					}
+					
+					float rotationSpeed = def.parameters.ContainsKey("rotationSpeed") ? float.TryParse(def.parameters["rotationSpeed"], out float rSpeed) ? rSpeed : 30f : 30f;
+					bool autoReturn = def.parameters.ContainsKey("autoReturn") ? bool.TryParse(def.parameters["autoReturn"], out bool aReturn) ? aReturn : false : false;
+
+					e = new CameraPanEvent(def.id, cameraPanRotation, cameraWorldRotation, rotationSpeed, autoReturn);
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
+				}
+				break;
 			default:
 				Debug.LogError($"Invalid type {def.type}");
 				return;
@@ -95,6 +175,7 @@ public static class EventManager
 			}
 			e.IsCompleted = def.isCompleted;
 			e.EventsToFire = def.eventsToFire;
+			e.EventsOnComplete = def.eventsOnComplete;
 			_events.Add(def.id, e);
 		}
 	}
@@ -112,7 +193,7 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		if( evt.IsCompleted) 
+		if(evt.IsCompleted) 
 		{
 			Debug.LogWarning($"Event {eventID} has already been completed. Skipping...");
 			return;
@@ -169,7 +250,19 @@ public static class EventManager
 			return;
 		}
 
+		if (evt.EventsOnComplete != null && evt.EventsOnComplete.Length > 0)
+		{
+			foreach (var e in evt.EventsOnComplete)
+			{
+				Raise(e);
+
+				Debug.Log($"Raised event {e}");
+
+			}
+		}
+
 		evt.IsCompleted = true;
+		Debug.Log($"Completed event {eventID}");
 	}
 
 	/// <summary>

@@ -49,6 +49,7 @@ public class GameEventDefinition
     public bool isCompleted = false;
     public string requireCompletedID;
     public string[] eventsToFire;
+    public string[] eventsOnComplete;
 	public Dictionary<string, string> parameters { get; set; } = new Dictionary<string, string>();
 }
 
@@ -62,12 +63,14 @@ public abstract class GameEventType
     public bool IsRepeatable;
     public string RequireCompletedID;
     public string[] EventsToFire;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null)
+    public string[] EventsOnComplete;
+    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
         IsCompleted = isCompleted;
         EventsToFire = eventsToFire;
+        EventsOnComplete = eventsOnComplete;
     }
 }
 
@@ -88,11 +91,13 @@ public class NPCMovementEvent : GameEventType
 { 
     public string NPCToMove {  get; private set; }
     public Vector3 TargetLocation { get; private set; }
-	public NPCMovementEvent(string id, string npc, Vector3 targetLocation) : base(id)
+	public Vector3 TargetRotation { get; private set; }
+	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
 	{
 		NPCToMove = npc;
 		TargetLocation = targetLocation;
-    }
+		TargetRotation = targetRotation;
+	}
 }
 
 public enum PlayerInputActionType
@@ -191,15 +196,15 @@ public class SpawnTriggerEvent : GameEventType
 {
 	public Vector3 Position { get; private set; }
 	public float Radius { get; private set; } // optional for spherical triggers
-    public int LayerMask { get; private set; }
-	public GameEventType EventToRaiseOnTrigger { get; private set; }
-	public SpawnTriggerEvent(string id,Vector3 position, GameEventType eventToRaiseOnTrigger, int layerMask = ~0,
+    public LayerMask layerMask { get; private set; }
+	public string EventToRaiseOnTrigger { get; private set; }
+	public SpawnTriggerEvent(string id,Vector3 position, string eventToRaiseOnTrigger, LayerMask layerMask,
         float radius = 1f) : base(id)
 	{
 		Position = position;
 		Radius = radius;
 		EventToRaiseOnTrigger = eventToRaiseOnTrigger;
-        LayerMask = layerMask;
+        this.layerMask = layerMask;
     }
 }
 
@@ -216,19 +221,46 @@ public class SpawnVisibleNoiseEvent : GameEventType
         IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
+
+public class CameraMoveEvent : GameEventType 
+{
+    public Vector3 TargetLocation { get; private set; }
+    public Vector3 WorldLocation { get; private set; }
+    public float MoveSpeed { get; private set; }
+    public bool AutoReturn { get; private set; }
+
+    public CameraMoveEvent(string id, Vector3 targetLocation, Vector3 worldLocation, float moveSpeed = 1, bool autoReturn = false) : base(id)
+	{
+		TargetLocation = targetLocation;
+		WorldLocation = worldLocation;
+		MoveSpeed = moveSpeed;
+		AutoReturn = autoReturn;
+	}
+}
+public class CameraPanEvent : GameEventType
+{
+	public Vector3 TargetRotation { get; private set; }
+	public Vector3 WorldRotation { get; private set; }
+	public float RotationSpeed { get; private set; }
+	public bool AutoReturn { get; private set; }
+
+	public CameraPanEvent(string id, Vector3 targetRotation, Vector3 worldRotation, float rotationSpeed = 1, bool autoReturn = false) : base(id)
+	{
+		TargetRotation = targetRotation;
+		WorldRotation = worldRotation;
+		RotationSpeed = rotationSpeed;
+		AutoReturn = autoReturn;
+	}
+}
 public class StartQuestEvent : GameEventType
 {
-	public StartQuestEvent(string id) : base(id){}
+	public StartQuestEvent(string id) : base(id) { }
 }
 
 public class ProgressQuestEvent : GameEventType
 {
 	public ProgressQuestEvent(string id) : base(id) { }
 }
-
-
-
-
 
 
 
