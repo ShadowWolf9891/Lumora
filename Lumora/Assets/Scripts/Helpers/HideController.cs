@@ -20,10 +20,10 @@ public class HideController : MonoBehaviour
 
 		float closestDistance = float.MaxValue;
 		Collider tempObject = null;
-		Debug.Log($"Running find distance on: {nearbyWalls.Count} objects");
+		//Debug.Log($"Running find distance on: {nearbyWalls.Count} objects");
 		foreach (Collider c in nearbyWalls)
 		{
-			Debug.Log($"Running Find Distance on {c.gameObject.name}");
+			//Debug.Log($"Running Find Distance on {c.gameObject.name}");
 			float tempDistance = Vector3.Distance(c.ClosestPoint(sourceLocation), sourceLocation);
 
 			if (tempDistance < closestDistance)
