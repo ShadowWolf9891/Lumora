@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 596235193403370507}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fountain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -318.23, y: 31.59, z: 101.95}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.51207, y: 0.51207, z: 0.51207}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4362131982546028948}
@@ -94,9 +94,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 021258930332ad04593eb874627d5364, type: 2}
     - target: {fileID: 919132149155446097, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
       propertyPath: m_Name
       value: 3D_PR_Dome (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -168,9 +180,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 021258930332ad04593eb874627d5364, type: 2}
     - target: {fileID: 919132149155446097, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
       propertyPath: m_Name
       value: 3D_PR_Dome (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: b1a1d60c949ee25418182ae0803255f3, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -245,6 +269,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c93d2f2333e9e694b88f5c867ac301cb, type: 3}
       propertyPath: m_Name
       value: 3D_PR_Tower (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c93d2f2333e9e694b88f5c867ac301cb, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: c93d2f2333e9e694b88f5c867ac301cb, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
