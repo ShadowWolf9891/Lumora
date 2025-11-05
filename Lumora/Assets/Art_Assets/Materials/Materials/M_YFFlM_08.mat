@@ -50,21 +50,24 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 7826803a7571e0d448319d33b1969e09, type: 3}
+    - _BaseColorMap:
+        m_Texture: {fileID: 2800000, guid: 9cefb8da651ecba44b228a85f33727c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 43a7b65d61bc0334d802018cd858aba3, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9cefb8da651ecba44b228a85f33727c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SpecGlossMap:
+    - _MaskMap:
         m_Texture: {fileID: 2800000, guid: 095934ec97c48e24bb026707ff7279c1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: 7826803a7571e0d448319d33b1969e09, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats:
-    - _MetallicRemapMax: 0.01
+    m_Floats: []
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
