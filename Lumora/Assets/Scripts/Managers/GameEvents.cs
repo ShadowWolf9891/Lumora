@@ -101,7 +101,7 @@ public class PlayerInputEvent : GameEventType
         MoveDirection = moveDirection;
     }
 }
-public enum GameStates { Running, Paused, Dialogue, Cutscene }
+public enum GameStates { Running, Paused, Dialogue, Cutscene, Game_Over }
 public class ChangeGameStateEvent : GameEventType
 {
     public GameStates State { get; private set; }

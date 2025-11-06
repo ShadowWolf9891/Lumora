@@ -44,7 +44,7 @@ public class PlayerBehavior : MonoBehaviour
 	//Private properties
 	private HideController hideController;
 	bool isHiding;
-	bool isSprinting;
+	public bool isSprinting { get; private set; }
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;

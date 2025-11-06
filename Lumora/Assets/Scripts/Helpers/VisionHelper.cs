@@ -16,7 +16,7 @@ public static class VisionHelper
 		//Make the target harder or easier to see if they have a visibility manager
 		if(target.TryGetComponent<VisibilityManager>(out VisibilityManager vm))
 		{
-			viewDistance *= vm.VisibilityLevel;
+			viewDistance *= vm.Visibility;
 		}
 
 		Vector3 origin = viewer.transform.position + Vector3.up * 1.5f;
