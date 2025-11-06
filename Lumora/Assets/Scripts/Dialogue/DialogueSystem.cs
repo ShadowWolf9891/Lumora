@@ -117,14 +117,14 @@ public class DialogueSystem : MonoBehaviour
     /// </summary>
     public void EndDialogue() 
     {
+        EventManager.MarkEventCompleted(currentDialogueID);
         DialoguePanel.SetActive(false);
 		SpeakerName.text = "";
 		DialogueText.text = "";
         currentLine = 0;
         currentDialogue = null;
-        EventManager.Raise("Resume_Game");
-        EventManager.MarkEventCompleted(currentDialogueID);
         currentDialogueID = "";
+        EventManager.Raise("Resume_Game");
 	}
 
     

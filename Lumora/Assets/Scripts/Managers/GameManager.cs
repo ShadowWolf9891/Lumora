@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         EventManager.Raise("Chapter2_Intro");
-		EventManager.Raise("Spawn_Test");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 
 	}
