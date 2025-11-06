@@ -249,6 +249,9 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
+		
+		evt.IsCompleted = true;
+		Debug.Log($"Completed event {eventID}");
 
 		if (evt.EventsOnComplete != null && evt.EventsOnComplete.Length > 0)
 		{
@@ -261,8 +264,7 @@ public static class EventManager
 			}
 		}
 
-		evt.IsCompleted = true;
-		Debug.Log($"Completed event {eventID}");
+		
 	}
 
 	/// <summary>
