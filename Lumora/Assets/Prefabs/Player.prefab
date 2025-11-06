@@ -220,7 +220,7 @@ Transform:
   m_GameObject: {fileID: 655220478846737925}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -372,11 +372,10 @@ MonoBehaviour:
   throwLocation: {fileID: 3646764263478511198}
   throwForce: 10
   lineRenderer: {fileID: 4654983748964475490}
-  snapDistance: 0.6
+  snapDistance: 1
   detectDistance: 1
   stealthSpeedModifier: 0.5
   sprintNoiseMade: 5
-  timebetweenFootsteps: 0.75
 --- !u!114 &2064154333712431666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,7 +390,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HideController
   coverLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 2048
+  tagToIgnore: NoiseTag
 --- !u!114 &7869366584272912734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,13 +942,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8602731980252993455}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.043619405, z: 0, w: 0.9990483}
-  m_LocalPosition: {x: 1.55, y: 0.69, z: -1.67}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.629, y: 0.8, z: -0.963}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3238719513988401299}
-  m_LocalEulerAnglesHint: {x: 0, y: -5, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5100493330512659184
 MonoBehaviour:
   m_ObjectHideFlags: 0

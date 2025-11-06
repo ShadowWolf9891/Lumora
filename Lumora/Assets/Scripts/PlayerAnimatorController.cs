@@ -87,4 +87,9 @@ public class PlayerAnimatorController : MonoBehaviour
         if (animator.GetBool("isSprinting")) { animator.SetBool("isSprinting", false); }
         else { animator.SetBool("isSprinting", true); }
     }
+
+    public void TriggerSprintNoise()
+    {
+        behavior.TriggerSprintNoise();
+    }
 }

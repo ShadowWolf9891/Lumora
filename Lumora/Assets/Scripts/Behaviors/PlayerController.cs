@@ -108,7 +108,6 @@ public class PlayerController : MonoBehaviour
 		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
 
 		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
-		//GameContext.Instance.RaiseMove(moveDirection);
 
 	}
 	private void FreezePlayer(ChangeGameStateEvent e) 

@@ -7,7 +7,8 @@ using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
 {
-	[SerializeField]
+    #region Properties
+    [SerializeField]
 	BehaviorTree btAsset;
 
 	[Header("Vision Properties")]
@@ -53,10 +54,12 @@ public class EnemyBehavior : MonoBehaviour
 	string bb_IsAlerted = "IsAlerted";
 	string bb_LostPlayer = "LostPlayer";
 
-	[SerializeField] GameObject endScreen;
+    [SerializeField] GameObject endScreen;
 	EnemyAnimatorController animController;
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
+    #endregion
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
 	{
 		agent = GetComponent<NavMeshAgent>();
 		playerRef = GameObject.FindGameObjectWithTag("Player");

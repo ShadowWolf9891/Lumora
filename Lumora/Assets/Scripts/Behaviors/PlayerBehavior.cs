@@ -37,7 +37,6 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
     [SerializeField] private float sprintNoiseMade = 5f;
-    [SerializeField] private float timebetweenFootsteps = 0.75f;
 
 
     Vector3 startVelocity = Vector3.zero;
@@ -46,8 +45,6 @@ public class PlayerBehavior : MonoBehaviour
 	private HideController hideController;
 	bool isHiding;
 	bool isSprinting;
-	bool shouldSprintTriggerNoise;
-	float timeSinceLastSprintNoise;
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
@@ -158,8 +155,9 @@ public class PlayerBehavior : MonoBehaviour
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
 		if (isHiding)
 		{
-            GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-        }
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
+		}
+
 		if (!isSprinting)
 		{
 			isSprinting = true;
@@ -175,19 +173,9 @@ public class PlayerBehavior : MonoBehaviour
 		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
 		Invoke("TriggerSprintNoise", 0.5f);
     }
-	private void TriggerSprintNoise()
-	{
-		if (shouldSprintTriggerNoise)
-		{
-			timeSinceLastSprintNoise = 0;
-			shouldSprintTriggerNoise = false;
-            GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
-        }
-		else
-		{
-			timeSinceLastSprintNoise += Time.deltaTime;
-			if (timeSinceLastSprintNoise > timebetweenFootsteps) shouldSprintTriggerNoise = true;
-		}
+	public void TriggerSprintNoise()
+    {
+        GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
 	}
     private void CrouchMove(Vector3 moveDirection)
 	{
@@ -216,6 +204,7 @@ public class PlayerBehavior : MonoBehaviour
 			rb.MovePosition(Vector3.Lerp(transform.position, snapTarget, 0.5f));
 		}
 
+		FaceMoveDirection(moveDirection);
 		////Debug for crouch movement, uncomment to re-enable.
 		//Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
 		//Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
@@ -270,7 +259,6 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (IsGrounded())
         {
-            Debug.Log("Jump Action!");
             rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
         }
     }
@@ -348,12 +336,10 @@ public class PlayerBehavior : MonoBehaviour
         {
 			//Toggle hiding
 			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent("enter_Stealth"));
-            //GameContext.Instance.RaiseEnterStealth();
         }
         else
 		{
 			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-			//GameContext.Instance.RaiseLeaveStealth();
 		}
 	}
 

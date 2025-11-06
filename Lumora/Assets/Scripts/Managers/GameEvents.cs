@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -155,6 +156,25 @@ public class EnemyDropsAlert : GameEventType
     public EnemyDropsAlert(string id, GameObject enemy) : base(id)
     {
         Enemy = enemy;
+    }
+}
+
+public class LoadedScene : GameEventType
+{
+    //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.
+    public string SceneName{ get; private set; }
+    public LoadedScene (string id, string sceneName) : base(id)
+    {
+        SceneName = sceneName;
+    }
+}
+public class UnloadedScene : GameEventType
+{
+    //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.
+    public string SceneName { get; private set; }
+    public UnloadedScene(string id, string sceneName) : base(id)
+    {
+        SceneName = sceneName;
     }
 }
 
