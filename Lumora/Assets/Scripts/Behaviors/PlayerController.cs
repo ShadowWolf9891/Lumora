@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
 	{
-		GameEvents<ChangeGameStateEvent>.Subscribe(FreezePlayer);
+		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChanged);
 		//GameContext.Instance.OnPauseGame += FreezePlayer;
 		//GameContext.Instance.OnUnPauseGame += UnFreezePlayer;
 
@@ -110,13 +110,13 @@ public class PlayerController : MonoBehaviour
 		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
 
 	}
-	private void FreezePlayer(ChangeGameStateEvent e) 
+	private void OnGameStateChanged(ChangeGameStateEvent e) 
 	{
 		if (e.State == GameStates.Running)
 		{
 			canMove = true;
 		}
-		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue) //Not sure what to do with cutscenes yet
+		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue || e.State == GameStates.Game_Over) //Not sure what to do with cutscenes yet
 		{
 			canMove = false;
 		}

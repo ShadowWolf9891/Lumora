@@ -76,6 +76,43 @@ public abstract class GameEventType
 
 //Add derived classes of GameEventType here...
 
+#region Player Events
+public enum PlayerInputActionType
+{
+    Move,
+    Look,
+    Interact,
+    Hide,
+    Sprint,
+    Jump,
+    Throw,
+    ThrowRelease,
+    NextDialogue
+}
+public class PlayerInputEvent : GameEventType
+{
+    public PlayerInputActionType ActionType { get; private set; }
+    public bool IsPressed { get; private set; } //For buttons
+    public Vector3 MoveDirection { get; private set; } //For movement
+    public PlayerInputEvent(string id, PlayerInputActionType actionType, bool isPressed = false, Vector3 moveDirection = default) : base(id)
+    {
+        ActionType = actionType;
+        IsPressed = isPressed;
+        MoveDirection = moveDirection;
+    }
+}
+public enum GameStates { Running, Paused, Dialogue, Cutscene }
+public class ChangeGameStateEvent : GameEventType
+{
+    public GameStates State { get; private set; }
+    public ChangeGameStateEvent(string id, GameStates state) : base(id)
+    {
+        State = state;
+    }
+}
+#endregion
+
+#region NPC and Quest Events
 public class DialogueEvent : GameEventType
 {
     public int Chapter { get; private set; }
@@ -99,40 +136,18 @@ public class NPCMovementEvent : GameEventType
 		TargetRotation = targetRotation;
 	}
 }
+public class StartQuestEvent : GameEventType
+{
+    public StartQuestEvent(string id) : base(id) { }
+}
 
-public enum PlayerInputActionType
+public class ProgressQuestEvent : GameEventType
 {
-    Move,
-    Look,
-	Interact,
-	Hide,
-    Sprint,
-	Jump,
-	Throw,
-	ThrowRelease,
-    NextDialogue
+    public ProgressQuestEvent(string id) : base(id) { }
 }
-public class PlayerInputEvent : GameEventType
-{ 
-    public PlayerInputActionType ActionType { get; private set; }
-    public bool IsPressed { get; private set; } //For buttons
-    public Vector3 MoveDirection { get; private set; } //For movement
-    public PlayerInputEvent(string id, PlayerInputActionType actionType, bool isPressed = false, Vector3 moveDirection = default) : base (id)
-	{
-		ActionType = actionType;
-        IsPressed = isPressed;
-        MoveDirection = moveDirection;
-    }
-}
-public enum GameStates {Running, Paused, Dialogue,Cutscene}
-public class ChangeGameStateEvent : GameEventType
-{
-    public GameStates State { get; private set; }
-	public ChangeGameStateEvent(string id, GameStates state) : base(id)
-	{
-		State = state;
-    }
-}
+#endregion
+
+#region Stealth Events
 public class EnterStealthEvent : GameEventType
 { 
     public EnterStealthEvent(string id) : base(id){}
@@ -158,7 +173,9 @@ public class EnemyDropsAlert : GameEventType
         Enemy = enemy;
     }
 }
+#endregion
 
+#region Loading Scenes
 public class LoadedScene : GameEventType
 {
     //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.
@@ -177,7 +194,9 @@ public class UnloadedScene : GameEventType
         SceneName = sceneName;
     }
 }
+#endregion
 
+#region Spawning Objects
 public class SpawnObjectEvent : GameEventType
 {
     public string PrefabName { get; private set; }
@@ -221,7 +240,9 @@ public class SpawnVisibleNoiseEvent : GameEventType
         IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
+#endregion
 
+#region Camera Events
 public class CameraMoveEvent : GameEventType 
 {
     public Vector3 TargetLocation { get; private set; }
@@ -252,16 +273,4 @@ public class CameraPanEvent : GameEventType
 		AutoReturn = autoReturn;
 	}
 }
-public class StartQuestEvent : GameEventType
-{
-	public StartQuestEvent(string id) : base(id) { }
-}
-
-public class ProgressQuestEvent : GameEventType
-{
-	public ProgressQuestEvent(string id) : base(id) { }
-}
-
-
-
-
+#endregion
