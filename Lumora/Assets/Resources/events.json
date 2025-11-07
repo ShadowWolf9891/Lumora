@@ -2,40 +2,6 @@
     "allEvents":
     [
         {
-            "type" : "TestEvent",
-            "id" : "All_Events_Template",
-            "isCompleted" : false,
-            "isRepeatable" : false,
-            "requireCompletedID" : "",
-            "eventsToFire" : 
-            [
-                "TestEvent2",
-                "TestEvent3"
-            ],
-            "eventsOnComplete" : 
-            [
-                "TestEvent4",
-                "TestEvent5"
-            ],
-            "parameters" :
-            {
-                "state" : "0",
-                "chapter" : "0",
-                "scene":"0",
-                "npcToMove" : "npcObjectName",
-                "prefabName" : "prefabName",
-                "targetLocation": "0,0,0",
-                "targetRotation": "0,0,0",
-                "worldLocation" : "0,0,0",
-                "worldRotation" : "0,0,0",
-                "radius" : "0",
-                "layerMask" : "~0",
-                "eventToRaiseOnTrigger" : "eventID",
-                "moveSpeed" : "0",
-                "autoReturn" : false
-            }
-        },
-        {
             "type" : "ChangeGameStateEvent",
             "id" : "Resume_Game",
             "isRepeatable" : true,
@@ -76,6 +42,5 @@
             }
 
         }
-
     ]
 }

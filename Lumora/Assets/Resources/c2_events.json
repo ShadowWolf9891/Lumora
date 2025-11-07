@@ -53,7 +53,7 @@
             "id" : "Mrs_Watts_Front_Arrive_Trigger",
             "parameters" : 
             {
-                "worldLocation" : "-504.63,0.36,-708.80",
+                "worldLocation" : "-169.96,1,-811.21",
                 "radius" : "1",
                 "layerMask" : "Player",
                 "eventToRaiseOnTrigger" : "C2_Arrive_Watts_Front"
@@ -79,8 +79,8 @@
             "id": "Watts_Back_Trigger",
             "parameters":
             {
-                "worldLocation": "-504.99, 0.47, -697.11",
-                "radius": "1",
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
                 "layerMask": "Player",
                 "eventToRaiseOnTrigger": "C2_Arrive_Watts_Back"
             }
@@ -90,7 +90,7 @@
             "id": "C2_Arrive_Watts_Back",
             "eventsOnComplete" :
             [
-                "C2_Watts_Back"
+                "Watts_Back_Trigger_2"
             ],
             "parameters":
             {
@@ -99,46 +99,38 @@
             }
         },
         {
-            "type": "SpawnObjectEvent",
-            "id": "C2_Spawn_Watts",
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger_2",
             "parameters":
             {
-                "prefabName": "MrsWatts",
-                "worldLocation": "-505.73, 1, -694.94",
-                "worldRotation": "0,0,0"
-                
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Watts_Back"
             }
         },
         {
             "type":"DialogueEvent",
             "id": "C2_Watts_Back",
+            "eventsOnComplete" :
+            [
+                "Watts_Back_Trigger_3"
+            ],
             "parameters":
             {
                 "chapter":"2",
                 "scene": "4"
             }
         },
-         {
-            "type": "NPCMovementEvent",
-            "id": "C2_Watts_Open_Door",
-            "eventsOnComplete" :
-            [
-                "C2_Watts_Answer"
-            ],
+          {
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger_3",
             "parameters":
             {
-                "npcToMove": "Mrs_Watts",
-                "targetLocation": "-504.89,1.04,-697.78"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Door_Open",
-            "parameters":
-            {
-                "npcToMove": "Cube.002",
-                "targetLocation" :"0.74,0,-2.4",
-                "targetRotation": "-90,0,-28.83"
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Watts_Answer"
             }
         },
         {
@@ -146,7 +138,7 @@
             "id": "C2_Watts_Answer",
             "eventsOnComplete":
             [
-                "C2_Watts_Pull"
+                "Watts_Back_Trigger_4"
             ],
             "parameters":
             {
@@ -154,27 +146,15 @@
                 "scene": "5"
             }
         },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Watts_Pull",
-               "eventsOnComplete":
-            [
-                "C2_Door_Close"
-            ],
-            "parameters": 
-            {
-                "npcToMove": "Mrs_Watts",
-                "targetLocation": "-503.06,1.04,-696.55"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Door_Close",
+         {
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger_4",
             "parameters":
             {
-                "npcToMove": "Cube.002",
-                "targetLocation" :"-0.01,0,-0.19",
-                "targetRotation": "-89.97,0,-2.07"
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Watts_Lira_1"
             }
         },
         {
@@ -182,7 +162,7 @@
             "id": "C2_Watts_Lira_1",
             "eventsOnComplete":
             [
-                "C2_Door_Open_2"
+                "Watts_Back_Trigger_5"
             ],
             "parameters":
             {
@@ -191,62 +171,14 @@
             }
         },
         {
-            "type": "NPCMovementEvent",
-            "id": "C2_Watts_BRB",
-            "eventsOnComplete":
-            [
-                "C2_Blueprint"
-            ],
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger_5",
             "parameters":
             {
-                "npcToMove":"Mrs_Watts",
-                "targetLocation": "504.66,1.04,-699.2"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Door_Open_2",
-            "eventsOnComplete":
-            [
-                "C2_Watts_BRB"
-            ],
-            "parameters":
-            {
-                "npcToMove": "Cube.002",
-                "targetLocation" :"0.74,0,-2.4",
-                "targetRotation": "-90,0,-28.83"
-            }
-        },
-        {
-            "type": "SpawnObjectEvent",
-            "id": "C2_Blueprint",
-            "eventsOnComplete":
-            [
-                "C2_Watts_BRB_2",
-                "C2_Blueprint_Carry"
-            ],
-            "parameters": 
-            {
-                "prefabName": "Blueprint",
-                "worldLocation": "-504.12,1.02,698.57"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Watts_BRB_2",
-            "parameters":
-            {
-                "npcToMove":"Mrs_Watts",
-                "targetLocation": "-503.06,1.04,-696.55"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Blueprint_Carry",
-            "parameters":
-            {
-                "npcToMove": "Blueprint",
-                "targetLocation": "-503.46,1,-695.89"
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Watts_Lira_2"
             }
         },
         {
@@ -254,8 +186,7 @@
             "id": "C2_Watts_Lira_2",
             "eventsOnComplete":
             [
-                "C2_Watts_Table",
-                "C2_Blueprint_Place"
+                "Watts_Back_Trigger_6"
             ],
             "parameters":
             {
@@ -264,35 +195,14 @@
             }
         },
         {
-            "type": "NPCMovementEvent",
-            "id": "C2_Watts_Table",
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger_6",
             "parameters":
             {
-                "npcToMove": "Mrs_Watts",
-                "targetLocation": "-503.06,1.04,-695.06"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Blueprint_Place",
-            "parameters": 
-            {
-                "npcToMove": "Blueprint",
-                "targetLocation": "-503.76,1.1,-693.70"
-            }
-        },
-        {
-            "type": "CameraMoveEvent",
-            "id": "C2_Cam_Table",
-            "eventsOnComplete":
-            [
-                "C2_Lira_Watts_3"
-            ],
-            "parameters":
-            {
-                "targetLocation": "-503.77, 1,1",
-                "moveSpeed": "2",
-                "autoReturn": "true"
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Lira_Watts_3"
             }
         },
         {
@@ -300,7 +210,7 @@
             "id": "C2_Lira_Watts_3",
             "eventsOnComplete":
             [
-                "C2_Lira_Watts_4"
+                "Watts_Back_Trigger_7"
             ],
             "parameters":
             {
@@ -309,43 +219,23 @@
             }
         },
         {
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Back_Trigger_7",
+            "parameters":
+            {
+                "worldLocation": "-178, 1, -800",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Lira_Watts_4"
+            }
+        },
+        {
             "type":"DialogueEvent",
             "id": "C2_Lira_Watts_4",
-            "eventsOnComplete":
-            [
-                "C2_Watts_Leave"
-            ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "9"
-            }
-        },
-        {
-            "type":"NPCMovementEvent",
-            "id": "C2_Watts_Leave",
-            "parameters":
-            {
-                "npcToMove":"Mrs_Watts",
-                "targetLocation": "504.66,1.04,-699.2"
-            }
-        },
-        {
-            "type": "NPCMovementEvent",
-            "id": "C2_Door_Close_2",
-            "parameters":
-            {
-                "npcToMove": "Cube.002",
-                "targetLocation" :"-0.01,0,-0.19",
-                "targetRotation": "-89.97,0,-2.07"
-            }
-        },
-        {
-            "type": "ChangeGameStateEvent",
-            "id": "Demo_End",
-            "parameters":
-            {
-                "state": "1"
             }
         }
     ]
