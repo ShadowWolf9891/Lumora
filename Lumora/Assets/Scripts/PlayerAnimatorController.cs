@@ -75,7 +75,7 @@ public class PlayerAnimatorController : MonoBehaviour
     private void Move(Vector3 moveDir)
     {
         animator.SetTrigger("doMovement");
-        animator.SetFloat("moveSpeed", moveDir.normalized.magnitude);
+        animator.SetFloat("moveSpeed", moveDir.magnitude);
     }
     private void DoThrow()
     {

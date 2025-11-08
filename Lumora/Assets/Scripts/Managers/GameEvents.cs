@@ -110,6 +110,23 @@ public class ChangeGameStateEvent : GameEventType
         State = state;
     }
 }
+
+public class PlayerDamagedEvent : GameEventType
+{
+    public int DamageTaken;
+    public PlayerDamagedEvent(string id, int damageTaken) : base(id)
+    {
+        DamageTaken = damageTaken;
+    }
+}
+public class PlayerHealthChanged : GameEventType //currently used to sync UI with player health
+{
+    public int CurrentHealthValue;
+    public PlayerHealthChanged(string id, int currentHealthValue) : base(id)
+    {
+        CurrentHealthValue = currentHealthValue;
+    }
+}
 #endregion
 
 #region NPC and Quest Events
