@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5472531031633136671
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Editor::UnityEditor.Rendering.HighDefinition.AssetVersion
+  version: 13
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -25,11 +41,11 @@ Material:
   stringTagMap:
     RenderType: TransparentCutout
   disabledShaderPasses:
-  - MOTIONVECTORS
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -48,10 +64,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
         m_Texture: {fileID: 2800000, guid: 907e1362e8f9f0948bfc0aeb5d0a0527, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BaseMap:
-        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
@@ -166,10 +178,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _Specular:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -238,7 +246,6 @@ Material:
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
-    - _AlphaClip: 1
     - _AlphaCutoff: 0.5
     - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
@@ -248,25 +255,18 @@ Material:
     - _AlphaRemapMax: 1
     - _AlphaRemapMin: 0
     - _AlphaSrcBlend: 1
-    - _AlphaToMask: 1
     - _AmbientalPower: 1
     - _AnimIntensity: -0.13
     - _Anisotropy: 0
-    - _Blend: 0
     - _BlendMode: 0
-    - _BlendModePreserveSpecular: 1
     - _BumpScale: 2
-    - _ClearCoatMask: 0
-    - _ClearCoatSmoothness: 0
     - _CoatMask: 0
     - _ColorMask: 1
-    - _Cull: 2
     - _CullMode: 2
     - _CullModeForward: 2
     - _CustomGloss: 1
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
-    - _DetailAlbedoMapScale: 1
     - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
     - _DetailNormalScale: 1
@@ -283,7 +283,6 @@ Material:
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
     - _DstBlend2: 0
-    - _DstBlendAlpha: 0
     - _EmissionLM: 1.5
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
@@ -293,7 +292,6 @@ Material:
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
-    - _EnvironmentReflections: 1
     - _Fresnel: -0.43
     - _GlossMapScale: 1
     - _Glossiness: 0.906
@@ -339,9 +337,7 @@ Material:
     - _PPDPrimitiveWidth: 1
     - _Parallax: 0.02
     - _PerPixelSorting: 0
-    - _QueueOffset: 0
     - _RayTracing: 0
-    - _ReceiveShadows: 1
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _ReflectionEmission: 0
@@ -360,7 +356,6 @@ Material:
     - _SpecularLevel: 1
     - _SpecularOcclusionMode: 1
     - _SrcBlend: 1
-    - _SrcBlendAlpha: 1
     - _StencilRef: 0
     - _StencilRefDepth: 8
     - _StencilRefGBuffer: 10
@@ -371,7 +366,6 @@ Material:
     - _StencilWriteMaskMV: 41
     - _SubsurfaceMask: 1
     - _SupportDecals: 1
-    - _Surface: 0
     - _SurfaceType: 0
     - _Tesellation: 1
     - _TexWorldScale: 1
@@ -398,18 +392,16 @@ Material:
     - _UseShadowThreshold: 0
     - _WeightAnim: 1
     - _WeightOffset: 0.42
-    - _WorkflowMode: 1
     - _WorldNoiseColor: 0.5
     - _WorldNoiseVelocity: 1
-    - _XRMotionVectorsPass: 1
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 3
     - _ZTestTransparent: 4
     - _ZWrite: 1
     - __dirty: 1
     m_Colors:
-    - _BaseColor: {r: 0, g: 1, b: 1, a: 1}
-    - _Color: {r: 0, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.08627451, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.08627448, g: 1, b: 1, a: 1}
     - _ColorA: {r: 0.023584902, g: 0.38404965, b: 1, a: 0}
     - _ColorB: {r: 1, g: 1, b: 1, a: 1}
     - _ColorFade: {r: 0, g: 0.07657405, b: 0.5566038, a: 1}
@@ -437,32 +429,3 @@ Material:
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &4413540684528426359
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.Rendering.Universal.AssetVersion
-  version: 10
---- !u!114 &4990647380170570124
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Editor::UnityEditor.Rendering.HighDefinition.AssetVersion
-  version: 13
-  hdPluginSubTargetMaterialVersions:
-    m_Keys: []
-    m_Values: 
