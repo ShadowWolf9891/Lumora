@@ -44,7 +44,7 @@ public class PlayerBehavior : MonoBehaviour
 	//Private properties
 	private HideController hideController;
 	bool isHiding;
-	bool isSprinting;
+	public bool isSprinting { get; private set; }
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
@@ -171,11 +171,10 @@ public class PlayerBehavior : MonoBehaviour
     private void SprintMove(Vector3 moveDirection)
     {
 		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
-		Invoke("TriggerSprintNoise", 0.5f);
     }
 	public void TriggerSprintNoise()
     {
-        //GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
+        GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
 	}
     private void CrouchMove(Vector3 moveDirection)
 	{
@@ -363,10 +362,8 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void GetSpotted(PlayerSpottedEvent e)
     {
-		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent(e.Id)); //Inproper use of id, fix later
-
+		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
         //GameContext.Instance.RaiseLeaveStealth();
-        //give player temporary movespeed buff? players should run away here, right?
     }
     private void LeaveHide(LeaveStealthEvent e)
     {

@@ -1,50 +1,77 @@
+using System;
 using UnityEngine;
+
+public enum VisibilityLevels
+{
+	//note: walking is default level!
+	Default,
+	Crouching,
+	Sprinting,
+	Invisible
+}
 
 public class VisibilityManager : MonoBehaviour
 {
+	[SerializeField]
 	[Range(0, 1)]
-	public float VisibilityLevel { get; private set; } = 0.8f; //Starting visibility
+	private float DefaultVisibility = 0.8f; //Starting visibility
 
+    [SerializeField]
+    [Range(0, 1)]
+    private float SprintingVisibility = 1; //Sprinting visibility
 
+    [SerializeField]
+    [Range(0, 1)]
+    private float CrouchedVisibility = 0.4f; //Crouching visibility
+
+	public float Visibility { get; private set; }
+    private PlayerBehavior playerBehavior;
 	private void Start()
 	{
+		playerBehavior = GetComponent<PlayerBehavior>();
 		GameEvents<EnterStealthEvent>.Subscribe(EnterStealth);
 		GameEvents<LeaveStealthEvent>.Subscribe(ExitStealth);
-		//GameContext.Instance.OnEnterHideState += EnterStealth;
-		//GameContext.Instance.OnLeaveHideState += ExitStealth;
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInputs);
 	}
 
-	/// <summary>
-	/// Amount to increase the visibility by. Clamped between 0 and 1.
-	/// </summary>
-	/// <param name="amount"></param>
-	public void IncreaseVisibility(float amount)
-	{
-		if (VisibilityLevel + amount <= 1 && VisibilityLevel + amount >= 0) 
+    private void SetVisibilityLevel(VisibilityLevels level)
+    {
+        switch (level)
+        {
+            case VisibilityLevels.Default:
+                Visibility = DefaultVisibility;
+                break;
+            case VisibilityLevels.Crouching:
+                Visibility = CrouchedVisibility;
+                break;
+            case VisibilityLevels.Sprinting:
+                Visibility = SprintingVisibility;
+                break;
+            case VisibilityLevels.Invisible:
+                Visibility = 0f;
+                break;
+        }
+    }
+
+    private void HandleInputs(PlayerInputEvent e)
+    {
+		switch (e.ActionType)
 		{
-			VisibilityLevel += amount;
+			case PlayerInputActionType.Move:
+				if (playerBehavior.isSprinting)
+				{
+					SetVisibilityLevel(VisibilityLevels.Sprinting);
+				}
+				break;
 		}
-	}
-	/// <summary>
-	/// Amount to decrease the visibility by. Clamped between 0 and 1. For example, entering stealth might have amount = 0.5;
-	/// </summary>
-	/// <param name="amount"></param>
-	public void DecreaseVisibility(float amount)
-	{
-		if (VisibilityLevel - amount <= 1 && VisibilityLevel - amount >= 0)
-		{
-			VisibilityLevel -= amount;
-		}
-	}
+    }
 
-	private void EnterStealth(EnterStealthEvent e)
-	{
-		DecreaseVisibility(0.4f);
-	}
-	private void ExitStealth(LeaveStealthEvent e)
-	{
-		IncreaseVisibility(0.4f);
-	}
-	//Other stuff that may increase or decrease visibility that is consistent
-
+    private void EnterStealth(EnterStealthEvent e)
+    {
+        SetVisibilityLevel(VisibilityLevels.Crouching);
+    }
+    private void ExitStealth(LeaveStealthEvent e)
+    {
+        SetVisibilityLevel(VisibilityLevels.Default);
+    }
 }

@@ -124,43 +124,6 @@ public static class EventManager
 					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
 				}
 				break;
-			case "CameraMoveEvent": 
-				if(TryParseVector3(def.parameters["targetLocation"], out Vector3 cameraMoveLocation))
-				{
-					Vector3 cameraWorldLocation = CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
-					if(def.parameters.ContainsKey("worldLocation"))
-					{
-						cameraWorldLocation = TryParseVector3(def.parameters["worldLocation"], out cameraWorldLocation) ? cameraWorldLocation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.position;
-					}
-					float moveSpeed = def.parameters.ContainsKey("moveSpeed") ? float.TryParse(def.parameters["moveSpeed"], out float mSpeed) ? mSpeed : 1f : 1f;
-					bool autoReturn = def.parameters.ContainsKey("autoReturn") ? bool.TryParse(def.parameters["autoReturn"], out bool aReturn) ? aReturn : false : false;
-
-					e = new CameraMoveEvent(def.id, cameraMoveLocation, cameraWorldLocation, moveSpeed, autoReturn);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			case "CameraPanEvent":
-				if (TryParseVector3(def.parameters["targetRotation"], out Vector3 cameraPanRotation))
-				{
-					Vector3 cameraWorldRotation = CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles; ;
-					if (def.parameters.ContainsKey("worldRotation"))
-					{
-						cameraWorldRotation = TryParseVector3(def.parameters["worldRotation"], out cameraWorldRotation) ? cameraWorldRotation : CinemachineBrain.GetActiveBrain(0).OutputCamera.transform.rotation.eulerAngles;
-					}
-					
-					float rotationSpeed = def.parameters.ContainsKey("rotationSpeed") ? float.TryParse(def.parameters["rotationSpeed"], out float rSpeed) ? rSpeed : 30f : 30f;
-					bool autoReturn = def.parameters.ContainsKey("autoReturn") ? bool.TryParse(def.parameters["autoReturn"], out bool aReturn) ? aReturn : false : false;
-
-					e = new CameraPanEvent(def.id, cameraPanRotation, cameraWorldRotation, rotationSpeed, autoReturn);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
 			default:
 				Debug.LogError($"Invalid type {def.type}");
 				return;
