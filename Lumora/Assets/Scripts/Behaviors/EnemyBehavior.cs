@@ -4,11 +4,12 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.InputSystem.XR;
 
 public class EnemyBehavior : MonoBehaviour
 {
-    #region Properties
-    [SerializeField]
+	#region Properties
+	[SerializeField]
 	BehaviorTree btAsset;
 
 	[Header("Vision Properties")]
@@ -37,7 +38,12 @@ public class EnemyBehavior : MonoBehaviour
 	[SerializeField]
 	float alertedTime = 2f;
 
-	NavMeshAgent agent;
+	[Header("Attack Damage")]
+	[SerializeField]
+	[Range(1, 10)]
+	public int attackDamage = 4;
+
+    NavMeshAgent agent;
 	GameObject playerRef;
 	BehaviorTree bt;
 	BTBlackboard bb;
@@ -54,7 +60,7 @@ public class EnemyBehavior : MonoBehaviour
 	string bb_IsAlerted = "IsAlerted";
 	string bb_LostPlayer = "LostPlayer";
 
-    [SerializeField] GameObject endScreen;
+    //[SerializeField] GameObject endScreen;
 	EnemyAnimatorController animController;
     #endregion
 
@@ -231,7 +237,9 @@ public class EnemyBehavior : MonoBehaviour
 
 	private void Attack()
 	{
-		Debug.Log("Tag! you're it");
+		animController.DoAttack();
+		agent.destination = transform.position;
+		//TODO: lock out movement for a second
 	}
 	#endregion
 
@@ -248,7 +256,7 @@ public class EnemyBehavior : MonoBehaviour
 			agent.velocity = previousVelocity;
 			agent.isStopped = false;
 		}
-		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue) //Not sure what to do with cutscenes yet
+		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue || e.State == GameStates.Game_Over) //Not sure what to do with cutscenes yet
 		{
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;
@@ -450,7 +458,7 @@ public class EnemyBehavior : MonoBehaviour
 	}
 	private void OnDrawGizmos()
 	{
-		if (searchPoints.Count > 0)
+		if (searchPoints.Count > 0)			//if search points are available, display all
 		{
 			foreach (var point in searchPoints)
 			{
@@ -458,5 +466,11 @@ public class EnemyBehavior : MonoBehaviour
 				Gizmos.DrawCube(point, Vector3.one * 0.1f);
 			}
 		}
+
+        if (curState == AlertStates.CHASING)		//Display attack range
+        {
+            Gizmos.color = Color.darkRed;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+        }
 	}
 }

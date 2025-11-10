@@ -62,6 +62,7 @@ public class VisibilityManager : MonoBehaviour
 				{
 					SetVisibilityLevel(VisibilityLevels.Sprinting);
 				}
+                SetVisibilityLevel(VisibilityLevels.Default);
 				break;
 		}
     }
