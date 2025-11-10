@@ -222,44 +222,36 @@ public class SpawnVisibleNoiseEvent : GameEventType
     }
 }
 
-public class CameraMoveEvent : GameEventType 
-{
-    public Vector3 TargetLocation { get; private set; }
-    public Vector3 WorldLocation { get; private set; }
-    public float MoveSpeed { get; private set; }
-    public bool AutoReturn { get; private set; }
-
-    public CameraMoveEvent(string id, Vector3 targetLocation, Vector3 worldLocation, float moveSpeed = 1, bool autoReturn = false) : base(id)
-	{
-		TargetLocation = targetLocation;
-		WorldLocation = worldLocation;
-		MoveSpeed = moveSpeed;
-		AutoReturn = autoReturn;
-	}
+public class BeginCutscene : GameEventType
+{ 
+    public string TimelineName { get; private set; }
+    public float StartTime { get; private set; }
+    public float EndTime { get; private set; }
+    public BeginCutscene(string id, string timelineName, float startTime = 0, float endTime = -1) : base(id) 
+    {
+        TimelineName = timelineName;
+        StartTime = startTime;
+        EndTime = endTime;
+    }
 }
-public class CameraPanEvent : GameEventType
-{
-	public Vector3 TargetRotation { get; private set; }
-	public Vector3 WorldRotation { get; private set; }
-	public float RotationSpeed { get; private set; }
-	public bool AutoReturn { get; private set; }
 
-	public CameraPanEvent(string id, Vector3 targetRotation, Vector3 worldRotation, float rotationSpeed = 1, bool autoReturn = false) : base(id)
-	{
-		TargetRotation = targetRotation;
-		WorldRotation = worldRotation;
-		RotationSpeed = rotationSpeed;
-		AutoReturn = autoReturn;
-	}
-}
+
 public class StartQuestEvent : GameEventType
 {
-	public StartQuestEvent(string id) : base(id) { }
+    public string QuestID { get; private set; }
+	public StartQuestEvent(string id, string questID) : base(id)
+    {
+        QuestID = questID;
+    }
 }
 
 public class ProgressQuestEvent : GameEventType
 {
-	public ProgressQuestEvent(string id) : base(id) { }
+	public string QuestID { get; private set; }
+	public ProgressQuestEvent(string id, string questID) : base(id) 
+    {
+        QuestID=questID;
+    }
 }
 
 

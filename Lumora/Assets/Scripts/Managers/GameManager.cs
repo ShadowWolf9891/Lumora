@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 	{
         NPCManager.Load();
 		SpawnerManager.Load(spawnableObjects);
-		CameraManager.Load();
 
 	}
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,9 +21,4 @@ public class GameManager : MonoBehaviour
 
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-		CameraManager.UpdateCameraEvents();
-	}
 }
