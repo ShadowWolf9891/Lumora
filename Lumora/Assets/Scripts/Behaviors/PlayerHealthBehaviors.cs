@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class PlayerHealthBehaviors : MonoBehaviour
 {
-    [SerializeField]
-    bool godModeEnabled;
+    [Header("Health Values")]
     [SerializeField]
     [Range(0, 10)]
+    int maxHealth;
+    [SerializeField]
     int currentHealthValue;
+    [SerializeField]
+    bool godModeEnabled;
 
     private void Start()
     {
         //TODO: Add health loading in from save file
-        currentHealthValue = 10;
+        currentHealthValue = maxHealth;
 
         GameEvents<PlayerDamagedEvent>.Subscribe(TakeDamage);
     }
@@ -19,10 +22,10 @@ public class PlayerHealthBehaviors : MonoBehaviour
  
     public void TakeDamage(PlayerDamagedEvent e)    //Triggers upon damage taken event. All damage calculation occurs within here.
     {
+        GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
         if (!godModeEnabled)
         {
             currentHealthValue -= e.DamageTaken;
-            GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
 
             if (currentHealthValue < 0)
             {
@@ -31,13 +34,14 @@ public class PlayerHealthBehaviors : MonoBehaviour
         }
     }
 
-    public void RestoreHealth(int healingValue)     //Triggers upon health restore keybind. 
+    public void RestoreHealth(int healingValue)     //Triggers upon health restore keybind. should probably be tied to animation event?
     {
-        currentHealthValue = healingValue;
-        GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", healingValue));
+        currentHealthValue += healingValue;
+        if (currentHealthValue > maxHealth) { currentHealthValue = maxHealth; }
+        GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
     }
 
-    private void DoGameOver()
+    private void DoGameOver()       //Triggers Game Over state change. we should have GameManager do some kinda event for game over methinks
     {
         GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("TODO: change ID; GameStateChanged - GameOver", GameStates.Game_Over));
     }
