@@ -24,6 +24,12 @@ public class VisibilityManager : MonoBehaviour
     [Range(0, 1)]
     private float CrouchedVisibility = 0.4f; //Crouching visibility
 
+    [SerializeField]
+    [Range(0, 2)]
+    private float LightEffectOnVision = 0.5f; //0.5 emphasizes shadow, 2 emphasizes light
+
+    private LightingSampler sampler;
+
 	public float Visibility { get; private set; }
     private PlayerBehavior playerBehavior;
 	private void Start()
@@ -32,25 +38,32 @@ public class VisibilityManager : MonoBehaviour
 		GameEvents<EnterStealthEvent>.Subscribe(EnterStealth);
 		GameEvents<LeaveStealthEvent>.Subscribe(ExitStealth);
 		GameEvents<PlayerInputEvent>.Subscribe(HandleInputs);
+        if(!TryGetComponent<LightingSampler>(out sampler))
+        {
+            Debug.Log("Lighting Sampler not attached to player.");
+        }
+        sampler = GetComponent<LightingSampler>();
 	}
 
     private void SetVisibilityLevel(VisibilityLevels level)
     {
+        float lightLevel = Mathf.Pow(sampler.brightness, 1f/LightEffectOnVision);
         switch (level)
         {
             case VisibilityLevels.Default:
-                Visibility = DefaultVisibility;
+                Visibility = DefaultVisibility * lightLevel;
                 break;
             case VisibilityLevels.Crouching:
-                Visibility = CrouchedVisibility;
+                Visibility = CrouchedVisibility * lightLevel;
                 break;
             case VisibilityLevels.Sprinting:
-                Visibility = SprintingVisibility;
+                Visibility = SprintingVisibility * lightLevel;
                 break;
             case VisibilityLevels.Invisible:
                 Visibility = 0f;
                 break;
         }
+        
     }
 
     private void HandleInputs(PlayerInputEvent e)
@@ -75,4 +88,14 @@ public class VisibilityManager : MonoBehaviour
     {
         SetVisibilityLevel(VisibilityLevels.Default);
     }
+
+	void OnGUI()
+	{
+		GUIStyle style = new GUIStyle(GUI.skin.label);
+		style.fontSize = 20;
+		style.normal.textColor = Color.yellow;
+
+		GUI.Label(new Rect(10, 10, 200, 50),
+				  "Visibility: " + Visibility.ToString("F2") + $"\nBrightness: {sampler.brightness:F2}", style);
+	}
 }
