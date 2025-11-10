@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 7257983983751162677}
   - component: {fileID: 2538106167411884877}
   - component: {fileID: 6481701089280577369}
+  - component: {fileID: 8209262538507549975}
   - component: {fileID: 7166657601331200534}
   - component: {fileID: 2064154333712431666}
   - component: {fileID: 7869366584272912734}
@@ -350,6 +351,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64004f7d73669f54e8d0cab59e76b23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+--- !u!114 &8209262538507549975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350591719694058521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa0d5ac0b8992242821e631e1727adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthBehaviors
+  godModeEnabled: 0
+  maxHealth: 2
+  currentHealthValue: 0
 --- !u!114 &7166657601331200534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,6 +420,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae8ed63fb8f1c54db4d1eb8e15128fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisibilityManager
+  DefaultVisibility: 0.8
+  SprintingVisibility: 1
+  CrouchedVisibility: 0.4
 --- !u!1 &5923059040758238787
 GameObject:
   m_ObjectHideFlags: 0

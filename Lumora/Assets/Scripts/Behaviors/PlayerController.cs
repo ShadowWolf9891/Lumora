@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
 	{
-		GameEvents<ChangeGameStateEvent>.Subscribe(FreezePlayer);
+		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChanged);
 		//GameContext.Instance.OnPauseGame += FreezePlayer;
 		//GameContext.Instance.OnUnPauseGame += UnFreezePlayer;
 
@@ -59,13 +59,7 @@ public class PlayerController : MonoBehaviour
 			if (lookAction.IsInProgress())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look));
-				//GameContext.Instance.RaiseCameraMove(cameraTransform);
 			}
-            //if (attackAction.WasPressedThisFrame())
-            //{
-            //	GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent(PlayerInputActionType.Attack, true));
-            //	//GameContext.Instance.RaiseAttack();
-            //}
 			if (sprintAction.WasPressedThisFrame())
             {
                 GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("sprint", PlayerInputActionType.Sprint, true));
@@ -77,22 +71,18 @@ public class PlayerController : MonoBehaviour
 			if (crouchAction.WasPressedThisFrame())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Hide, true));
-				//GameContext.Instance.RaiseHidePressed();
 			}
 			if (jumpAction.WasPressedThisFrame())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("jump", PlayerInputActionType.Jump, true));
-				//GameContext.Instance.RaiseJumpPressed();
 			}
 			if (throwAction.WasReleasedThisFrame())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throwRelease", PlayerInputActionType.ThrowRelease, false));
-				//GameContext.Instance.RaiseThrowReleased();
 			}
 			if (throwAction.WasPressedThisFrame())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throw", PlayerInputActionType.Throw, true));
-				//GameContext.Instance.RaiseThrowPressed();
 			}
 		}
 	}
@@ -110,13 +100,13 @@ public class PlayerController : MonoBehaviour
 		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
 
 	}
-	private void FreezePlayer(ChangeGameStateEvent e) 
+	private void OnGameStateChanged(ChangeGameStateEvent e) 
 	{
 		if (e.State == GameStates.Running)
 		{
 			canMove = true;
 		}
-		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue) //Not sure what to do with cutscenes yet
+		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue || e.State == GameStates.Game_Over) //Not sure what to do with cutscenes yet
 		{
 			canMove = false;
 		}
