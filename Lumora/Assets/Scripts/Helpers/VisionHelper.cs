@@ -19,7 +19,7 @@ public static class VisionHelper
 			viewDistance *= vm.Visibility;
 		}
 
-		Vector3 origin = viewer.transform.position + Vector3.up * 1.5f;
+		Vector3 origin = viewer.transform.position;
 		Vector3 directionToTarget = target.transform.position - origin;
 		float distanceToTarget = directionToTarget.magnitude;
 

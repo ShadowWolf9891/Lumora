@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-public class HealthBarBehaviors : MonoBehaviour
+public class UIHealthBar : MonoBehaviour
 {
     [SerializeField]
     int currentHealth;

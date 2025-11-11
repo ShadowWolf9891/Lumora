@@ -174,7 +174,7 @@ public class PlayerBehavior : MonoBehaviour
     }
 	public void TriggerSprintNoise()
     {
-        GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
+        //GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
 	}
     private void CrouchMove(Vector3 moveDirection)
 	{
