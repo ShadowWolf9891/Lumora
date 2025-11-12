@@ -27,6 +27,12 @@ public class EnemyAnimatorController : MonoBehaviour
     public void OnEnemyAttackEvent()     //Triggers from animation event. Reduces player health via event.
     {
         GameEvents<PlayerDamagedEvent>.Raise(new PlayerDamagedEvent("Player Damaged Event", enemyBehavior.attackDamage));
+        Invoke("UnlockEnemyMovement", enemyBehavior.attackLockoutTime);
+    }
+
+    private void UnlockEnemyMovement()
+    {
         animator.SetBool("IsAttacking", false);
+        enemyBehavior.EndAttackState();
     }
 }

@@ -43,6 +43,10 @@ public class EnemyBehavior : MonoBehaviour
 	[Range(1, 10)]
 	public int attackDamage = 4;
 
+	[Header("Attack Lockout Time")]
+	[SerializeField]
+	public float attackLockoutTime = 1f;
+
     NavMeshAgent agent;
 	GameObject playerRef;
 	BehaviorTree bt;
@@ -235,15 +239,20 @@ public class EnemyBehavior : MonoBehaviour
 
 		if (IsObjectInRange(playerRef, attackRange))
 		{
-			Attack();
+			bb.Set("IsAttacking", true);
 		}
 	}
 
-	private void Attack()
+	public void Attack()
 	{
 		animController.DoAttack();
 		agent.destination = transform.position;
-		//TODO: lock out movement for a second
+		//Should lock enemy movement until AnimationController runs EndAttackState,
+		//which gets triggered at the end of the attack animation.
+	}
+	public void EndAttackState()
+	{
+		bb.Set("IsAttacking", false);
 	}
 	#endregion
 
