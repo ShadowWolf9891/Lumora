@@ -28,21 +28,25 @@ public class VisibilityManager : MonoBehaviour
     [Range(0, 2)]
     private float LightEffectOnVision = 0.5f; //0.5 emphasizes shadow, 2 emphasizes light
 
+    [SerializeField]
     private LightingSampler sampler;
 
 	public float Visibility { get; private set; }
     private PlayerBehavior playerBehavior;
-	private void Start()
+	private void Awake()
 	{
+        SetVisibilityLevel(VisibilityLevels.Default);
 		playerBehavior = GetComponent<PlayerBehavior>();
 		GameEvents<EnterStealthEvent>.Subscribe(EnterStealth);
 		GameEvents<LeaveStealthEvent>.Subscribe(ExitStealth);
 		GameEvents<PlayerInputEvent>.Subscribe(HandleInputs);
-        if(!TryGetComponent<LightingSampler>(out sampler))
-        {
-            Debug.Log("Lighting Sampler not attached to player.");
-        }
-        sampler = GetComponent<LightingSampler>();
+
+        //We're serializing this because we're got getting the component somehow
+        //if(!TryGetComponent<LightingSampler>(out sampler))
+        //{
+        //    Debug.Log("Lighting Sampler not attached to player.");
+        //}
+        //sampler = GetComponent<LightingSampler>();
 	}
 
     private void SetVisibilityLevel(VisibilityLevels level)

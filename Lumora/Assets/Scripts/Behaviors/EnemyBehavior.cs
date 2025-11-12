@@ -43,6 +43,10 @@ public class EnemyBehavior : MonoBehaviour
 	[Range(1, 10)]
 	public int attackDamage = 4;
 
+	[Header("Attack Lockout Time")]
+	[SerializeField]
+	public float attackLockoutTime = 1f;
+
     NavMeshAgent agent;
 	GameObject playerRef;
 	BehaviorTree bt;
@@ -99,7 +103,10 @@ public class EnemyBehavior : MonoBehaviour
 	#region Vision
 	private void CheckVision()
 	{
-		if (playerRef == null) return;
+		if (playerRef == null)
+		{
+			return;
+		}
 
 		float distance = Vector3.Distance(transform.position, playerRef.transform.position);
 		bool canSee = false;
@@ -107,6 +114,7 @@ public class EnemyBehavior : MonoBehaviour
 		// Only do expensive raycast if within alert range
 		if (distance <= alertRange)
 		{
+			
 			canSee = CanSeeTarget(playerRef, alertRange);
 			if (canSee && !bb.Get<bool>(bb_IsAlerted))
 				bb.Set<bool>(bb_IsAlerted, true);
@@ -231,15 +239,20 @@ public class EnemyBehavior : MonoBehaviour
 
 		if (IsObjectInRange(playerRef, attackRange))
 		{
-			Attack();
+			bb.Set("IsAttacking", true);
 		}
 	}
 
-	private void Attack()
+	public void Attack()
 	{
 		animController.DoAttack();
 		agent.destination = transform.position;
-		//TODO: lock out movement for a second
+		//Should lock enemy movement until AnimationController runs EndAttackState,
+		//which gets triggered at the end of the attack animation.
+	}
+	public void EndAttackState()
+	{
+		bb.Set("IsAttacking", false);
 	}
 	#endregion
 
@@ -273,7 +286,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-		return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
+        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
