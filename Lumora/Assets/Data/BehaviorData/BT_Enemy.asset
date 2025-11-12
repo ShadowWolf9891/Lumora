@@ -1,5 +1,28 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8802058368807450037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
+  m_Name: BTActionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
+  blackboard: {fileID: 4582775741818728380}
+  Name: Attack
+  NodeRect:
+    serializedVersion: 2
+    x: -330.66666
+    y: 175.33334
+    width: 120
+    height: 60
+  Parent: {fileID: 5566909765494067401}
+  Children: []
+  functionName: Attack
 --- !u!114 &-7094553706152414191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,7 +36,7 @@ MonoBehaviour:
   m_Name: BTSequence
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
   blackboard: {fileID: 4582775741818728380}
-  Name: BTSequence
+  Name: BTSequenceAlert
   NodeRect:
     serializedVersion: 2
     x: 198.40005
@@ -37,11 +60,11 @@ MonoBehaviour:
   m_Name: BTSequence
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
   blackboard: {fileID: 4582775741818728380}
-  Name: BTSequence
+  Name: BTSequenceChase
   NodeRect:
     serializedVersion: 2
-    x: -120.26668
-    y: 188.93327
+    x: -0.2666626
+    y: 164.26659
     width: 120
     height: 60
   Parent: {fileID: 5566909765494067401}
@@ -95,6 +118,30 @@ MonoBehaviour:
   Parent: {fileID: 5566909765494067401}
   Children: []
   functionName: Patrol
+--- !u!114 &-3413399767267632858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
+  blackboard: {fileID: 4582775741818728380}
+  Name: IsAttacking
+  NodeRect:
+    serializedVersion: 2
+    x: -403.3333
+    y: 129.33337
+    width: 120
+    height: 60
+  Parent: {fileID: 0}
+  Children: []
+  key: IsAttacking
+  expectedValue: 1
 --- !u!114 &-2001364535851365699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,8 +192,10 @@ MonoBehaviour:
   - {fileID: -2001364535851365699}
   - {fileID: -7094553706152414191}
   - {fileID: -4307816765050787802}
-  - {fileID: 231096744801493775}
---- !u!114 &231096744801493775
+  - {fileID: -8802058368807450037}
+  - {fileID: -3413399767267632858}
+  - {fileID: 291290722033623480}
+--- !u!114 &291290722033623480
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,11 +211,11 @@ MonoBehaviour:
   Name: BTSequence
   NodeRect:
     serializedVersion: 2
-    x: 483.99997
-    y: 16.799978
+    x: -219.99988
+    y: 98.66664
     width: 120
     height: 60
-  Parent: {fileID: 0}
+  Parent: {fileID: 5566909765494067401}
   Children: []
 --- !u!114 &1045441819679091466
 MonoBehaviour:
@@ -300,6 +349,14 @@ MonoBehaviour:
     BoolValue: 0
     GameObjectValue: {fileID: 0}
     Vector3Value: {x: 0, y: 0, z: 0}
+  - Key: IsAttacking
+    Type: 3
+    StringValue: 
+    IntValue: 0
+    FloatValue: 0
+    BoolValue: 0
+    GameObjectValue: {fileID: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
 --- !u!114 &4743781131496862014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,15 +396,14 @@ MonoBehaviour:
   Name: BTSelector
   NodeRect:
     serializedVersion: 2
-    x: 182.53336
-    y: 59.59999
+    x: 40.533325
+    y: 58.93332
     width: 120
     height: 60
   Parent: {fileID: 5952354492407787188}
   Children:
-  - {fileID: -6411627075126116447}
-  - {fileID: -7094553706152414191}
-  - {fileID: -3749383689463194458}
+  - {fileID: 291290722033623480}
+  - {fileID: 291290722033623480}
 --- !u!114 &5952354492407787188
 MonoBehaviour:
   m_ObjectHideFlags: 0

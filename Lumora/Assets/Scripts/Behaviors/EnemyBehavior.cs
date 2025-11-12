@@ -99,7 +99,10 @@ public class EnemyBehavior : MonoBehaviour
 	#region Vision
 	private void CheckVision()
 	{
-		if (playerRef == null) return;
+		if (playerRef == null)
+		{
+			return;
+		}
 
 		float distance = Vector3.Distance(transform.position, playerRef.transform.position);
 		bool canSee = false;
@@ -107,6 +110,7 @@ public class EnemyBehavior : MonoBehaviour
 		// Only do expensive raycast if within alert range
 		if (distance <= alertRange)
 		{
+			
 			canSee = CanSeeTarget(playerRef, alertRange);
 			if (canSee && !bb.Get<bool>(bb_IsAlerted))
 				bb.Set<bool>(bb_IsAlerted, true);
@@ -273,7 +277,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-		return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
+        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
