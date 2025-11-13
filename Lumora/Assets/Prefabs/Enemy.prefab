@@ -494,6 +494,7 @@ MonoBehaviour:
   timeAtEachPoint: 0
   alertedTime: 2
   attackDamage: 4
+  attackLockoutTime: 1
 --- !u!195 &949569845706991502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -771,9 +772,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.28719342
-  m_Height: 1.8987464
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0.17809343, y: 0.87144786, z: -0.03471315}
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!95 &1542053904733956834
 Animator:
   serializedVersion: 7
