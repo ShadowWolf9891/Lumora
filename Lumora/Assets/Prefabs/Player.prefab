@@ -588,7 +588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aa0d5ac0b8992242821e631e1727adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthBehaviors
-  maxHealth: 2
+  maxHealth: 10
   currentHealthValue: 0
   godModeEnabled: 0
 --- !u!114 &7166657601331200534
@@ -649,6 +649,7 @@ MonoBehaviour:
   SprintingVisibility: 1
   CrouchedVisibility: 0.4
   LightEffectOnVision: 0.5
+  sampler: {fileID: 957667314810470744}
 --- !u!114 &957667314810470744
 MonoBehaviour:
   m_ObjectHideFlags: 0

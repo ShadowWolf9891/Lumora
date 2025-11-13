@@ -5,7 +5,7 @@ public class UIHealthBar : MonoBehaviour
     [SerializeField]
     int currentHealth;
     Animator anim;
-    void Start()
+    void Awake()
     {
         GameEvents<PlayerHealthChanged>.Subscribe(UpdateHealthBar);
         anim = GetComponent<Animator>();
@@ -13,26 +13,24 @@ public class UIHealthBar : MonoBehaviour
 
     private void UpdateHealthBar(PlayerHealthChanged e)
     {
-        e.CurrentHealthValue = currentHealth;
+        currentHealth = e.CurrentHealthValue;
 
         if (anim != null)
         {
-            if (currentHealth >= 7)
+            if (currentHealth >= 7) //above 7
             {
                 anim.SetTrigger("GreenHealth");
             }
-            else if (currentHealth <= 6 && currentHealth >= 4)
+            else if (currentHealth <= 6 && currentHealth >= 4) //between 6 and 4
             {
                 anim.SetTrigger("YellowHealth");
             }
-            else //currentHealth <= 3
+            else //below 3
             {
                 anim.SetTrigger("RedHealth");
+                Debug.Log("Health Bar is in red");
             }
         }
-        else
-        {
-            Debug.Log("Health Bar Animator is null");
-        }
+        else Debug.Log("Health Bar Animator is null");
     }
 }

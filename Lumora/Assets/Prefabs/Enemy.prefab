@@ -482,11 +482,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829935706fd20c8418c055721a18269b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  btAsset: {fileID: 11400000, guid: a62d88f6769707a4cb4fd5129c46c856, type: 2}
+  btAsset: {fileID: 11400000, guid: 4e8f58628c0bf8548a03f67f5472280a, type: 2}
   chasingRange: 10
   alertRange: 20
   angleOfVision: 120
-  attackRange: 0.5
+  attackRange: 1.5
   patrolPoints: []
   timeAtEachPatrolPoint: 2
   searchRadius: 10
@@ -494,6 +494,7 @@ MonoBehaviour:
   timeAtEachPoint: 0
   alertedTime: 2
   attackDamage: 4
+  attackLockoutTime: 1
 --- !u!195 &949569845706991502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -771,9 +772,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.28719342
-  m_Height: 1.8987464
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0.17809343, y: 0.87144786, z: -0.03471315}
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!95 &1542053904733956834
 Animator:
   serializedVersion: 7

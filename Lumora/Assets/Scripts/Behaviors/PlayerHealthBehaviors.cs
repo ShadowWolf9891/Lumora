@@ -14,7 +14,8 @@ public class PlayerHealthBehaviors : MonoBehaviour
     private void Start()
     {
         //TODO: Add health loading in from save file
-        currentHealthValue = maxHealth;
+        currentHealthValue = 0;
+        RestoreHealth(100);
 
         GameEvents<PlayerDamagedEvent>.Subscribe(TakeDamage);
     }
@@ -22,7 +23,6 @@ public class PlayerHealthBehaviors : MonoBehaviour
  
     public void TakeDamage(PlayerDamagedEvent e)    //Triggers upon damage taken event. All damage calculation occurs within here.
     {
-        GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
         if (!godModeEnabled)
         {
             currentHealthValue -= e.DamageTaken;
@@ -31,6 +31,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
             {
                 DoGameOver();
             }
+            GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
         }
     }
 
@@ -43,6 +44,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
 
     private void DoGameOver()       //Triggers Game Over state change. we should have GameManager do some kinda event for game over methinks
     {
+        Debug.Log("Triggered Game over!");
         GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("TODO: change ID; GameStateChanged - GameOver", GameStates.Game_Over));
     }
 }

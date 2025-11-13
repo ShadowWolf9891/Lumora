@@ -1,6 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8802058368807450037
+--- !u!114 &-8346370503717809153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
+  blackboard: {fileID: 6251473723182574679}
+  Name: CanSeePlayer
+  NodeRect:
+    serializedVersion: 2
+    x: 14.666687
+    y: 516.6667
+    width: 120
+    height: 60
+  Parent: {fileID: -7212269541656579715}
+  Children: []
+  key: CanSeePlayer
+  expectedValue: 1
+--- !u!114 &-7212269541656579715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
+  blackboard: {fileID: 6251473723182574679}
+  Name: SequenceChase
+  NodeRect:
+    serializedVersion: 2
+    x: 130.66669
+    y: 387.33334
+    width: 120
+    height: 60
+  Parent: {fileID: 8865629448923761921}
+  Children:
+  - {fileID: -8346370503717809153}
+  - {fileID: 640622700130621057}
+--- !u!114 &-7117838471337323487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,18 +60,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
   m_Name: BTActionNode
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
-  blackboard: {fileID: 4582775741818728380}
+  blackboard: {fileID: 6251473723182574679}
   Name: Attack
   NodeRect:
     serializedVersion: 2
-    x: -269.99994
-    y: 198.00003
+    x: -120.000015
+    y: 483.33337
     width: 120
     height: 60
-  Parent: {fileID: 291290722033623480}
+  Parent: {fileID: -2791466323602094888}
   Children: []
   functionName: Attack
---- !u!114 &-7094553706152414191
+--- !u!114 &-6741207750871398671
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -32,46 +80,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
-  m_Name: BTSequence
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 4582775741818728380}
-  Name: BTSequenceAlert
+  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
+  m_Name: BTActionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
+  blackboard: {fileID: 6251473723182574679}
+  Name: Searching
   NodeRect:
     serializedVersion: 2
-    x: 198.40005
-    y: 172.79996
+    x: 594.0001
+    y: 788.6667
     width: 120
     height: 60
-  Parent: {fileID: 5566909765494067401}
-  Children:
-  - {fileID: 1895538345791935119}
-  - {fileID: -4307816765050787802}
---- !u!114 &-6411627075126116447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
-  m_Name: BTSequence
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 4582775741818728380}
-  Name: BTSequenceChase
-  NodeRect:
-    serializedVersion: 2
-    x: 19.06665
-    y: 192.9333
-    width: 120
-    height: 60
-  Parent: {fileID: 5566909765494067401}
-  Children:
-  - {fileID: 3416001590898217211}
-  - {fileID: 4743781131496862014}
---- !u!114 &-4307816765050787802
+  Parent: {fileID: -3688752973228431118}
+  Children: []
+  functionName: Searching
+--- !u!114 &-6631167307195684354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,19 +106,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8282a6902d0064aafec0d4e900c205, type: 3}
   m_Name: BTSelector
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSelector
-  blackboard: {fileID: 4582775741818728380}
+  blackboard: {fileID: 6251473723182574679}
   Name: BTSelector
   NodeRect:
     serializedVersion: 2
-    x: 347.20004
-    y: 280.80005
+    x: 578.00006
+    y: 528
     width: 120
     height: 60
-  Parent: {fileID: -7094553706152414191}
+  Parent: {fileID: -3328875878519450596}
   Children:
-  - {fileID: -2001364535851365699}
-  - {fileID: 4415527253878800437}
---- !u!114 &-3749383689463194458
+  - {fileID: -3688752973228431118}
+  - {fileID: -6430903674448814226}
+--- !u!114 &-6430903674448814226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,18 +130,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
   m_Name: BTActionNode
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: Patrol
+  blackboard: {fileID: 6251473723182574679}
+  Name: OnAlert
   NodeRect:
     serializedVersion: 2
-    x: 414.6667
-    y: 159.06665
+    x: 686.66675
+    y: 665.33325
     width: 120
     height: 60
-  Parent: {fileID: 5566909765494067401}
+  Parent: {fileID: -6631167307195684354}
   Children: []
-  functionName: Patrol
---- !u!114 &-3413399767267632858
+  functionName: Alerted
+--- !u!114 &-3839154268104387260
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,19 +153,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
   m_Name: BTConditionNode
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: IsAttacking
+  blackboard: {fileID: 6251473723182574679}
+  Name: LostPlayer
   NodeRect:
     serializedVersion: 2
-    x: -402.66666
-    y: 178.6667
+    x: 449.33344
+    y: 780
     width: 120
     height: 60
-  Parent: {fileID: 291290722033623480}
+  Parent: {fileID: -3688752973228431118}
   Children: []
-  key: IsAttacking
+  key: LostPlayer
   expectedValue: 1
---- !u!114 &-2001364535851365699
+--- !u!114 &-3688752973228431118
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,18 +177,112 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
   m_Name: BTSequence
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 4582775741818728380}
+  blackboard: {fileID: 6251473723182574679}
   Name: BTSequence
   NodeRect:
     serializedVersion: 2
-    x: 270.4
-    y: 360.8
+    x: 527.3334
+    y: 660.6666
     width: 120
     height: 60
-  Parent: {fileID: -4307816765050787802}
+  Parent: {fileID: -6631167307195684354}
   Children:
-  - {fileID: 1045441819679091466}
-  - {fileID: 6399140941337875590}
+  - {fileID: -3839154268104387260}
+  - {fileID: -6741207750871398671}
+--- !u!114 &-3328875878519450596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
+  blackboard: {fileID: 6251473723182574679}
+  Name: IsAlerted
+  NodeRect:
+    serializedVersion: 2
+    x: 325.33334
+    y: 366.00003
+    width: 120
+    height: 60
+  Parent: {fileID: 8865629448923761921}
+  Children:
+  - {fileID: 2972712072274093601}
+  - {fileID: -6631167307195684354}
+--- !u!114 &-2791466323602094888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
+  blackboard: {fileID: 6251473723182574679}
+  Name: BTSequence
+  NodeRect:
+    serializedVersion: 2
+    x: -84
+    y: 347.33334
+    width: 120
+    height: 60
+  Parent: {fileID: 8865629448923761921}
+  Children:
+  - {fileID: 4480270941357043558}
+  - {fileID: -7117838471337323487}
+--- !u!114 &-1414043915551718136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
+  m_Name: BTActionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
+  blackboard: {fileID: 6251473723182574679}
+  Name: Patrol
+  NodeRect:
+    serializedVersion: 2
+    x: 522.66675
+    y: 367.33334
+    width: 120
+    height: 60
+  Parent: {fileID: 8865629448923761921}
+  Children: []
+  functionName: Patrol
+--- !u!114 &-214315623818130009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
+  blackboard: {fileID: 0}
+  Name: RootNode
+  NodeRect:
+    serializedVersion: 2
+    x: 100
+    y: 99.33333
+    width: 120
+    height: 60
+  Parent: {fileID: 0}
+  Children:
+  - {fileID: 8865629448923761921}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,122 +293,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 199428a7a8f42de44a10dc7461dad8f2, type: 3}
-  m_Name: BT_Enemy
+  m_Name: BT_Enemy_2
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BehaviorTree
-  rootNode: {fileID: 5952354492407787188}
+  rootNode: {fileID: -214315623818130009}
   nodes:
-  - {fileID: 3416001590898217211}
-  - {fileID: -3749383689463194458}
-  - {fileID: 5566909765494067401}
-  - {fileID: -6411627075126116447}
-  - {fileID: 4743781131496862014}
-  - {fileID: 6399140941337875590}
-  - {fileID: 1895538345791935119}
-  - {fileID: 1045441819679091466}
-  - {fileID: 4415527253878800437}
-  - {fileID: -2001364535851365699}
-  - {fileID: -7094553706152414191}
-  - {fileID: -4307816765050787802}
-  - {fileID: -8802058368807450037}
-  - {fileID: -3413399767267632858}
-  - {fileID: 291290722033623480}
---- !u!114 &291290722033623480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
-  m_Name: BTSequence
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 4582775741818728380}
-  Name: BTSequence
-  NodeRect:
-    serializedVersion: 2
-    x: -219.99988
-    y: 98.66664
-    width: 120
-    height: 60
-  Parent: {fileID: 5566909765494067401}
-  Children:
-  - {fileID: -3413399767267632858}
-  - {fileID: -8802058368807450037}
---- !u!114 &1045441819679091466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
-  m_Name: BTConditionNode
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: LostPlayer
-  NodeRect:
-    serializedVersion: 2
-    x: 168.79999
-    y: 503.2
-    width: 120
-    height: 60
-  Parent: {fileID: -2001364535851365699}
-  Children: []
-  key: LostPlayer
-  expectedValue: 1
---- !u!114 &1895538345791935119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
-  m_Name: BTConditionNode
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: IsAlerted
-  NodeRect:
-    serializedVersion: 2
-    x: 94.93338
-    y: 293.86673
-    width: 120
-    height: 60
-  Parent: {fileID: -7094553706152414191}
-  Children: []
-  key: IsAlerted
-  expectedValue: 1
---- !u!114 &3416001590898217211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
-  m_Name: BTConditionNode
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: CanSeePlayer
-  NodeRect:
-    serializedVersion: 2
-    x: -233.33334
-    y: 305.73334
-    width: 120
-    height: 60
-  Parent: {fileID: -6411627075126116447}
-  Children: []
-  key: CanSeePlayer
-  expectedValue: 1
---- !u!114 &4415527253878800437
+  - {fileID: 8865629448923761921}
+  - {fileID: -2791466323602094888}
+  - {fileID: -7212269541656579715}
+  - {fileID: -3328875878519450596}
+  - {fileID: -7117838471337323487}
+  - {fileID: 4480270941357043558}
+  - {fileID: -8346370503717809153}
+  - {fileID: 640622700130621057}
+  - {fileID: 2972712072274093601}
+  - {fileID: -6631167307195684354}
+  - {fileID: -3688752973228431118}
+  - {fileID: -3839154268104387260}
+  - {fileID: -6741207750871398671}
+  - {fileID: -6430903674448814226}
+  - {fileID: -1414043915551718136}
+--- !u!114 &640622700130621057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,18 +324,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
   m_Name: BTActionNode
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: OnAlert
+  blackboard: {fileID: 6251473723182574679}
+  Name: Chase
   NodeRect:
     serializedVersion: 2
-    x: 441.59982
-    y: 364.8
+    x: 152.00003
+    y: 522
     width: 120
     height: 60
-  Parent: {fileID: -4307816765050787802}
+  Parent: {fileID: -7212269541656579715}
   Children: []
-  functionName: Alerted
---- !u!114 &4582775741818728380
+  functionName: Chase
+--- !u!114 &2972712072274093601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
+  blackboard: {fileID: 6251473723182574679}
+  Name: IsAlerted
+  NodeRect:
+    serializedVersion: 2
+    x: 346.00006
+    y: 538
+    width: 120
+    height: 60
+  Parent: {fileID: -3328875878519450596}
+  Children: []
+  key: IsAlerted
+  expectedValue: 1
+--- !u!114 &4480270941357043558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15bc4b7b54bf130498b168176090ae0b, type: 3}
+  m_Name: BTConditionNode
+  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTConditionNode
+  blackboard: {fileID: 6251473723182574679}
+  Name: IsAttacking
+  NodeRect:
+    serializedVersion: 2
+    x: -245.33331
+    y: 492.00006
+    width: 120
+    height: 60
+  Parent: {fileID: -2791466323602094888}
+  Children: []
+  key: IsAttacking
+  expectedValue: 1
+--- !u!114 &6251473723182574679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -359,30 +428,7 @@ MonoBehaviour:
     BoolValue: 0
     GameObjectValue: {fileID: 0}
     Vector3Value: {x: 0, y: 0, z: 0}
---- !u!114 &4743781131496862014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
-  m_Name: BTActionNode
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: Chase
-  NodeRect:
-    serializedVersion: 2
-    x: -79.066666
-    y: 305.0667
-    width: 120
-    height: 60
-  Parent: {fileID: -6411627075126116447}
-  Children: []
-  functionName: Chase
---- !u!114 &5566909765494067401
+--- !u!114 &8865629448923761921
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -394,60 +440,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8282a6902d0064aafec0d4e900c205, type: 3}
   m_Name: BTSelector
   m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSelector
-  blackboard: {fileID: 4582775741818728380}
+  blackboard: {fileID: 6251473723182574679}
   Name: BTSelector
   NodeRect:
     serializedVersion: 2
-    x: 27.199982
-    y: 3.5999756
+    x: 104
+    y: 223.33334
     width: 120
     height: 60
-  Parent: {fileID: 5952354492407787188}
+  Parent: {fileID: -214315623818130009}
   Children:
-  - {fileID: 0}
---- !u!114 &5952354492407787188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e93d1dc14eb68a44eb2a2e4aeabd50e6, type: 3}
-  m_Name: RootNode
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTSequence
-  blackboard: {fileID: 0}
-  Name: RootNode
-  NodeRect:
-    serializedVersion: 2
-    x: 170.39996
-    y: -42.26664
-    width: 120
-    height: 60
-  Parent: {fileID: 0}
-  Children:
-  - {fileID: 5566909765494067401}
---- !u!114 &6399140941337875590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26ec39630fb072846a2c255ea646073d, type: 3}
-  m_Name: BTActionNode
-  m_EditorClassIdentifier: Assembly-CSharp::EasyBehaviorTree.BTActionNode
-  blackboard: {fileID: 4582775741818728380}
-  Name: Searching
-  NodeRect:
-    serializedVersion: 2
-    x: 349.59998
-    y: 505.06665
-    width: 120
-    height: 60
-  Parent: {fileID: -2001364535851365699}
-  Children: []
-  functionName: Searching
+  - {fileID: -2791466323602094888}
+  - {fileID: -7212269541656579715}
+  - {fileID: -3328875878519450596}
+  - {fileID: -1414043915551718136}

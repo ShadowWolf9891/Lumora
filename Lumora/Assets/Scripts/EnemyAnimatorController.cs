@@ -6,11 +6,12 @@ using UnityEngine.AI;
 public class EnemyAnimatorController : MonoBehaviour
 {
     EnemyBehavior enemyBehavior;
+
     Animator animator;
     NavMeshAgent agent;
     void Awake()
     {
-        enemyBehavior = GetComponent<EnemyBehavior>();
+        enemyBehavior = GetComponentInParent<EnemyBehavior>();
         animator = GetComponent<Animator>();
         agent = GetComponentInParent<NavMeshAgent>();
     }
@@ -21,10 +22,17 @@ public class EnemyAnimatorController : MonoBehaviour
     }
     public void DoAttack()
     {
-        animator.SetTrigger("DoAttack");
+        animator.SetBool("IsAttacking", true);
     }
     public void OnEnemyAttackEvent()     //Triggers from animation event. Reduces player health via event.
     {
         GameEvents<PlayerDamagedEvent>.Raise(new PlayerDamagedEvent("Player Damaged Event", enemyBehavior.attackDamage));
+        Invoke("UnlockEnemyMovement", enemyBehavior.attackLockoutTime);
+    }
+
+    private void UnlockEnemyMovement()
+    {
+        animator.SetBool("IsAttacking", false);
+        enemyBehavior.EndAttackState();
     }
 }

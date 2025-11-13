@@ -14,9 +14,9 @@ public static class VisionHelper
 	public static bool CanSeeTarget(GameObject viewer, GameObject target, float viewAngle, float viewDistance, LayerMask layerMask)
 	{
 		//Make the target harder or easier to see if they have a visibility manager
-		if(target.TryGetComponent<VisibilityManager>(out VisibilityManager vm))
+		if (target.TryGetComponent<VisibilityManager>(out VisibilityManager vm))
 		{
-			viewDistance *= vm.Visibility;
+			viewDistance -= viewDistance * vm.Visibility;
 		}
 
 		Vector3 origin = viewer.transform.position;
@@ -24,10 +24,15 @@ public static class VisionHelper
 		float distanceToTarget = directionToTarget.magnitude;
 
 		if (distanceToTarget > viewDistance)
+		{
 			return false;
+		}
 
 		float angleToTarget = Vector3.Angle(viewer.transform.forward, directionToTarget);
-		if (angleToTarget > viewAngle * 0.5f) return false;
+		if (angleToTarget > viewAngle * 0.5f) 
+		{
+			return false; 
+		}
 
 		Debug.DrawRay(origin, directionToTarget.normalized * (distanceToTarget), Color.mediumVioletRed, Time.deltaTime);
 	
