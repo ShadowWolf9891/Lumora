@@ -97,3 +97,19 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# --- Unity baked lighting (completely local) ---
+# Ignore baked lightmaps and their meta files
+*/Lightmap-*
+*/Lightmap-*.meta
+
+# Ignore lighting data
+*/LightingData.asset
+*/LightingData.asset.meta
+
+# Ignore reflection probes
+*/ReflectionProbe-*
+*/ReflectionProbe-*.meta
+
+# Ignore GI cache
+[Ll]ibrary/GICache/
