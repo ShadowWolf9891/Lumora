@@ -2,7 +2,13 @@ using UnityEngine;
 
 public class EnemyCollision : MonoBehaviour
 {
-    [SerializeField] GameObject endScreen;
+    private GameObject endScreen;
+
+    void Start()
+    {
+        endScreen = GameObject.Find("EndGame");
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Player")
