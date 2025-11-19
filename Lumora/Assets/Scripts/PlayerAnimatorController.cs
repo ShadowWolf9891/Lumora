@@ -85,6 +85,7 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         Debug.Log("Did sprint toggle animator");
         if (animator.GetBool("isSprinting")) { animator.SetBool("isSprinting", false); }
+        else if (animator.GetBool("isHiding")) { animator.SetBool("isSprinting", true); }
         else { animator.SetBool("isSprinting", true); }
     }
 

@@ -459,15 +459,19 @@ public class EnemyBehavior : MonoBehaviour
             curState = AlertStates.CHASING;
 			
 
-            //do i need to do all this?
+            //do i need to do all this? anyways-
             lastKnownPlayerLocation = noiseLocation;
             agent.SetDestination(noiseLocation);
         }
-		else
+		else if (curState == AlertStates.IDLE)
 		{
             bb.Set<bool>("IsAlerted", true);
             agent.SetDestination(noiseLocation);
         }
+		else if (curState == AlertStates.ALERT && !CanSeeTarget(playerRef, alertRange))
+		{
+			agent.SetDestination(noiseLocation);
+		}
 	}
 	private void OnDrawGizmos()
 	{
