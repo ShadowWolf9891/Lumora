@@ -10,7 +10,7 @@ public class EnemyAlertController : MonoBehaviour
     [SerializeField]
     Sprite[] sprites;
 
-    private void Start()
+    private void Awake()
     {
         displayImage = GetComponent<Image>();
     }
