@@ -445,6 +445,7 @@ GameObject:
   - component: {fileID: 5834094678125490573}
   - component: {fileID: 1185649223247278612}
   - component: {fileID: 949569845706991502}
+  - component: {fileID: 819600112163679419}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -485,7 +486,7 @@ MonoBehaviour:
   btAsset: {fileID: 11400000, guid: 4e8f58628c0bf8548a03f67f5472280a, type: 2}
   chasingRange: 10
   alertRange: 20
-  angleOfVision: 120
+  angleOfVision: 90
   attackRange: 1.5
   patrolPoints: []
   timeAtEachPatrolPoint: 2
@@ -517,6 +518,19 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &819600112163679419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5516940199162863807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c87b4a9320ecc374a8bd0562396bc664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCollision
+  endScreen: {fileID: 0}
 --- !u!1 &8279032578275009318
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,9 +707,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6579581211981453061}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3544743411045962609}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
       insertIndex: -1
@@ -712,19 +723,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
   m_PrefabInstance: {fileID: 1116879952572901786}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6579581211981453061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 269826440647791819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c87b4a9320ecc374a8bd0562396bc664, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyCollision
-  endScreen: {fileID: 0}
 --- !u!54 &3544743411045962609
 Rigidbody:
   m_ObjectHideFlags: 0
