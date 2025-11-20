@@ -281,10 +281,15 @@ public class SpawnVisibleNoiseEvent : GameEventType
     }
 }
 #endregion
+#region UI
 
+public class SpawnPauseMenuEvent : GameEventType
+{
+    public bool MenuPopup { get; private set; }
+    public SpawnPauseMenuEvent(string id, bool menuPopup) : base(id)
+    {
+        MenuPopup = menuPopup;
+    }
+}
 
-
-
-
-
-
+#endregion

@@ -124,6 +124,15 @@ public static class EventManager
 					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
 				}
 				break;
+			case "UIEvent":
+				bool menuPopup = false;
+				if (def.parameters.ContainsKey("menuPopup"))
+				{
+					menuPopup = bool.TryParse(def.parameters["menuPopup"], out bool popup);
+				}
+				e = new SpawnPauseMenuEvent(def.id, menuPopup);
+				break;
+			
 			default:
 				Debug.LogError($"Invalid type {def.type}");
 				return;
