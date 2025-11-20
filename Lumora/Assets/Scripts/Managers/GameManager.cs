@@ -18,7 +18,11 @@ public class GameManager : MonoBehaviour
 
         EventManager.Raise("Chapter2_Intro");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
+	}
 
+	private void Update()
+	{
+		StartCoroutine(EventManager.HandleEvents()); //Handle events each frame if there are any.
 	}
 
 }
