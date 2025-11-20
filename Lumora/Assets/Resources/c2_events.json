@@ -90,7 +90,7 @@
             "id": "C2_Arrive_Watts_Back",
             "eventsOnComplete" :
             [
-                "Watts_Back_Trigger_2"
+                "C2_Watts_Back"
             ],
             "parameters":
             {
@@ -99,22 +99,11 @@
             }
         },
         {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Back_Trigger_2",
-            "parameters":
-            {
-                "worldLocation": "-170.12,0.13,-811.81",
-                "radius": "2",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "C2_Watts_Back"
-            }
-        },
-        {
             "type":"DialogueEvent",
             "id": "C2_Watts_Back",
             "eventsOnComplete" :
             [
-                "Watts_Back_Trigger_3"
+                "C2_Watts_Answer"
             ],
             "parameters":
             {
@@ -122,23 +111,12 @@
                 "scene": "4"
             }
         },
-          {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Back_Trigger_3",
-            "parameters":
-            {
-                "worldLocation": "-170.12,0.13,-811.81",
-                "radius": "2",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "C2_Watts_Answer"
-            }
-        },
         {
             "type":"DialogueEvent",
             "id": "C2_Watts_Answer",
             "eventsOnComplete":
             [
-                "Watts_Back_Trigger_4"
+                "C2_Watts_Lira_1"
             ],
             "parameters":
             {
@@ -146,23 +124,12 @@
                 "scene": "5"
             }
         },
-         {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Back_Trigger_4",
-            "parameters":
-            {
-                "worldLocation": "-170.12,0.13,-811.81",
-                "radius": "2",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "C2_Watts_Lira_1"
-            }
-        },
         {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira_1",
             "eventsOnComplete":
             [
-                "Watts_Back_Trigger_5"
+                "C2_Watts_Lira_2"
             ],
             "parameters":
             {
@@ -171,22 +138,11 @@
             }
         },
         {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Back_Trigger_5",
-            "parameters":
-            {
-                "worldLocation": "-170.12,0.13,-811.81",
-                "radius": "2",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "C2_Watts_Lira_2"
-            }
-        },
-        {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira_2",
             "eventsOnComplete":
             [
-                "Watts_Back_Trigger_6"
+                "C2_Lira_Watts_3"
             ],
             "parameters":
             {
@@ -195,38 +151,16 @@
             }
         },
         {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Back_Trigger_6",
-            "parameters":
-            {
-                "worldLocation": "-170.12,0.13,-811.81",
-                "radius": "2",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "C2_Lira_Watts_3"
-            }
-        },
-        {
             "type":"DialogueEvent",
             "id": "C2_Lira_Watts_3",
             "eventsOnComplete":
             [
-                "Watts_Back_Trigger_7"
+                "C2_Lira_Watts_4"
             ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "8"
-            }
-        },
-        {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Back_Trigger_7",
-            "parameters":
-            {
-                "worldLocation": "-170.12,0.13,-811.81",
-                "radius": "2",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "C2_Lira_Watts_4"
             }
         },
         {

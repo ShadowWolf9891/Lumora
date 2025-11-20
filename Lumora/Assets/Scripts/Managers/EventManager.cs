@@ -5,6 +5,8 @@ using System.Reflection;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Cinemachine;
+using System.Linq;
+using System.Collections;
 
 [System.Serializable]
 public class AllEvents
@@ -14,6 +16,11 @@ public class AllEvents
 
 public static class EventManager
 {
+	public static Queue<GameEventType> EventQueue { get; private set; }
+	
+	//Checked only when another event is completed. Used for if an event is fired but the requirements are not yet met.
+	public static Queue<GameEventType> LazyEventQueue { get; private set; } 
+
 	private static AllEvents allEventsDefs, c2EventsDefs;
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
@@ -25,6 +32,8 @@ public static class EventManager
 		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
 		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
+		EventQueue = new Queue<GameEventType>();
+		LazyEventQueue = new Queue<GameEventType>();
 		
 		foreach (GameEventDefinition eventDef in allEventsDefs.allEvents)
 		{
@@ -156,7 +165,7 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		if(evt.IsCompleted) 
+		if(evt.IsCompleted)
 		{
 			Debug.LogWarning($"Event {eventID} has already been completed. Skipping...");
 			return;
@@ -165,9 +174,9 @@ public static class EventManager
 		{
 			if (_events.TryGetValue(evt.RequireCompletedID, out var completedEvent))
 			{
-				if(!completedEvent.IsCompleted) 
+				if(!completedEvent.IsCompleted)
 				{
-					Debug.Log($"Event {completedEvent.Id} is not completed so {eventID} will not fire. Skipping...");
+					LazyEventQueue.Enqueue(evt);
 					return;
 				}
 			}
@@ -176,19 +185,9 @@ public static class EventManager
 				Debug.LogWarning($"Invalid event with id: {evt.RequireCompletedID}. Skipping isCompleted check for event {eventID}.");
 			}
 		}
-		
-		Type type = evt.GetType();
-		//Use reflection to get the correct type if the value has not been cached already.
-		if (!_raiseCache.TryGetValue(type, out var raiseMethod))
-		{
-			raiseMethod = typeof(GameEvents<>)
-				.MakeGenericType(type)
-				.GetMethod("Raise", BindingFlags.Public | BindingFlags.Static);
-			_raiseCache[type] = raiseMethod;
-		}
 
-		raiseMethod?.Invoke(null, new object[] { evt });
-		Debug.Log($"Raising event via {raiseMethod?.DeclaringType}::{raiseMethod?.Name}");
+		EventQueue.Enqueue(evt);
+
 		//Trigger events that are raised when this event is raised
 		if (evt.EventsToFire != null && evt.EventsToFire.Length > 0) 
 		{
@@ -197,8 +196,49 @@ public static class EventManager
 				Raise(e);
 			}
 		}
-
 	}
+	/// <summary>
+	/// Handle the events in the queue. Called from GameManager.
+	/// </summary>
+	public static IEnumerator HandleEvents()
+	{
+        if (EventQueue.Count > 0)
+        {
+			GameEventType evt = EventQueue.Dequeue();
+
+			Type type = evt.GetType();
+			//Use reflection to get the correct type if the value has not been cached already.
+			if (!_raiseCache.TryGetValue(type, out var raiseMethod))
+			{
+				raiseMethod = typeof(GameEvents<>)
+					.MakeGenericType(type)
+					.GetMethod("Raise", BindingFlags.Public | BindingFlags.Static);
+				_raiseCache[type] = raiseMethod;
+			}
+
+			raiseMethod?.Invoke(null, new object[] { evt });
+			Debug.Log($"Raising event via {raiseMethod?.DeclaringType}::{raiseMethod?.Name}");
+		}
+		yield return 0;
+    }
+
+	/// <summary>
+	/// Check if the lazy events have their requirements met after another event was completed and add them to the queue if they do.
+	/// </summary>
+	/// <param name="completedID">The ID of the event that was completed to trigger this method.</param>
+	private static void CheckLazyEvents(string completedID)
+	{
+		if (LazyEventQueue.Count > 0)
+		{
+			List<GameEventType> lazyEventMatches = (List<GameEventType>)LazyEventQueue.Where(x => x.RequireCompletedID == completedID);
+
+			foreach(var lazyEventMatch in lazyEventMatches)
+			{
+				EventQueue.Enqueue(lazyEventMatch);
+			}
+		}
+	}
+
 	/// <summary>
 	/// Call this to mark an event as completed.
 	/// </summary>
@@ -223,10 +263,10 @@ public static class EventManager
 				Raise(e);
 
 				Debug.Log($"Raised event {e}");
-
 			}
 		}
 
+		CheckLazyEvents(eventID);
 		
 	}
 
