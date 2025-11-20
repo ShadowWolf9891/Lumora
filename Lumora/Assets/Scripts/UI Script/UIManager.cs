@@ -39,12 +39,12 @@ public class UIManager : MonoBehaviour
         if (isMenuActive) 
         {
             GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Pause_Game", GameStates.Paused)); 
-            Cursor.lockState = CursorLockMode.Confined;
+            //Cursor.lockState = CursorLockMode.Confined;
         }
         else
         {
             GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Resume_Game", GameStates.Running));
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked;
         }
     }
 
@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
     {
         isMenuActive = false;
         pauseMenuUI.SetActive(isMenuActive);
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
     public void OnOptionsPressed()
     {
