@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 	private Vector2 moveInput;
     private Transform cameraTransform;
 	private bool canMove;
+	private bool sprinting;
 
     private void Start()
 	{
@@ -60,10 +61,16 @@ public class PlayerController : MonoBehaviour
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look));
 			}
-			if (sprintAction.WasPressedThisFrame())
+			if (sprintAction.WasPressedThisFrame() && !sprinting)
             {
-                GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("sprint", PlayerInputActionType.Sprint, true));
+				sprinting = true;
+                GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("sprint", PlayerInputActionType.Sprint, sprinting));
             }
+			else if(sprintAction.WasReleasedThisFrame() && sprinting)
+			{
+				sprinting = false;
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("sprint", PlayerInputActionType.Sprint, sprinting));
+			}
             if (interactAction.WasPressedThisFrame())
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("interact", PlayerInputActionType.Interact, true));
