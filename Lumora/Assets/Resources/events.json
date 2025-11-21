@@ -41,6 +41,23 @@
                 "worldRotation" : "0,0,0"
             }
 
+        },
+        {
+            "type" : "UIEvent",
+            "id" : "Toggle_PauseMenu_On",
+            "isRepeatable" : true,
+            "parameters": 
+            {
+                "menuPopup" : "true"
+            }
+        },
+        {    "type" : "UIEvent",
+            "id" : "Toggle_PauseMenu_Off",
+            "isRepeatable" :true,
+            "parameters":
+            {
+                "menuPopup" : "false"
+            }
         }
     ]
 }
