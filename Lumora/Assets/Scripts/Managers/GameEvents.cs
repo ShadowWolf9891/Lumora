@@ -281,8 +281,8 @@ public class SpawnVisibleNoiseEvent : GameEventType
     }
 }
 #endregion
-#region UI
 
+#region UI
 public class SpawnPauseMenuEvent : GameEventType
 {
     public bool MenuPopup { get; private set; }

@@ -137,7 +137,11 @@ public static class EventManager
 				bool menuPopup = false;
 				if (def.parameters.ContainsKey("menuPopup"))
 				{
-					menuPopup = bool.TryParse(def.parameters["menuPopup"], out bool popup);
+					menuPopup = bool.TryParse(def.parameters["menuPopup"], out bool popup) ? popup : false;
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
 				}
 				e = new SpawnPauseMenuEvent(def.id, menuPopup);
 				break;
