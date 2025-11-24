@@ -125,6 +125,16 @@ public class PlayerHealthChanged : GameEventType //currently used to sync UI wit
         CurrentHealthValue = currentHealthValue;
     }
 }
+
+public class UnlockAbilityEvent : GameEventType
+{ 
+    public string AbilityName;
+    public UnlockAbilityEvent(string id,  string abilityName) : base(id)
+    {
+        AbilityName = abilityName;
+    }
+}
+
 #endregion
 
 #region NPC and Quest Events

@@ -31,6 +31,7 @@ public class PlayerBehavior : MonoBehaviour
 	private int linePoints = 8;
 	private float timeBetweenPoints = 0.15f;
 	private bool isThrowing;
+	private bool canThrow;
 
 	[Header("Stealth Settings")]
 	[SerializeField] private float snapDistance = 0.6f;
@@ -65,6 +66,7 @@ public class PlayerBehavior : MonoBehaviour
         GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
         //GameContext.Instance.OnMove += Move;
         //GameContext.Instance.OnCameraLook += UpdateThrow;
         //GameContext.Instance.OnAttackPressed += Attack;
@@ -117,10 +119,16 @@ public class PlayerBehavior : MonoBehaviour
 				DoHide();
 				break;
 			case PlayerInputActionType.Throw:
-				PrepareThrow();
+				if (canThrow)
+				{
+					PrepareThrow();
+				}
 				break;
 			case PlayerInputActionType.ThrowRelease:
-				ReleaseThrow();
+				if (canThrow)
+				{
+					ReleaseThrow();
+				}
 				break;
 
 		}
@@ -377,7 +385,28 @@ public class PlayerBehavior : MonoBehaviour
         isHiding = true;
         // TODO: Add animation
     }
-    #endregion
+	#endregion
 
-	
+	#region EventStuff
+	/// <summary>
+	/// Event handler for unlocking a specific player ability.
+	/// </summary>
+	/// <param name="e">The Unlock Ability event defined in a json file.</param>
+	private void UnlockAbility(UnlockAbilityEvent e)
+	{
+		switch (e.AbilityName)
+		{
+			case "throw":
+				canThrow = true;
+				break;
+			//Add other abilities here
+
+			default:
+				Debug.LogError($"Invalid ability name to unlock {e.AbilityName}");
+				break;
+		}
+	}
+
+
+	#endregion
 }

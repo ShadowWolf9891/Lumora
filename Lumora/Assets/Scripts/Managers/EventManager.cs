@@ -141,6 +141,17 @@ public static class EventManager
 				}
 				e = new SpawnPauseMenuEvent(def.id, menuPopup);
 				break;
+			case "UnlockAbilityEvent":
+				if (def.parameters.ContainsKey("abilityName"))
+				{
+					e = new UnlockAbilityEvent(def.id, def.parameters["abilityName"]);
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
+				}
+				break;
+				
 			
 			default:
 				Debug.LogError($"Invalid type {def.type}");
