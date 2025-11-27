@@ -45,6 +45,9 @@ public class CameraManager
 		PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
 		CurrentCamera = _cameraList[cameraIndex];
 
+		PreviousCamera.gameObject.SetActive(false);
+		CurrentCamera.gameObject.SetActive(true);
+
 		_brain.DefaultBlend.Time = blendSpeed;
 
 		PreviousCamera.Priority = 0;
@@ -64,7 +67,7 @@ public class CameraManager
 		}
 		else
 		{
-			Debug.LogWarning($"Cannot set camera to cameraIndex: {index}. IndexOutOfRangeException.");
+			Debug.LogWarning($"Cannot set camera to cameraIndex: {index}. IndexOutOfRangeException. {_cameraList.Count}");
 		}
 	}
 	/// <summary>
@@ -82,6 +85,9 @@ public class CameraManager
 		(PreviousCamera, CurrentCamera) = (CurrentCamera, PreviousCamera);
 		PreviousCamera.Priority = 0;
 		CurrentCamera.Priority = 10;
+
+		PreviousCamera.gameObject.SetActive(false);
+		CurrentCamera.gameObject.SetActive(true);
 
 		_brain.DefaultBlend.Time = blendSpeed;
 	}
