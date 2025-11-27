@@ -51,26 +51,6 @@
         },
         {
             "type" : "SpawnTriggerEvent",
-            "id" : "TestCutsceneSpawn",
-            "parameters" : 
-            {
-                "worldLocation" : "-96.74,0.08,-920.22",
-                "radius" : "1",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "TestCutscene"
-            }
-
-        },
-        {
-            "type" : "BeginCutsceneEvent",
-            "id" : "TestCutscene",
-            "parameters" :
-            {
-                "timelineName": "Timeline1Timeline"
-            }
-        },
-        {
-            "type" : "SpawnTriggerEvent",
             "id" : "Mrs_Watts_Front_Arrive_Trigger",
             "parameters" : 
             {
@@ -187,10 +167,71 @@
         {
             "type":"DialogueEvent",
             "id": "C2_Lira_Watts_4",
+            "eventsOnComplete":
+            [
+                "C2_Arrive_Darren"
+            ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "9"
+            }
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "C2_Arrive_Darren",
+            "parameters":
+            {
+                "worldLocation": "-137.75, 0.08, -818.3",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Lira_Darren"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "C2_Lira_Darren",
+            "eventsOnComplete": 
+            [
+                "C2_Lira_Darren_2"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "12"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "C2_Lira_Darren_2",
+            "eventsOnComplete":
+            [
+                "C2_Darren_Stop"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "13"
+            }
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "C2_Darren_Stop",
+            "parameters":
+            {
+                "worldLocation": "-142.7, 0.08, -817.42",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Lira_Darren_3"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_3",
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "14"
             }
         }
     ]
