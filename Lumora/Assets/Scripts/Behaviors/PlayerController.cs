@@ -11,9 +11,9 @@ public class PlayerController : MonoBehaviour
 	//Private variables
 	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
 	private Vector2 moveInput;
-    private Transform cameraTransform;
 	private bool canMove;
 	private bool sprinting;
+	private Camera mainCam;
 
     private void Start()
 	{
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
 		lookAction = InputSystem.actions.FindAction("Look");
-		cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
+		mainCam = Camera.main;
 	}
 
 	private void Update()
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 			}
 			if (lookAction.IsInProgress())
 			{
-				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look));
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("look",PlayerInputActionType.Look, true, lookAction.ReadValue<Vector2>()));
 			}
 			if (sprintAction.WasPressedThisFrame() && !sprinting)
             {
@@ -96,8 +96,8 @@ public class PlayerController : MonoBehaviour
 	private void MovePlayer()
 	{
 		//calculates proper move direction
-		Vector3 camForward = cameraTransform.forward;
-		Vector3 camRight = cameraTransform.right;
+		Vector3 camForward = mainCam.transform.forward;
+		Vector3 camRight = mainCam.transform.right;
 		camForward.y = 0f;
 		camRight.y = 0f;
 		camForward.Normalize();
