@@ -26,7 +26,6 @@ public class SpawnableTriggerBehavior : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log($"[Trigger] mask.value={layerMask.value}");
 		if (((1 << other.gameObject.layer) & layerMask.value) != 0)
 		{
 			Debug.Log($"{other.gameObject.name} entered the trigger.");

@@ -1,8 +1,12 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -26,9 +30,12 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] GameObject thrownObjPrefab;
 	[SerializeField] Transform throwLocation;
 	[SerializeField] float throwForce = 10;
+	[SerializeField] float throwSensitivity = 1f;
 	//line renderer 
 	[SerializeField] LineRenderer lineRenderer;
-	private int linePoints = 8;
+	[SerializeField] GameObject hitSpherePrefab;
+	private GameObject activeHitSphere;
+	private int linePoints = 16;
 	private float timeBetweenPoints = 0.15f;
 	private bool isThrowing;
 	private bool canThrow;
@@ -49,18 +56,24 @@ public class PlayerBehavior : MonoBehaviour
 	Rigidbody rb;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
-	private Transform cameraTransform;
+	private Camera mainCam;
+	private Vector3 curThrowDirection;
+	private float throwYaw;
+	private float throwPitch;
+	#endregion
 
-    #endregion
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	void Awake()
     {
         SubscribeToEvents();
         GetComponentReferences();
     }
+	private void Start()
+	{
+		CameraManager.SetCurrentCamera("3rd Person Camera");
+	}
 
-    private void SubscribeToEvents()
+	private void SubscribeToEvents()
     {
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
@@ -85,12 +98,12 @@ public class PlayerBehavior : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         hideController = GetComponent<HideController>();
-        cameraTransform = GameObject.FindGameObjectWithTag("Camera").transform;
         if (hideController == null)
         {
             Debug.LogError("HideController not found on player!");
         }
-    }
+		mainCam = Camera.main;
+	}
 
     private void Update()
     {//i stg if we're trying to remove this specific Update() im gonna crash out -jo
@@ -104,7 +117,7 @@ public class PlayerBehavior : MonoBehaviour
 				Move(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Look:
-				UpdateThrow(cameraTransform);
+				UpdateThrow(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Interact:
 				Interact();
@@ -156,7 +169,7 @@ public class PlayerBehavior : MonoBehaviour
             //adding drag while grounded
         }
 
-        if (isThrowing) { UpdateThrow(CameraManager.CurrentCamera.transform); }
+        if (isThrowing) { UpdateThrow(Vector3.zero); }
     }
     private void DoSprint()
     {
@@ -226,7 +239,7 @@ public class PlayerBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool IsGrounded()
 	{
-		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), Color.azure);
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), UnityEngine.Color.azure);
         //return Physics.Raycast(transform.position, Vector3.down, playerHeight, LayerMask.NameToLayer("Ground"));
         return Physics.Raycast(transform.position, Vector3.down, playerHeight);
     }
@@ -278,36 +291,70 @@ public class PlayerBehavior : MonoBehaviour
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		//Debug.Log("Preparing throw.");
 		isThrowing = true;
+		
 		CameraManager.SetCurrentCamera("ThrowCamera", 0.2f);
-		UpdateThrow(CameraManager.CurrentCamera.transform);
+		throwYaw = mainCam.transform.forward.x;
+		throwPitch = -10f; // slight upward bias
 
 	}
-	private void UpdateThrow(Transform cameraTransform)
+	private void UpdateThrow(Vector2 lookInput)
 	{
-		if (isThrowing)
+		if (!isThrowing) return;
+
+		Vector3 startPos = throwLocation.position;
+
+		// Update aiming angles
+		throwYaw += lookInput.x * throwSensitivity;
+		throwPitch -= lookInput.y * throwSensitivity;
+
+		// Clamp vertical aim to avoid flipping
+		throwPitch = Mathf.Clamp(throwPitch, -60f, 60f);
+
+		// Convert angles to direction
+		Quaternion rotation =
+		Quaternion.AngleAxis(throwYaw, Vector3.up) *
+		Quaternion.AngleAxis(throwPitch, Camera.main.transform.right);
+
+		curThrowDirection = rotation * transform.forward;
+		curThrowDirection.Normalize();
+
+		startVelocity = curThrowDirection.normalized * throwForce;
+
+		Vector3[] points = new Vector3[linePoints];
+		lineRenderer.positionCount = linePoints;
+		for (int i = 0; i < linePoints; i++)
 		{
-			Vector3 startPos = throwLocation.position;
-			startVelocity = (cameraTransform.forward + (cameraTransform.up /2)) * throwForce;
-			Vector3[] points = new Vector3[linePoints];
-			for (int i = 0; i < linePoints; i++)
+			float time = i * timeBetweenPoints;
+
+			Vector3 position = startPos
+						 + startVelocity * time
+						 + 0.5f * time * time * Physics.gravity;
+			points[i] = position;
+			if (i > 0)
 			{
-				float time = i * timeBetweenPoints;
+				Vector3 prevPoint = points[i - 1];
+				Vector3 dir = position - prevPoint;
+				float dist = dir.magnitude;
 
-				Vector3 curVelocity = startVelocity * time;
-				Vector3 curAcceleration = 0.5f * Mathf.Pow(time,2f) * Physics.gravity;
-				Vector3 position = startPos + curVelocity + curAcceleration;
+				if (Physics.Raycast(prevPoint, dir.normalized, out RaycastHit hit, dist))
+				{
+					if (activeHitSphere == null)
+						activeHitSphere = Instantiate(hitSpherePrefab);
 
-				points[i] = position;
+					activeHitSphere.transform.position = hit.point;
+
+					// Stop the line at the hit point
+					points[i] = hit.point;
+					lineRenderer.positionCount = i + 1;
+					
+					break;
+				}
 			}
-			lineRenderer.positionCount = linePoints;
-			lineRenderer.SetPositions(points);
-			lineRenderer.enabled = true;
 
-			Vector3 moveDir = cameraTransform.forward;
-			moveDir.y = 0f;
-
-			FaceMoveDirection(moveDir);
 		}
+		lineRenderer.SetPositions(points);
+		lineRenderer.enabled = true;
+
 	}
 	private void ReleaseThrow()
 	{
@@ -316,6 +363,7 @@ public class PlayerBehavior : MonoBehaviour
 		//Debug.Log("Release Throw");
 		isThrowing = false;
 		lineRenderer.enabled = false;
+		Destroy(activeHitSphere);
 		if (!CameraManager.IsBlending())
 		{
 			GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
