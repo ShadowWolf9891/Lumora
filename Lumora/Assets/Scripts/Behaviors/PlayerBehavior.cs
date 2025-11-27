@@ -45,6 +45,8 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
     [SerializeField] private float sprintNoiseMade = 5f;
+    [SerializeField] private float standingHeight = 1f;
+    [SerializeField] private float crouchedHeight = 0.5f;
 
 
     Vector3 startVelocity = Vector3.zero;
@@ -54,6 +56,7 @@ public class PlayerBehavior : MonoBehaviour
 	bool isHiding;
 	public bool isSprinting { get; private set; }
 	Rigidbody rb;
+	CapsuleCollider playerCollider;
 	private GameObject coverObject;
 	private Vector3 lastWallNormal = Vector3.zero;
 	private Camera mainCam;
@@ -80,17 +83,6 @@ public class PlayerBehavior : MonoBehaviour
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
-        //GameContext.Instance.OnMove += Move;
-        //GameContext.Instance.OnCameraLook += UpdateThrow;
-        //GameContext.Instance.OnAttackPressed += Attack;
-        // GameContext.Instance.OnInteractPressed += Interact;
-        //GameContext.Instance.OnHidePressed += DoHide;
-        //GameContext.Instance.OnJumpPressed += Jump;
-        //GameContext.Instance.OnPlayerSpotted += GetSpotted;
-        //GameContext.Instance.OnThrowPressed += PrepareThrow;
-        //GameContext.Instance.OnThrowReleased += ReleaseThrow;
-        //GameContext.Instance.OnEnterHideState += EnterHide;
-        //GameContext.Instance.OnLeaveHideState += LeaveHide;
 
     }
 
@@ -103,10 +95,11 @@ public class PlayerBehavior : MonoBehaviour
             Debug.LogError("HideController not found on player!");
         }
 		mainCam = Camera.main;
+		playerCollider = GetComponent<CapsuleCollider>();
 	}
 
     private void Update()
-    {//i stg if we're trying to remove this specific Update() im gonna crash out -jo
+	{
         HandleSpeedControl();
     }
     private void HandleInput(PlayerInputEvent e)
@@ -410,7 +403,6 @@ public class PlayerBehavior : MonoBehaviour
         else
         {
 			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-			//GameContext.Instance.RaiseLeaveStealth();
         }
     }
 	/// <summary>
@@ -419,19 +411,18 @@ public class PlayerBehavior : MonoBehaviour
 	private void GetSpotted(PlayerSpottedEvent e)
     {
 		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-        //GameContext.Instance.RaiseLeaveStealth();
     }
     private void LeaveHide(LeaveStealthEvent e)
     {
+		playerCollider.height = standingHeight;
         isHiding = false;
-        // TODO: Add animation
     }
 
     private void EnterHide(EnterStealthEvent e)
     {
+		playerCollider.height = crouchedHeight;
         isSprinting = false;
         isHiding = true;
-        // TODO: Add animation
     }
 	#endregion
 

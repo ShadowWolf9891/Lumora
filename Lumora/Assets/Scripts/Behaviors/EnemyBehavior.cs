@@ -180,8 +180,10 @@ public class EnemyBehavior : MonoBehaviour
 			}
 
 			bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
-		}
-	}
+            agent.SetDestination(patrolPoints[curPatrolPoint].position);
+            waitTimer = 0f;
+        }
+    }
 
 	public void Searching()
 	{

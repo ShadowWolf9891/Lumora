@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,5 +26,4 @@ public class GameManager : MonoBehaviour
 	{
 		StartCoroutine(EventManager.HandleEvents()); //Handle events each frame if there are any.
 	}
-
 }
