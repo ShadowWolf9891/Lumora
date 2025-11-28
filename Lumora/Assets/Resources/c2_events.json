@@ -41,7 +41,7 @@
             "eventsOnComplete" :
             [
                 "Mrs_Watts_Front_Arrive_Trigger",
-                "TestCutsceneSpawn"
+                "TestCutsceneTrigger"
             ],
             "parameters" :
             {
@@ -60,6 +60,26 @@
                 "eventToRaiseOnTrigger" : "C2_Arrive_Watts_Front"
             }
 
+        },
+        {
+            "type" : "SpawnTriggerEvent",
+            "id" : "TestCutsceneTrigger",
+            "parameters" : 
+            {
+                "worldLocation" : "-97.37,0.08,-921.81",
+                "radius" : "1",
+                "layerMask" : "Player",
+                "eventToRaiseOnTrigger" : "TestCutsceneEvent"
+            }
+
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "TestCutsceneEvent",
+            "parameters":
+            {
+                "timelineName": "TestCam"
+            }
         },
         {
             "type" : "DialogueEvent",

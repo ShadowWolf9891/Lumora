@@ -169,7 +169,7 @@ public static class EventManager
 						endTime = float.TryParse(def.parameters["endTime"], out float eTime) ? eTime : -1f;
 					}
 
-					e = new BeginCutsceneEvent(def.id, def.parameters["timeLineName"], startTime, endTime);
+					e = new BeginCutsceneEvent(def.id, def.parameters["timelineName"], startTime, endTime);
 				}
 				else
 				{
