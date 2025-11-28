@@ -155,8 +155,27 @@ public static class EventManager
 					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
 				}
 				break;
-				
-			
+			case "BeginCutsceneEvent":
+				if (def.parameters.ContainsKey("timelineName"))
+				{
+					float startTime = 0f;
+					float endTime = -1f;
+					if (def.parameters.ContainsKey("startTime"))
+					{
+						startTime = float.TryParse(def.parameters["startTime"], out float sTime) ? sTime : 1f;
+					}
+					if (def.parameters.ContainsKey("endTime"))
+					{
+						endTime = float.TryParse(def.parameters["endTime"], out float eTime) ? eTime : 1f;
+					}
+
+					e = new BeginCutsceneEvent(def.id, def.parameters["timeLineName"], startTime, endTime);
+				}
+				else
+				{
+					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
+				}
+				break;
 			default:
 				Debug.LogError($"Invalid type {def.type}");
 				return;

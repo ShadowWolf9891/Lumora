@@ -202,12 +202,12 @@ public class PlayerSpottedEvent : GameEventType
 #endregion
 
 #region Cutscene Events
-public class BeginCutscene : GameEventType
+public class BeginCutsceneEvent : GameEventType
 {
     public string TimelineName { get; private set; }
     public float StartTime { get; private set; }
     public float EndTime { get; private set; }
-    public BeginCutscene(string id, string timelineName, float startTime = 0, float endTime = -1) : base(id)
+    public BeginCutsceneEvent(string id, string timelineName, float startTime = 0, float endTime = -1) : base(id)
     {
         TimelineName = timelineName;
         StartTime = startTime;
