@@ -40,8 +40,7 @@
             "id": "Chapter2_Intro",
             "eventsOnComplete" :
             [
-                "Mrs_Watts_Front_Arrive_Trigger",
-                "TestCutsceneTrigger"
+                "Mrs_Watts_Front_Arrive_Trigger"
             ],
             "parameters" :
             {
@@ -60,26 +59,6 @@
                 "eventToRaiseOnTrigger" : "C2_Arrive_Watts_Front"
             }
 
-        },
-        {
-            "type" : "SpawnTriggerEvent",
-            "id" : "TestCutsceneTrigger",
-            "parameters" : 
-            {
-                "worldLocation" : "-97.37,0.08,-921.81",
-                "radius" : "1",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "TestCutsceneEvent"
-            }
-
-        },
-        {
-            "type": "BeginCutsceneEvent",
-            "id": "TestCutsceneEvent",
-            "parameters":
-            {
-                "timelineName": "TestCam"
-            }
         },
         {
             "type" : "DialogueEvent",
@@ -124,7 +103,7 @@
             "id": "C2_Watts_Back",
             "eventsOnComplete" :
             [
-                "C2_Watts_Answer"
+                "Watts_Door_Open"
             ],
             "parameters":
             {
@@ -133,16 +112,71 @@
             }
         },
         {
+            "type": "BeginCutsceneEvent",
+            "id": "Watts_Door_Open",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Answer"
+            ],
+            "parameters":
+            {
+                "timelineName": "BackDoor"
+            }
+        },
+        {
             "type":"DialogueEvent",
             "id": "C2_Watts_Answer",
             "eventsOnComplete":
             [
-                "C2_Watts_Lira_1"
+                "Watts_Walk_Inside",
+                "Watts_DClose_Trigger"
             ],
             "parameters":
             {
                 "chapter":"2",
                 "scene": "5"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "Watts_Walk_Inside",
+            "eventsOnComplete":
+            [
+                "Watts_Inside_Trigger"
+            ],
+            "parameters":
+            {
+                "timelineName": "WattsWalkInsideTimeline"
+            }
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Inside_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-166.54,0.60,-817.09",
+                "radius":"1",
+                "layerMask":"Player",
+                "eventToRaiseOnTrigger": "C2_Watts_Lira_1"
+            }
+        },
+        {
+            "type":"SpawnTriggerEvent",
+            "id": "Watts_DClose_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-171.27,0.63,-812.69",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "Watts_Door_Close"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Watts_Door_Close",
+            "parameters":
+            {
+                "timelineName": "WattsDoorShutTimeline"
             }
         },
         {
