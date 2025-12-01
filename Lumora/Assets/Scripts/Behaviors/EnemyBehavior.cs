@@ -117,7 +117,13 @@ public class EnemyBehavior : MonoBehaviour
 			
 			canSee = CanSeeTarget(playerRef, alertRange);
 			if (canSee && !bb.Get<bool>(bb_IsAlerted))
+			{
 				bb.Set<bool>(bb_IsAlerted, true);
+				if (agent.destination == null)
+				{
+					Debug.LogWarning("Enemy can see player, but has no target");
+				}
+			}
 		}
 
 		if (distance <= chasingRange && canSee)
@@ -288,7 +294,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player"));
+        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player", "Obstacles"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
