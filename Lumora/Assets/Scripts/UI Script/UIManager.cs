@@ -10,10 +10,9 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject pauseMenuUI, optionsMenuUI;
+    [SerializeField] private GameObject pauseMenuUI, optionsMenuUI, controlMenuUI;
     private InputAction menuAction;
     [SerializeField]bool isMenuActive;
-    bool eventActive;
 
     void Start()
     {
@@ -60,13 +59,17 @@ public class UIManager : MonoBehaviour
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(true);
     }
-    public void OnExitGame()
-    {
-        Application.Quit();
-    }
     public void OnOptionsReturn()
     {
         optionsMenuUI.SetActive(false);
         pauseMenuUI.SetActive(true);
+    }
+    public void OnControlPress()
+    {
+        controlMenuUI.SetActive(true);
+    }
+    public void OnExitGame()
+    {
+        Application.Quit();
     }
 }
