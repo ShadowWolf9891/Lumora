@@ -192,8 +192,9 @@ public class EnemyBehavior : MonoBehaviour
     }
 
 	public void Searching()
-	{
-		if (searchPoints.Count <= 0 && bb.Get<bool>(bb_LostPlayer)) 
+    {
+
+        if (searchPoints.Count <= 0 && bb.Get<bool>(bb_LostPlayer)) 
 		{
 			curState = AlertStates.ALERT;
 			GameEvents<EnemyDropsAlert>.Raise(new EnemyDropsAlert($"EnemyDropsAlert: {gameObject.name}", this.gameObject));
@@ -207,6 +208,11 @@ public class EnemyBehavior : MonoBehaviour
 			}
 			agent.SetDestination(GetClosestPoint(lastKnownPlayerLocation, searchPoints));
 			waitTimer = timeAtEachPoint;
+		}
+		if (curState != AlertStates.ALERT)
+		{
+			curState = AlertStates.ALERT;
+			OnChangeState();
 		}
 
 		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
@@ -456,30 +462,28 @@ public class EnemyBehavior : MonoBehaviour
 	/// </summary>
 	public void OnHearNoise(Vector3 noiseLocation, bool isPlayerDetectionNoise)
 	{
+		Debug.Log($"{gameObject.name} heard Noise. Alert state = {curState}");
+
 		//enemies should ignore noises if they're already chasing you
 		if (curState == AlertStates.CHASING)
 		{
 			return;
 		}
-		else if(isPlayerDetectionNoise)
+		else
         {
-            bb.Set<bool>("IsChasing", true);
-            curState = AlertStates.CHASING;
-			
-
-            //do i need to do all this? anyways-
-            lastKnownPlayerLocation = noiseLocation;
-            agent.SetDestination(noiseLocation);
+            if (!CanSeeTarget(playerRef, alertRange))
+            {
+                bb.Set<bool>(bb_IsAlerted, true);
+                agent.SetDestination(noiseLocation);
+            }
+            else if (isPlayerDetectionNoise )
+            {
+                //do i need to do all this? anyways-
+                bb.Set<bool>(bb_IsAlerted, true);
+                agent.SetDestination(noiseLocation);
+            }
         }
-		else if (curState == AlertStates.IDLE)
-		{
-            bb.Set<bool>("IsAlerted", true);
-            agent.SetDestination(noiseLocation);
-        }
-		else if (curState == AlertStates.ALERT && !CanSeeTarget(playerRef, alertRange))
-		{
-			agent.SetDestination(noiseLocation);
-		}
+		
 	}
 	private void OnDrawGizmos()
 	{
