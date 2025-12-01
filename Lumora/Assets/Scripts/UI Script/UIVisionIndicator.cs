@@ -95,8 +95,7 @@ public class UIVisionIndicator : MonoBehaviour
         }
         foreach (EnemyIndicatorPair graphicPair in graphicObjectList)
         {
-            graphicPair.UIIndicatorGraphic.transform.position = canvasCenterPoint.position + new Vector3(0, 150, 0);
-            //Commented out for thursday build!
+            graphicPair.UIIndicatorGraphic.transform.position = canvasCenterPoint.position + new Vector3(0, 225, 0);
             //SetIndicatorRotation(graphicPair.UIIndicatorGraphic, graphicPair.Enemy);
         }
 
@@ -104,11 +103,13 @@ public class UIVisionIndicator : MonoBehaviour
 
     private void SetIndicatorRotation(GameObject indicatorGameOb, GameObject enemyGameOb)
     {
+        Vector3 cam2Enemy = (cameraTransform.transform.position - enemyGameOb.transform.position);
+        Vector3 cam2Enemy2D = new Vector3(cam2Enemy.x, cam2Enemy.z, 0);
         Vector3 directionToEnemy = (playerRef.transform.position - enemyGameOb.transform.position).normalized;
         Vector3 directionToEnemy2D = new Vector3(directionToEnemy.x, directionToEnemy.z, 0);
         Vector3 camDirectionToPlayer = (playerRef.transform.position - cameraTransform.position).normalized;
         Vector3 camDirectionToPlayer2D = new Vector3(camDirectionToPlayer.x, camDirectionToPlayer.z, 0);
-        Vector3 indicatorVectorPos = -(directionToEnemy2D - camDirectionToPlayer2D).normalized;
+        Vector3 indicatorVectorPos = -(cam2Enemy2D - camDirectionToPlayer2D).normalized;
         Vector3 intendedPos =  canvasCenterPoint.position - (indicatorVectorPos * circleRadius);
         indicatorGameOb.transform.position = intendedPos;
         //based on x,y, rotate object to face center point
