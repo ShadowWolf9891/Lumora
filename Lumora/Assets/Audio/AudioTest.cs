@@ -20,4 +20,25 @@ public class AudioTest : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX("S_Distraction_3");
     }
+    public void OnFootstep1Click()
+    {
+        AudioManager.Instance.PlaySFX("S_Footsteps_1");
+    }
+    public void OnFootstep2Click()
+    {
+        AudioManager.Instance.PlaySFX("S_Footsteps_2");
+    }
+    public void OnBodyDropClick()
+    {
+        AudioManager.Instance.PlaySFX("S_Bodydrop_1");
+    }
+    public void OnPunchClick()
+    {
+        AudioManager.Instance.PlaySFX("S_Punch_1");
+    }
+    public void OnHitGuardClick()
+    {
+        AudioManager.Instance.PlaySFX("S_HitGuard_1");
+    }
 }
+
