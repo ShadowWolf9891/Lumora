@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 	{
         NPCManager.Load();
 		SpawnerManager.Load(spawnableObjects);
+		TimelineManager.Load();
 
 	}
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
