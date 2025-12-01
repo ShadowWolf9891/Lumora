@@ -40,8 +40,7 @@
             "id": "Chapter2_Intro",
             "eventsOnComplete" :
             [
-                "Mrs_Watts_Front_Arrive_Trigger",
-                "TestCutsceneSpawn"
+                "Mrs_Watts_Front_Arrive_Trigger"
             ],
             "parameters" :
             {
@@ -104,7 +103,7 @@
             "id": "C2_Watts_Back",
             "eventsOnComplete" :
             [
-                "C2_Watts_Answer"
+                "Watts_Door_Open"
             ],
             "parameters":
             {
@@ -113,11 +112,24 @@
             }
         },
         {
+            "type": "BeginCutsceneEvent",
+            "id": "Watts_Door_Open",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Answer"
+            ],
+            "parameters":
+            {
+                "timelineName": "BackDoor"
+            }
+        },
+        {
             "type":"DialogueEvent",
             "id": "C2_Watts_Answer",
             "eventsOnComplete":
             [
-                "C2_Watts_Lira_1"
+                "Watts_Walk_Inside",
+                "Watts_DClose_Trigger"
             ],
             "parameters":
             {
@@ -126,16 +138,70 @@
             }
         },
         {
+            "type":"BeginCutsceneEvent",
+            "id": "Watts_Walk_Inside",
+            "eventsOnComplete":
+            [
+                "Watts_Inside_Trigger"
+            ],
+            "parameters":
+            {
+                "timelineName": "WattsWalkInsideTimeline"
+            }
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "Watts_Inside_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-166.54,0.60,-817.09",
+                "radius":"1",
+                "layerMask":"Player",
+                "eventToRaiseOnTrigger": "C2_Watts_Lira_1"
+            }
+        },
+        {
+            "type":"SpawnTriggerEvent",
+            "id": "Watts_DClose_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-171.27,0.63,-812.69",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "Watts_Door_Close"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Watts_Door_Close",
+            "parameters":
+            {
+                "timelineName": "WattsDoorShutTimeline"
+            }
+        },
+        {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira_1",
+            "eventsOnComplete":
+            [
+                "Watts_BRB"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "6"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "Watts_BRB",
             "eventsOnComplete":
             [
                 "C2_Watts_Lira_2"
             ],
             "parameters":
             {
-                "chapter": "2",
-                "scene": "6"
+                "timelineName": "WattsBRBTimeline"
             }
         },
         {
@@ -169,7 +235,9 @@
             "id": "C2_Lira_Watts_4",
             "eventsOnComplete":
             [
-                "C2_Arrive_Darren"
+                "C2_Arrive_Darren_Trigger",
+                "Lira_Leave_Watts_Trigger",
+                "Lira_Leave_Door_Trigger"
             ],
             "parameters":
             {
@@ -178,8 +246,46 @@
             }
         },
         {
+            "type":"SpawnTriggerEvent",
+            "id": "Lira_Leave_Watts_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-172.74,0.59,-810.77",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "Lira_Door_Open"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "Lira_Door_Open",
+            "parameters":
+            {
+                "timelineName": "LiraLeaveOpenTimeline"
+            }
+        },
+        {
+            "type":"SpawnTriggerEvent",
+            "id": "Lira_Leave_Door_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-175.11,0.37,-807.66",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "Lira_Door_Close"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "Lira_Door_Close",
+            "parameters":
+            {
+                "timelineName": "LiraLeaveCloseTimeline"
+            }
+        },
+        {
             "type": "SpawnTriggerEvent",
-            "id": "C2_Arrive_Darren",
+            "id": "C2_Arrive_Darren_Trigger",
             "parameters":
             {
                 "worldLocation": "-137.75, 0.08, -818.3",

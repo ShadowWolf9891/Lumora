@@ -162,14 +162,14 @@ public static class EventManager
 					float endTime = -1f;
 					if (def.parameters.ContainsKey("startTime"))
 					{
-						startTime = float.TryParse(def.parameters["startTime"], out float sTime) ? sTime : 1f;
+						startTime = float.TryParse(def.parameters["startTime"], out float sTime) ? sTime : 0f;
 					}
 					if (def.parameters.ContainsKey("endTime"))
 					{
-						endTime = float.TryParse(def.parameters["endTime"], out float eTime) ? eTime : 1f;
+						endTime = float.TryParse(def.parameters["endTime"], out float eTime) ? eTime : -1f;
 					}
 
-					e = new BeginCutsceneEvent(def.id, def.parameters["timeLineName"], startTime, endTime);
+					e = new BeginCutsceneEvent(def.id, def.parameters["timelineName"], startTime, endTime);
 				}
 				else
 				{

@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class CameraManager
+public static class CameraManager
 {
 	static List<CinemachineCamera> _cameraList;
 	static CinemachineBrain _brain;
