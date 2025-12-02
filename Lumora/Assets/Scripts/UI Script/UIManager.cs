@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using Unity.VisualScripting;
@@ -10,24 +11,31 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject pauseMenuUI, optionsMenuUI, controlMenuUI;
+    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI;
     private InputAction menuAction;
     [SerializeField]bool isMenuActive;
 
     void Start()
     {
         menuAction = InputSystem.actions.FindAction("Escape");
-        
+        isMenuActive = false;
         GameEvents<SpawnPauseMenuEvent>.Subscribe(OnMenuAction);
     }
     void Update()
     {
         if (menuAction.WasPressedThisFrame())
-        {
-            GameEvents<SpawnPauseMenuEvent>.Raise(new SpawnPauseMenuEvent("Toggle_PauseMenu_On", isMenuActive));
+        {            
             if (optionsMenuUI.activeSelf)
-            {
+            {   
                 optionsMenuUI.SetActive(false);
+            }
+            else if (controlMenuUI.activeSelf)
+            {
+                controlMenuUI.SetActive(false);
+            }
+            else
+            {
+                GameEvents<SpawnPauseMenuEvent>.Raise(new SpawnPauseMenuEvent("Toggle_PauseMenu_On", isMenuActive));
             }
         }
     }
@@ -37,13 +45,13 @@ public class UIManager : MonoBehaviour
         pauseMenuUI.SetActive(isMenuActive);
         if (isMenuActive) 
         {
+            playerCanvasUI.SetActive(false);
             GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Pause_Game", GameStates.Paused)); 
-            //Cursor.lockState = CursorLockMode.Confined;
         }
         else
         {
+            playerCanvasUI.SetActive(true);
             GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Resume_Game", GameStates.Running));
-            //Cursor.lockState = CursorLockMode.Locked;
         }
     }
 
@@ -56,7 +64,6 @@ public class UIManager : MonoBehaviour
     }
     public void OnOptionsPressed()
     {
-        pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(true);
     }
     public void OnOptionsReturn()
