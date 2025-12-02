@@ -50,8 +50,8 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            playerCanvasUI.SetActive(true);
             GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Resume_Game", GameStates.Running));
+            playerCanvasUI.SetActive(true);
         }
     }
 
