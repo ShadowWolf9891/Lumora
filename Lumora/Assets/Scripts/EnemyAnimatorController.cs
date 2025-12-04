@@ -26,6 +26,7 @@ public class EnemyAnimatorController : MonoBehaviour
     }
     public void OnEnemyAttackEvent()     //Triggers from animation event. Reduces player health via event.
     {
+        AudioManager.Instance.PlaySFX("S_Punch_1");
         GameEvents<PlayerDamagedEvent>.Raise(new PlayerDamagedEvent("Player Damaged Event", enemyBehavior.attackDamage));
         Invoke("UnlockEnemyMovement", enemyBehavior.attackLockoutTime);
     }
