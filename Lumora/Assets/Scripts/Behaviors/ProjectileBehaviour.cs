@@ -9,12 +9,12 @@ public class ProjectileBehaviour : MonoBehaviour
         //checks if collision with ground layer
         if (collision.gameObject.layer == 3)
         {
-            AudioManager.Instance.PlaySFX("ProjectileLanding");
+            AudioManager.Instance.PlaySFX("S_Distraction_1");
             Destroy(gameObject, 0.1f);
         }
         else
         {
-            AudioManager.Instance.PlaySFX("ProjectileLanding");
+            AudioManager.Instance.PlaySFX("S_Distraction_2");
             Destroy(gameObject);
         }
     }
