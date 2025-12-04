@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -104,9 +104,24 @@ public class PlayerController : MonoBehaviour
 		camRight.Normalize();
 		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
 
-		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
+		PlayFootStepSFX(1000);	
 
+		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
 	}
+
+	private void PlayFootStepSFX(int timePerStep)
+    {
+		float t = timePerStep;
+		float timer = 0;
+		timer += Time.deltaTime;
+
+		if(timer > t)
+        {
+            AudioManager.Instance.PlaySFX("S_Footsteps_1");
+			timer = 0;
+        }
+        //okay so i think the int will be used to slow down or speed up based on player speed
+    }
 	private void OnGameStateChanged(ChangeGameStateEvent e) 
 	{
 		if (e.State == GameStates.Running)
