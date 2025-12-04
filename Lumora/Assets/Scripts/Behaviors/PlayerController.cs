@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
 		{
 			canMove = true;
 		}
-		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue || e.State == GameStates.Game_Over) //Not sure what to do with cutscenes yet
+		else // used to be else if, currently either the game's running or its paused, so here we are
 		{
 			canMove = false;
 		}

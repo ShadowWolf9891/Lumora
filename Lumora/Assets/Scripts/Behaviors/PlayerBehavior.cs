@@ -24,9 +24,11 @@ public class PlayerBehavior : MonoBehaviour
 	float playerHeight = 1.2f;
 	[SerializeField, Tooltip("How high the player can jump in m")]
 	float jumpHeight = 5;
+	[SerializeField, Tooltip("LayerMask for IsGrounded")]
+	LayerMask groundedLayers;
 
-	//throw mechanic
-	[Header("Throw Settings")]
+    //throw mechanic
+    [Header("Throw Settings")]
 	[SerializeField] GameObject thrownObjPrefab;
 	[SerializeField] Transform throwLocation;
 	[SerializeField] float throwForce = 10;
@@ -232,9 +234,8 @@ public class PlayerBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool IsGrounded()
 	{
-		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), UnityEngine.Color.azure);
-        //return Physics.Raycast(transform.position, Vector3.down, playerHeight, LayerMask.NameToLayer("Ground"));
-        return Physics.Raycast(transform.position, Vector3.down, playerHeight);
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), UnityEngine.Color.darkRed);
+        return Physics.Raycast(transform.position, Vector3.down, playerHeight, groundedLayers);
     }
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{
