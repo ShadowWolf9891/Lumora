@@ -45,12 +45,13 @@ public static class CameraManager
 		PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
 		CurrentCamera = _cameraList[cameraIndex];
 
-		PreviousCamera.gameObject.SetActive(false);
+		
+		if(PreviousCamera) PreviousCamera.gameObject.SetActive(false);
 		CurrentCamera.gameObject.SetActive(true);
 
 		_brain.DefaultBlend.Time = blendSpeed;
 
-		PreviousCamera.Priority = 0;
+		if(PreviousCamera) PreviousCamera.Priority = 0;
 		CurrentCamera.Priority = 10;
     }
 	/// <summary>
