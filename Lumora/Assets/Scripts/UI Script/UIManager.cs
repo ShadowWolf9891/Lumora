@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI;
+    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI;
     private InputAction menuAction;
     [SerializeField]bool isMenuActive;
 
@@ -23,19 +23,22 @@ public class UIManager : MonoBehaviour
     }
     void Update()
     {
-        if (menuAction.WasPressedThisFrame())
-        {            
-            if (optionsMenuUI.activeSelf)
-            {   
+        if(!dialogueMenuUI.activeSelf){
+
+            if (menuAction.WasPressedThisFrame())
+            {            
+                if (optionsMenuUI.activeSelf)
+                {   
                 optionsMenuUI.SetActive(false);
-            }
-            else if (controlMenuUI.activeSelf)
-            {
-                controlMenuUI.SetActive(false);
-            }
-            else
-            {
-                GameEvents<SpawnPauseMenuEvent>.Raise(new SpawnPauseMenuEvent("Toggle_PauseMenu_On", isMenuActive));
+                }
+                else if (controlMenuUI.activeSelf)
+                {
+                    controlMenuUI.SetActive(false);
+                }
+                else
+                {
+                    GameEvents<SpawnPauseMenuEvent>.Raise(new SpawnPauseMenuEvent("Toggle_PauseMenu_On", isMenuActive));
+                }
             }
         }
     }
