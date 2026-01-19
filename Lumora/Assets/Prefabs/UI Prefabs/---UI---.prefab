@@ -1939,7 +1939,7 @@ GameObject:
   - component: {fileID: 2520361521468618655}
   - component: {fileID: 851113549915456792}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: T_Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2662,6 +2662,7 @@ GameObject:
   - component: {fileID: 7220945731008570333}
   - component: {fileID: 2705388180356474898}
   - component: {fileID: 2413543962566343446}
+  - component: {fileID: 2252242813807443497}
   m_Layer: 0
   m_Name: ---EndGame---
   m_TagString: Untagged
@@ -2756,6 +2757,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2252242813807443497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3142878375930252582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fd5e9e947d0c641bdada3dbd9c2728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIGameOverPanel
+  gameOverPanel: {fileID: 3142878375930252582}
 --- !u!1 &3269116751181536586
 GameObject:
   m_ObjectHideFlags: 0
@@ -6845,7 +6859,7 @@ GameObject:
   - component: {fileID: 59211343030778977}
   - component: {fileID: 7360525754415029602}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: T_Subtitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
