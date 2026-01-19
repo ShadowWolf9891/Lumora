@@ -135,6 +135,16 @@ public class UnlockAbilityEvent : GameEventType
     }
 }
 
+public class TeleportPlayerEvent : GameEventType
+{
+    Vector3 PositionToGoTo, PlayerPositionOnStart;
+    public TeleportPlayerEvent(string id, Vector3 positionToGoTo, Vector3 playerPositionOnStart) : base(id) 
+    {
+        PositionToGoTo = positionToGoTo;
+        PlayerPositionOnStart = playerPositionOnStart;
+    }
+}
+
 #endregion
 
 #region NPC and Quest Events
