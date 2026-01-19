@@ -1,6 +1,136 @@
 {
     "allEvents":
     [
-        
+        {
+            "type": "DialogueEvent",
+            "id": "Chapter1_Intro",
+            "eventsOnComplete" :
+            [
+                "Bridge_Cross_Trigger",
+                "ShiftLeader_Walking_1"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"1"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "ShiftLeader_Walking_1",
+            "parameters":
+            {
+                "timelineName": "SLWalkingTimeline"
+            }
+        },
+        {
+            "type" : "SpawnTriggerEvent",
+            "id" : "Bridge_Cross_Trigger",
+            "parameters" : 
+            {
+                "worldLocation" : "332.68, 30.86, 197.53",
+                "radius" : "1",
+                "layerMask" : "Player",
+                "eventToRaiseOnTrigger" : "Bridge_Dialogue"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Bridge_Dialogue",
+            "eventsOnComplete":
+            [
+                "ShiftLeader_Walking_2",
+                "Pit_Cold_Trigger"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"2"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "ShiftLeader_Walking_2",
+            "parameters":
+            {
+                "timelineName": "SLWalkingContTimeline"
+            }
+        },
+        {
+            "type" : "SpawnTriggerEvent",
+            "id" : "Pit_Cold_Trigger",
+            "parameters" : 
+            {
+                "worldLocation" : "420.29, 0.51, 330",
+                "radius" : "2",
+                "layerMask" : "Player",
+                "eventToRaiseOnTrigger" : "Pit_Cold"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_Cold",
+            "eventsOnComplete":
+            [
+                "Pit_1"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"4"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_1",
+            "eventsOnComplete":
+            [
+                "Pit_Crystal_Trigger"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"5"
+            }
+        },
+        {
+            "type" : "SpawnTriggerEvent",
+            "id" : "Pit_Crystal_Trigger",
+            "parameters" : 
+            {
+                "worldLocation" : "407.09, 0.51, 344.07",
+                "radius" : "1",
+                "layerMask" : "Player",
+                "eventToRaiseOnTrigger" : "Shaw_Pit_1"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_Pit_1",
+            "eventsOnComplete":
+            [
+                "Pit_2"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"9"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_2",
+            "eventsOnComplete":
+            [
+                
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"10"
+            }
+        }
+
+
     ]
 }
