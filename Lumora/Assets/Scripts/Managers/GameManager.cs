@@ -19,13 +19,14 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
 		EventManager.Raise("Chapter1_Intro");
-        //EventManager.Raise("Chapter2_Intro");
-		EventManager.Raise("UnlockThrow");
+		Debug.Log($"Frame {Time.frameCount} QueueCount={EventManager.EventQueue.Count}");
+		//EventManager.Raise("Chapter2_Intro");
+		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
 
 	private void Update()
 	{
-		StartCoroutine(EventManager.HandleEvents()); //Handle events each frame if there are any.
+		EventManager.HandleEvents(); //Handle events each frame if there are any.
 	}
 }
