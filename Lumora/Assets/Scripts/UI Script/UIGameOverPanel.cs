@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -25,6 +26,7 @@ public class UIGameOverPanel : MonoBehaviour
     {
         if(e.State == GameStates.Game_Over)
         {
+            GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Resume_Game", GameStates.Running));
             gameOverPanel.SetActive(true);
         }
     }
