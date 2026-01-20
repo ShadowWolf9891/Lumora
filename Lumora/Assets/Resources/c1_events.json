@@ -122,15 +122,191 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
-                
+                "Pit_Shaw_Trigger"
             ],
             "parameters" :
             {
                 "chapter":"1",
                 "scene":"10"
             }
+        },
+        {
+            "type" : "SpawnTriggerEvent",
+            "id" : "Pit_Shaw_Trigger",
+            "parameters" : 
+            {
+                "worldLocation" : "412.16, 0.49, 331.22",
+                "radius" : "1",
+                "layerMask" : "Player",
+                "eventToRaiseOnTrigger" : "Shaw_Enter"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Shaw_Enter",
+            "eventsOnComplete": 
+            [
+                "Shaw_2"
+            ],
+            "parameters":
+            {
+                "timelineName": "ShawWalkingTimeline"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_2",
+            "eventsOnComplete":
+            [
+                "Shaw_3"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"11"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_3",
+            "eventsOnComplete":
+            [
+                "Shaw_4"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"12"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_4",
+            "eventsOnComplete":
+            [
+                "Shaw_5"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"13"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_5",
+            "eventsOnComplete":
+            [
+                "Shaw_6"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"14"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_6",
+            "eventsOnComplete":
+            [
+                "Shaw_7"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"15"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Shaw_7",
+            "eventsOnComplete":
+            [
+                "Shaw_Leave",
+                "Pit_3"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"16"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Shaw_Leave",
+            "parameters":
+            {
+                "timelineName": "ShawWalkingOutTimeline"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_3",
+            "eventsOnComplete":
+            [
+                "Pit_4"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"17"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_4",
+            "eventsOnComplete":
+            [
+                "Pit_5"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"18"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_5",
+            "eventsOnComplete":
+            [
+                "ShiftLeader_Leave",
+                "Pit_Crystal_Trigger_2"
+            ],
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"19"
+            }
+        },
+         {
+            "type": "BeginCutsceneEvent",
+            "id": "ShiftLeader_Leave",
+            "parameters":
+            {
+                "timelineName": "SLWalkingOutTimeline"
+            }
+        },
+         {
+            "type" : "SpawnTriggerEvent",
+            "id" : "Pit_Crystal_Trigger_2",
+            "parameters" : 
+            {
+                "worldLocation" : "407.09, 0.51, 344.07",
+                "radius" : "1",
+                "layerMask" : "Player",
+                "eventToRaiseOnTrigger" : "Pit_6"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Pit_6",
+            "parameters" :
+            {
+                "chapter":"1",
+                "scene":"20"
+            }
         }
-
-
     ]
 }
