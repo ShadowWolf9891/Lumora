@@ -250,7 +250,7 @@ public static class EventManager
 	/// <summary>
 	/// Handle the events in the queue. Called from GameManager.
 	/// </summary>
-	public static IEnumerator HandleEvents()
+	public static void HandleEvents()
 	{
         if (EventQueue.Count > 0)
         {
@@ -269,7 +269,6 @@ public static class EventManager
 			raiseMethod?.Invoke(null, new object[] { evt });
 			Debug.Log($"Raising event via {raiseMethod?.DeclaringType}::{raiseMethod?.Name}");
 		}
-		yield return 0;
     }
 
 	/// <summary>

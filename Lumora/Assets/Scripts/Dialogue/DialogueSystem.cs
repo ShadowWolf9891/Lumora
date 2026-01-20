@@ -1,8 +1,10 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class DialogueSystem : MonoBehaviour
 {
@@ -13,6 +15,9 @@ public class DialogueSystem : MonoBehaviour
     TextMeshProUGUI SpeakerName;
     [SerializeField]
     TextMeshProUGUI DialogueText;
+
+    [SerializeField]
+    Dictionary<string, Image[]> CharacterPortraits;
 
 	DialogueData data; //All dialogue json file
     DialogueLine[] currentDialogue; //The current chapter / scene dialogue
@@ -92,6 +97,8 @@ public class DialogueSystem : MonoBehaviour
     { 
         SpeakerName.text = line.speaker;
 		DialogueText.text = line.text;
+        //TODO: Add Image UI and initalize it
+
         if(!DialoguePanel.activeInHierarchy) DialoguePanel.SetActive(true);
 	}
     /// <summary>
