@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        EventManager.Raise("Chapter2_Intro");
+		EventManager.Raise("Chapter1_Intro");
+        //EventManager.Raise("Chapter2_Intro");
 		EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
