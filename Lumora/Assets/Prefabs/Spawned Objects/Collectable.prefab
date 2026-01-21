@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5750626147876886143}
-  - component: {fileID: 5670240717539127525}
-  - component: {fileID: 5522456398209284340}
   - component: {fileID: 226484963225437336}
   m_Layer: 8
   m_Name: Collectable
@@ -35,36 +33,6 @@ Transform:
   - {fileID: 2003719372049361717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5670240717539127525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4781354563760337910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7992d2938c6b949bf79163bb1156fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CollectibleBehaviour
-  interactionPrompt: Heat Crystal\nE to Interact
---- !u!114 &5522456398209284340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4781354563760337910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e42acf7d7e13996448ffe6d5d585ec77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractWithObject
-  interactRange: 2
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  interactionUI: {fileID: 0}
 --- !u!135 &226484963225437336
 SphereCollider:
   m_ObjectHideFlags: 0
