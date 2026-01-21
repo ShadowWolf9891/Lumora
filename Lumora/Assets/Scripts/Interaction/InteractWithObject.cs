@@ -27,14 +27,12 @@ public class InteractWithObject : MonoBehaviour
 
     void Update()
     {
-        //CheckForInteractable();
+        CheckForInteractable();
     }
 
     /// <summary>
     /// Raycast for prompt before interacting
     /// </summary>
-	/*
-
 	private void CheckForInteractable()
 	{
 		//adjusted Ray to work with 3rd person movement.
@@ -53,20 +51,12 @@ public class InteractWithObject : MonoBehaviour
 		currentInteractable = null;
 		interactionUI.text = "";
 	}
-	*/
+
 	public void OnInteract()
 	{
 		currentInteractable?.OnInteractStart();
 		interactionUI.text = "";
 	}
 
-    public void OnTriggerEnter(Collider other)
-    {
-		if(other.gameObject.layer == interactableLayer)
-		{
-			currentInteractable = this.gameObject.GetComponent<CollectibleBehaviour>();
-			interactionUI.text = currentInteractable.GetInteractionPrompt();
 
-		}
-    }
 }
