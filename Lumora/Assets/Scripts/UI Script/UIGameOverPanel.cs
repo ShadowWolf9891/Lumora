@@ -26,7 +26,7 @@ public class UIGameOverPanel : MonoBehaviour
     {
         if(e.State == GameStates.Game_Over)
         {
-            GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Resume_Game", GameStates.Running));
+            EventManager.Raise("Resume_Game");
             gameOverPanel.SetActive(true);
         }
     }

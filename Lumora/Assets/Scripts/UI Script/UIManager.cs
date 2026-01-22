@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using NUnit.Framework;
@@ -11,25 +12,40 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI;
-    private InputAction menuAction;
+    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
+    private InputAction menuAction, consoleAction;
     [SerializeField]bool isMenuActive;
 
     void Start()
     {
         menuAction = InputSystem.actions.FindAction("Escape");
+        consoleAction = InputSystem.actions.FindAction("Console");
         isMenuActive = false;
         GameEvents<SpawnPauseMenuEvent>.Subscribe(OnMenuAction);
     }
     void Update()
     {
         if(!dialogueMenuUI.activeSelf){
-
+            if (consoleAction.WasPressedThisFrame())
+            {
+                if (consoleMenuUI.activeSelf)
+                {   
+                    consoleMenuUI.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    EventManager.Raise("Resume_Game");
+                }
+                else if (!consoleMenuUI.activeSelf)
+                {
+                    consoleMenuUI.SetActive(true);
+                    Cursor.lockState = CursorLockMode.None;
+                    EventManager.Raise("Pause_Game");
+                }
+            }
             if (menuAction.WasPressedThisFrame())
             {            
                 if (optionsMenuUI.activeSelf)
                 {   
-                optionsMenuUI.SetActive(false);
+                    optionsMenuUI.SetActive(false);
                 }
                 else if (controlMenuUI.activeSelf)
                 {
@@ -37,7 +53,7 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    GameEvents<SpawnPauseMenuEvent>.Raise(new SpawnPauseMenuEvent("Toggle_PauseMenu_On", isMenuActive));
+                    EventManager.Raise("Toggle_PauseMenu_On");
                 }
             }
         }
@@ -49,11 +65,11 @@ public class UIManager : MonoBehaviour
         if (isMenuActive) 
         {
             playerCanvasUI.SetActive(false);
-            GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Pause_Game", GameStates.Paused)); 
+            EventManager.Raise("Pause_Game"); 
         }
         else
         {
-            GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Resume_Game", GameStates.Running));
+            EventManager.Raise("Resume_Game");
             playerCanvasUI.SetActive(true);
         }
     }
