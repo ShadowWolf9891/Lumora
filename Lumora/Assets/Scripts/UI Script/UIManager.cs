@@ -15,13 +15,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
     private InputAction menuAction, consoleAction;
     [SerializeField]GameObject currentCanvas;
-    [SerializeField]bool isMenuActive;
 
     void Start()
     {
         menuAction = InputSystem.actions.FindAction("Escape");
         consoleAction = InputSystem.actions.FindAction("Console");
-        isMenuActive = false;
         GameEvents<SpawnPauseMenuEvent>.Subscribe(OnMenuAction);
     }
     void Update()
@@ -55,6 +53,7 @@ public class UIManager : MonoBehaviour
         //opens pause menu
         if (currentCanvas == null)
         {
+            playerCanvasUI.SetActive(false);
             currentCanvas = pauseMenuUI;
             pauseMenuUI.SetActive(true);
             EventManager.Raise("Pause_Game");
@@ -69,6 +68,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
+                playerCanvasUI.SetActive(true);
                 currentCanvas = null;
                 EventManager.Raise("Resume_Game");
             }
