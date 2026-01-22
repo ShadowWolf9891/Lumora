@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
     private InputAction menuAction, consoleAction;
+    [SerializeField]GameObject currentCanvas;
     [SerializeField]bool isMenuActive;
 
     void Start()
@@ -45,55 +46,48 @@ public class UIManager : MonoBehaviour
             }
             if (menuAction.WasPressedThisFrame())
             {            
-                if (optionsMenuUI.activeSelf)
-                {   
-                    optionsMenuUI.SetActive(false);
-                }
-                else if (controlMenuUI.activeSelf)
-                {
-                    controlMenuUI.SetActive(false);
-                }
-                else
-                {
-                    EventManager.Raise("Toggle_PauseMenu_On");
-                }
+                EventManager.Raise("Toggle_PauseMenu_On");
             }
         }
     }
     public void OnMenuAction(SpawnPauseMenuEvent a)
     {
-        isMenuActive = !isMenuActive;
-        pauseMenuUI.SetActive(isMenuActive);
-        if (isMenuActive) 
+        //opens pause menu
+        if (currentCanvas == null)
         {
-            playerCanvasUI.SetActive(false);
-            EventManager.Raise("Pause_Game"); 
+            currentCanvas = pauseMenuUI;
+            pauseMenuUI.SetActive(true);
+            EventManager.Raise("Pause_Game");
         }
         else
         {
-            EventManager.Raise("Resume_Game");
-            playerCanvasUI.SetActive(true);
+            currentCanvas.SetActive(false);
+
+            if (pauseMenuUI.activeSelf)
+            {
+                currentCanvas = pauseMenuUI;
+            }
+            else
+            {
+                currentCanvas = null;
+                EventManager.Raise("Resume_Game");
+            }
         }
     }
 
-    //button controller
+    //button controllers
     public void OnResumePressed()
     {
-        isMenuActive = false;
-        pauseMenuUI.SetActive(isMenuActive);
-        //Cursor.lockState = CursorLockMode.Locked;
+        EventManager.Raise("Toggle_PauseMenu_On");
     }
     public void OnOptionsPressed()
     {
+        currentCanvas = optionsMenuUI;
         optionsMenuUI.SetActive(true);
     }
-    public void OnOptionsReturn()
+    public void OnControllerPress()
     {
-        optionsMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(true);
-    }
-    public void OnControlPress()
-    {
+        currentCanvas = controlMenuUI;
         controlMenuUI.SetActive(true);
     }
     public void OnExitGame()
