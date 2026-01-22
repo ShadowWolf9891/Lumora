@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
+    [SerializeField] private GameObject playerCanvasUI, pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
     private InputAction menuAction, consoleAction;
     [SerializeField]GameObject currentCanvas;
 
