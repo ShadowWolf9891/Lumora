@@ -30,12 +30,14 @@ public class UIManager : MonoBehaviour
             {
                 if (consoleMenuUI.activeSelf)
                 {   
+                    //closes console window
                     consoleMenuUI.SetActive(false);
                     Cursor.lockState = CursorLockMode.Locked;
                     EventManager.Raise("Resume_Game");
                 }
                 else if (!consoleMenuUI.activeSelf)
                 {
+                    //opens console window
                     consoleMenuUI.SetActive(true);
                     Cursor.lockState = CursorLockMode.None;
                     EventManager.Raise("Pause_Game");
