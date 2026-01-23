@@ -12,15 +12,14 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject playerCanvasUI,pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
+    [SerializeField] private GameObject playerCanvasUI, pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
     private InputAction menuAction, consoleAction;
-    [SerializeField]bool isMenuActive;
+    [SerializeField]GameObject currentCanvas;
 
     void Start()
     {
         menuAction = InputSystem.actions.FindAction("Escape");
         consoleAction = InputSystem.actions.FindAction("Console");
-        isMenuActive = false;
         GameEvents<SpawnPauseMenuEvent>.Subscribe(OnMenuAction);
     }
     void Update()
@@ -30,12 +29,14 @@ public class UIManager : MonoBehaviour
             {
                 if (consoleMenuUI.activeSelf)
                 {   
+                    //closes console window
                     consoleMenuUI.SetActive(false);
                     Cursor.lockState = CursorLockMode.Locked;
                     EventManager.Raise("Resume_Game");
                 }
                 else if (!consoleMenuUI.activeSelf)
                 {
+                    //opens console window
                     consoleMenuUI.SetActive(true);
                     Cursor.lockState = CursorLockMode.None;
                     EventManager.Raise("Pause_Game");
@@ -43,55 +44,50 @@ public class UIManager : MonoBehaviour
             }
             if (menuAction.WasPressedThisFrame())
             {            
-                if (optionsMenuUI.activeSelf)
-                {   
-                    optionsMenuUI.SetActive(false);
-                }
-                else if (controlMenuUI.activeSelf)
-                {
-                    controlMenuUI.SetActive(false);
-                }
-                else
-                {
-                    EventManager.Raise("Toggle_PauseMenu_On");
-                }
+                EventManager.Raise("Toggle_PauseMenu_On");
             }
         }
     }
     public void OnMenuAction(SpawnPauseMenuEvent a)
     {
-        isMenuActive = !isMenuActive;
-        pauseMenuUI.SetActive(isMenuActive);
-        if (isMenuActive) 
+        //opens pause menu
+        if (currentCanvas == null)
         {
             playerCanvasUI.SetActive(false);
-            EventManager.Raise("Pause_Game"); 
+            currentCanvas = pauseMenuUI;
+            pauseMenuUI.SetActive(true);
+            EventManager.Raise("Pause_Game");
         }
         else
         {
-            EventManager.Raise("Resume_Game");
-            playerCanvasUI.SetActive(true);
+            currentCanvas.SetActive(false);
+
+            if (pauseMenuUI.activeSelf)
+            {
+                currentCanvas = pauseMenuUI;
+            }
+            else
+            {
+                playerCanvasUI.SetActive(true);
+                currentCanvas = null;
+                EventManager.Raise("Resume_Game");
+            }
         }
     }
 
-    //button controller
+    //button controllers
     public void OnResumePressed()
     {
-        isMenuActive = false;
-        pauseMenuUI.SetActive(isMenuActive);
-        //Cursor.lockState = CursorLockMode.Locked;
+        EventManager.Raise("Toggle_PauseMenu_On");
     }
     public void OnOptionsPressed()
     {
+        currentCanvas = optionsMenuUI;
         optionsMenuUI.SetActive(true);
     }
-    public void OnOptionsReturn()
+    public void OnControllerPress()
     {
-        optionsMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(true);
-    }
-    public void OnControlPress()
-    {
+        currentCanvas = controlMenuUI;
         controlMenuUI.SetActive(true);
     }
     public void OnExitGame()
