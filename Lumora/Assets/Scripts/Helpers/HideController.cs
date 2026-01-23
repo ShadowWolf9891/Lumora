@@ -1,26 +1,127 @@
+using NUnit.Framework.Internal;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class HideController : MonoBehaviour
 {
 	[Header("Stealth Variables")]
 	public LayerMask coverLayerMask;
-	[SerializeField]
-	public string tagToIgnore;
-	
+	[SerializeField] private string tagToIgnore;
+	[SerializeField] private float attachThreshold = 1f; //Dot product threshold to be considered attaching
+	[SerializeField] private float detachThreshold = 0.2f; //Dot product threshold to consider as detaching
+	[SerializeField] private float detachRate = 1f; //How quickly the player should detach as a multiplier
+	[SerializeField] private float decayRate = 1f; //How quickly the players attempts to detach from a wall fall off
+	[SerializeField] private float attachRange = 1f; //How far away to begin attaching to the wall
+	[SerializeField] private float snapDistance = 0.6f; //How far away to snap the player from the wall
+	[HideInInspector] public bool IsInCover = false;
+	[HideInInspector] public Vector3 CurrentMoveIntent { get; private set; }
+
+	private float detachCharge = 0f;
+	private float attachCharge = 0f;
+	private Coroutine detachRoutine, attachRoutine, snapRoutine;
+
+	private Vector3 wallNormal = Vector3.zero;
+	private Vector3 lastMoveInput = Vector3.zero;
+	private Vector3 snapMovementModifier = Vector3.zero;
 	List<Collider> nearbyWalls = new();
-	public Collider GetClosestCollider(Vector3 sourceLocation)
+	Collider closestWall;
+
+	CoverState curState = CoverState.Free;
+	enum CoverState
 	{
+		Free,
+		Snapping,
+		InCover,
+		Detaching
+	}
+	
+	#region Handle Movement States
+	public Vector3 ResolveMovement(Vector3 moveIntent, Vector3 position)
+	{
+		SetMoveIntent(moveIntent);
+		GetClosestWall(position);
+		Debug.DrawRay(transform.position, wallNormal,
+		curState == CoverState.InCover ? Color.blue :
+		curState == CoverState.Snapping ? Color.yellow :
+		Color.green);
+
+		switch (curState)
+		{
+			case CoverState.Free:
+				return HandleFree(moveIntent, position);
+
+			case CoverState.Snapping:
+				return HandleSnapping(moveIntent, position);
+
+			case CoverState.InCover:
+				return HandleInCover(moveIntent, position);
+
+			//case CoverState.Detaching:
+				//return HandleDetaching(moveIntent, position);
+		}
+		
+		return moveIntent;
+	}
+
+	
+	private Vector3 HandleFree(Vector3 moveIntent, Vector3 position)
+	{
+		if(closestWall == null) return moveIntent;
+
+		float dist = DistanceToWall(position);
+		if (dist <= attachRange && IsPushingInto())
+		{
+			curState = CoverState.Snapping;
+		}
+		return moveIntent;
+	}
+	private Vector3 HandleSnapping(Vector3 moveIntent, Vector3 position)
+	{
+		if (IsPullingAway())
+		{
+			curState = CoverState.Free;
+			return moveIntent;
+		}
+
+		float dist = DistanceToWall(position);
+
+		if (Mathf.Abs(dist - snapDistance) < 0.05f)
+		{
+			curState = CoverState.InCover;
+			return Vector3.zero;
+		}
+
+		Vector3 wallPoint = closestWall.ClosestPoint(position);
+		return (wallPoint - position).normalized;
+	}
+	private Vector3 HandleInCover(Vector3 moveIntent, Vector3 position)
+	{
+		if(IsPullingAway())
+		{
+			curState = CoverState.Free;
+			return moveIntent;
+		}
+		// Project movement along wall plane
+		return moveIntent - wallNormal * Vector3.Dot(moveIntent, wallNormal);
+	}
+	//private Vector3 HandleDetaching(Vector3 moveIntent, Vector3 position)
+	//{
+
+	//}
+	#endregion
+	#region Wall Detection
+	public void GetClosestWall(Vector3 sourceLocation)
+	{
+		closestWall = null;
 		if (nearbyWalls == null || nearbyWalls.Count == 0)
 		{
-			Debug.Log("No nearby walls to check.");
-			return null;
+			return;
 		}
 
 		float closestDistance = float.MaxValue;
-		Collider tempObject = null;
-		//Debug.Log($"Running find distance on: {nearbyWalls.Count} objects");
 		foreach (Collider c in nearbyWalls)
 		{
 			//Debug.Log($"Running Find Distance on {c.gameObject.name}");
@@ -29,16 +130,43 @@ public class HideController : MonoBehaviour
 			if (tempDistance < closestDistance)
 			{
 				closestDistance = tempDistance;
-				tempObject = c;
+				closestWall = c;
 			}
 		}
 
-		if (tempObject == null)
+		if (closestWall == null)
+		{
 			Debug.LogWarning("No valid wall found with line of sight.");
+			return;
+		}
 
-		return tempObject;
+		Vector3 wallPoint = closestWall.ClosestPoint(sourceLocation);
+		wallNormal = (sourceLocation - wallPoint).normalized;
 	}
+	#endregion
+	#region Helpers
+	private bool IsPullingAway()
+	{
+		return Vector3.Dot(CurrentMoveIntent, wallNormal) > detachThreshold;
+	}
+	bool IsPushingInto()
+	{
+		return Vector3.Dot(CurrentMoveIntent, wallNormal) < -0.2f;
+	}
+	private float DistanceToWall(Vector3 position)
+	{
+		if(closestWall == null) return float.MaxValue;
 
+		return Vector3.Distance(transform.position, closestWall.ClosestPoint(transform.position));
+	}
+	public void SetMoveIntent(Vector3 moveDirection)
+	{
+		CurrentMoveIntent = moveDirection.sqrMagnitude > 0.0001f
+			? moveDirection.normalized
+			: Vector3.zero;
+	}
+	#endregion
+	#region Colliders
 	void OnTriggerEnter(Collider other)
 	{
 		if (((1 << other.gameObject.layer) & coverLayerMask) != 0)
@@ -47,7 +175,6 @@ public class HideController : MonoBehaviour
 			{
 				nearbyWalls.Add(other);
 			}
-			
 		}
 	}
 
@@ -59,4 +186,5 @@ public class HideController : MonoBehaviour
 		}
 		
 	}
+	#endregion
 }
