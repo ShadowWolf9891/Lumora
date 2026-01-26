@@ -16,7 +16,7 @@ public static class CameraManager
 	/// Load all of the cinemachine cameras in the scene into the list. 
 	/// No need to call this unless you add your own cameras during runtime.
 	/// </summary>
-	private static void LoadCameras()
+	public static void LoadCameras()
 	{
 		_cameraList = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsSortMode.InstanceID).ToList();
 		_brain = CinemachineBrain.GetActiveBrain(0);

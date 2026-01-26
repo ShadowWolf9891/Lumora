@@ -21,7 +21,7 @@ public static class EventManager
 	//Checked only when another event is completed. Used for if an event is fired but the requirements are not yet met.
 	public static Queue<GameEventType> LazyEventQueue { get; private set; } 
 
-	private static AllEvents allEventsDefs, c2EventsDefs;
+	private static AllEvents allEventsDefs, c2EventsDefs, c1EventsDefs;
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
 
@@ -29,8 +29,10 @@ public static class EventManager
 	{
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
 		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
+		TextAsset c1JsonFile = Resources.Load<TextAsset>("c1_events");
 		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
 		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
+		c1EventsDefs = JsonConvert.DeserializeObject<AllEvents> (c1JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
 		EventQueue = new Queue<GameEventType>();
 		LazyEventQueue = new Queue<GameEventType>();
@@ -45,7 +47,12 @@ public static class EventManager
 			CreateEvent(eventDef);
 			Debug.Log($"Created event {eventDef.id}");
 		}
-		Debug.Log("Loaded events json file.");
+        foreach (GameEventDefinition eventDef in c1EventsDefs.allEvents)
+        {
+            CreateEvent(eventDef);
+            Debug.Log($"Created event {eventDef.id}");
+        }
+        Debug.Log("Loaded events json file.");
 	}
 
 	private static void CreateEvent(GameEventDefinition def)
@@ -243,7 +250,7 @@ public static class EventManager
 	/// <summary>
 	/// Handle the events in the queue. Called from GameManager.
 	/// </summary>
-	public static IEnumerator HandleEvents()
+	public static void HandleEvents()
 	{
         if (EventQueue.Count > 0)
         {
@@ -262,7 +269,6 @@ public static class EventManager
 			raiseMethod?.Invoke(null, new object[] { evt });
 			Debug.Log($"Raising event via {raiseMethod?.DeclaringType}::{raiseMethod?.Name}");
 		}
-		yield return 0;
     }
 
 	/// <summary>

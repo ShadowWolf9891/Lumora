@@ -9,12 +9,12 @@ public class PlayerAnimatorController : MonoBehaviour
     Animator animator;
     PlayerBehavior behavior;
     Rigidbody rb;
+    bool canThrow = false;
 
     private void Start()
     {
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
-        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+        GameEvents<UnlockAbilityEvent>.Subscribe(UnlockThrow);
         //GameContext.Instance.OnMove += Move;
         //GameContext.Instance.OnEnterHideState += EnterHide;
         //GameContext.Instance.OnLeaveHideState += LeaveHide;
@@ -24,57 +24,43 @@ public class PlayerAnimatorController : MonoBehaviour
         animator = GetComponent<Animator>(); 
         behavior = gameObject.GetComponentInParent<PlayerBehavior>();
         rb = behavior.gameObject.GetComponent<Rigidbody>();
+        canThrow = false;
     }
 
 	private void HandleInput(PlayerInputEvent e)
 	{
-		switch(e.ActionType) 
+        switch (e.ActionType)
         {
             case PlayerInputActionType.Move:
                 Move(e.MoveDirection);
                 break;
-			case PlayerInputActionType.Jump:
+            case PlayerInputActionType.Jump:
                 //Jump animation
-				break;
-			case PlayerInputActionType.Throw:
+                break;
+            case PlayerInputActionType.Throw:
                 //Prepare throw animation?
-				break;
-			case PlayerInputActionType.ThrowRelease:
-                DoThrow();
-				break;
+                break;
+            case PlayerInputActionType.ThrowRelease:
+                if (canThrow) DoThrow();
+                break;
             case PlayerInputActionType.Sprint:
                 DoSprintToggle();
                 break;
-		}
+            case PlayerInputActionType.Crouch:
+                DoCrouchToggle();
+                break;
+        }
 	}
 
-
-    private void Update()
+    private void UnlockThrow(UnlockAbilityEvent e) 
     {
-        animator.SetFloat("moveSpeed", rb.linearVelocity.normalized.magnitude);
-    }
-
-    private void LeaveHide(LeaveStealthEvent e)
-    {
-        if (animator.GetBool("isHiding"))
+        if(e.AbilityName == "throw")
         {
-            animator.SetBool("isHiding", false);
-            animator.SetTrigger("hideStateChanged");
+            canThrow = true;
         }
     }
-
-    private void EnterHide(EnterStealthEvent e)
-    {
-        if (!animator.GetBool("isHiding"))
-        {
-            animator.SetBool("isHiding", true);
-            animator.SetTrigger("hideStateChanged");
-        }
-    }
-
     private void Move(Vector3 moveDir)
     {
-        animator.SetTrigger("doMovement");
         animator.SetFloat("moveSpeed", moveDir.magnitude);
     }
     private void DoThrow()
@@ -83,11 +69,13 @@ public class PlayerAnimatorController : MonoBehaviour
     }
     private void DoSprintToggle()
     {
-        Debug.Log("Did sprint toggle animator");
-        if (animator.GetBool("isSprinting")) { animator.SetBool("isSprinting", false); }
-        else if (animator.GetBool("isHiding")) { animator.SetBool("isSprinting", true); }
-        else { animator.SetBool("isSprinting", true); }
+		animator.SetBool("isSprinting", !animator.GetBool("isSprinting"));
     }
+
+    private void DoCrouchToggle()
+    {
+        animator.SetBool("isHiding", !animator.GetBool("isHiding"));
+	}
 
     public void TriggerSprintNoise()
     {
