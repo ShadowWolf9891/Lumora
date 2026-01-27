@@ -80,7 +80,7 @@ public enum PlayerInputActionType
     Move,
     Look,
     Interact,
-    Hide,
+    Crouch,
     Sprint,
     Jump,
     Throw,

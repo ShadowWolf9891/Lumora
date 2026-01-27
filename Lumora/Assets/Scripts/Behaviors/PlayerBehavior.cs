@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(HideController), typeof(Rigidbody), typeof(CapsuleCollider))]
 public class PlayerBehavior : MonoBehaviour
 {
     #region Properties
@@ -43,24 +44,22 @@ public class PlayerBehavior : MonoBehaviour
 	private bool canThrow;
 
 	[Header("Stealth Settings")]
-	[SerializeField] private float snapDistance = 0.6f;
 	[SerializeField] private float detectDistance = 1f;
-	[SerializeField] private float stealthSpeedModifier = 0.5f;
     [SerializeField] private float sprintNoiseMade = 5f;
     [SerializeField] private float standingHeight = 1f;
     [SerializeField] private float crouchedHeight = 0.5f;
+	[SerializeField] private float stealthSpeedModifier = 0.5f;
 
+	public bool isCrouching { get; private set; }
+	public bool isSprinting { get; private set; }
 
-    Vector3 startVelocity = Vector3.zero;
 
 	//Private properties
+	Vector3 startVelocity = Vector3.zero;
 	private HideController hideController;
-	bool isHiding;
-	public bool isSprinting { get; private set; }
 	Rigidbody rb;
 	CapsuleCollider playerCollider;
 	private GameObject coverObject;
-	private Vector3 lastWallNormal = Vector3.zero;
 	private Camera mainCam;
 	private Vector3 curThrowDirection;
 	private float throwYaw;
@@ -82,28 +81,16 @@ public class PlayerBehavior : MonoBehaviour
     {
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
-        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
-
     }
-
     private void GetComponentReferences()
     {
         rb = GetComponent<Rigidbody>();
         hideController = GetComponent<HideController>();
-        if (hideController == null)
-        {
-            Debug.LogError("HideController not found on player!");
-        }
+        if (hideController == null) Debug.LogError("HideController not found on player!");
 		mainCam = Camera.main;
 		playerCollider = GetComponent<CapsuleCollider>();
 	}
-
-    private void Update()
-	{
-        HandleSpeedControl();
-    }
     private void HandleInput(PlayerInputEvent e)
 	{
 		switch (e.ActionType)
@@ -123,8 +110,8 @@ public class PlayerBehavior : MonoBehaviour
 			case PlayerInputActionType.Jump:
 				Jump();
 				break;
-			case PlayerInputActionType.Hide:
-				DoHide();
+			case PlayerInputActionType.Crouch:
+				Crouch();
 				break;
 			case PlayerInputActionType.Throw:
 				if (canThrow)
@@ -146,88 +133,41 @@ public class PlayerBehavior : MonoBehaviour
     #region Movement
     private void Move(Vector3 moveDirection)
 	{
-		if (isHiding)
-		{
-			CrouchMove(moveDirection);
-		}
-		else
-        {
-			if (isSprinting)
-			{
-				SprintMove(moveDirection);
-			}
-			else
-			{
-				DefaultMove(moveDirection);
-			}
-            FaceMoveDirection(moveDirection);
-            //adding drag while grounded
-        }
+		Vector3 resolved = hideController.ResolveMovement(moveDirection.normalized, transform.position);
+		//Calculate how fast to move based on state
+		float speedScale = 1f;
+		
+		if (isCrouching || hideController.IsInCover) speedScale = stealthSpeedModifier;
+		else if (isSprinting) speedScale = 1.5f;
 
-        if (isThrowing) { UpdateThrow(Vector3.zero); }
-    }
+		rb.linearVelocity = resolved * speedScale * 10;
+		FaceMoveDirection(resolved);
+		
+		//Check if throwing
+		if (isThrowing) { UpdateThrow(Vector3.zero); }
+
+		//Limit speed
+		HandleSpeedControl();
+	}
+
     private void DoSprint()
     {
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
-		if (isHiding)
+		if (isCrouching)
 		{
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
+			GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Crouch, true));
 		}
-
-		if (!isSprinting)
-		{
-			isSprinting = true;
-		}
-		else isSprinting = false;
-    }
-    private void DefaultMove(Vector3 moveDirection)
-	{
-		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
-	}
-    private void SprintMove(Vector3 moveDirection)
-    {
-		rb.AddForce(acceleration * Time.deltaTime * 60 * moveDirection, ForceMode.Acceleration);
+		isSprinting = !isSprinting;
     }
 	public void TriggerSprintNoise()
-    {
-        GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
-	}
-    private void CrouchMove(Vector3 moveDirection)
 	{
-		Vector3 nextPosition = transform.position + moveDirection;
-
-		if (coverObject == null) return;
-
-		Collider currentCollider = hideController.GetClosestCollider(transform.position)?.GetComponent<Collider>();
-		if (currentCollider == null) return;
-
-		// Get wall contact point and normal
-		Vector3 wallPoint = currentCollider.ClosestPoint(transform.position);
-		Vector3 wallNormal = (transform.position - wallPoint).normalized;
-		if (wallNormal.sqrMagnitude > 0.0001f)
-			lastWallNormal = wallNormal; // Cache for stability
-
-		Vector3 projectedNextPosition = nextPosition - lastWallNormal * Vector3.Dot(nextPosition - wallPoint, lastWallNormal);
-
-		Vector3 movementAlongPlane = (projectedNextPosition - transform.position);
-		rb.AddForce(acceleration * Time.deltaTime * 60 * stealthSpeedModifier * movementAlongPlane, ForceMode.Acceleration);
-
-		float distanceToWall = Vector3.Dot(transform.position - wallPoint, lastWallNormal);
-		if (Mathf.Abs(distanceToWall - snapDistance) > 0.01f)
-		{
-			Vector3 snapTarget = transform.position - lastWallNormal * (distanceToWall - snapDistance);
-			rb.MovePosition(Vector3.Lerp(transform.position, snapTarget, 0.5f));
-		}
-
-		FaceMoveDirection(moveDirection);
-		////Debug for crouch movement, uncomment to re-enable.
-		//Debug.DrawLine(transform.position, projectedNextPosition, Color.green);
-		//Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), Color.red);
-		//Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), Color.red);
-		//Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), Color.orange);
-		//Debug.DrawLine(transform.position,transform.position + wallNormal, Color.blue);
+		GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
 	}
-
+	private void Crouch()
+	{
+		isCrouching = !isCrouching;
+	}
+	
 	/// <summary>
 	/// Checks if the player is on the ground or not.
 	/// </summary>
@@ -248,7 +188,7 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void HandleSpeedControl()
 	{
-		float speedMod = isHiding ? stealthSpeedModifier : 1f;
+		float speedMod = isCrouching ? stealthSpeedModifier : 1f;
 
 		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 		if (isSprinting && groundSpeed.magnitude > sprintMaxSpeed)
@@ -373,39 +313,7 @@ public class PlayerBehavior : MonoBehaviour
 	}
 
     #region Stealth
-    /// <summary>
-    /// Checks the area for gameobjects with colliders and enters hiding state
-    /// </summary>
-    private void TryHide()
-	{
-		Collider closest = hideController.GetClosestCollider(transform.position);
-		coverObject = closest ? closest.gameObject : null;
-
-		if (coverObject != null)
-        {
-			//Toggle hiding
-			GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent("enter_Stealth"));
-        }
-        else
-		{
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-		}
-	}
-
-	/// <summary>
-	/// Triggers on button press. Player tries to hide if not hiding, untoggles hiding state when hiding.
-	/// </summary>
-    private void DoHide()
-    {
-		if (!isHiding)
-        {
-			TryHide();
-        }
-        else
-        {
-			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-        }
-    }
+   
 	/// <summary>
 	/// behavior for when player is spotted. Runs via gamecontext event
 	/// </summary>
@@ -413,18 +321,7 @@ public class PlayerBehavior : MonoBehaviour
     {
 		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
     }
-    private void LeaveHide(LeaveStealthEvent e)
-    {
-		playerCollider.height = standingHeight;
-        isHiding = false;
-    }
-
-    private void EnterHide(EnterStealthEvent e)
-    {
-		playerCollider.height = crouchedHeight;
-        isSprinting = false;
-        isHiding = true;
-    }
+    
 	#endregion
 
 	#region EventStuff
