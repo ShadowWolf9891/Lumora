@@ -96,7 +96,7 @@ public class PlayerBehavior : MonoBehaviour
 		switch (e.ActionType)
 		{
 			case PlayerInputActionType.Move:
-				if(IsGrounded())	Move(e.MoveDirection);
+				Move(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Look:
 				UpdateThrow(e.MoveDirection);
