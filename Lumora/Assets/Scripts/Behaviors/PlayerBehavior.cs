@@ -140,7 +140,7 @@ public class PlayerBehavior : MonoBehaviour
 		if (isCrouching || hideController.IsInCover) speedScale = stealthSpeedModifier;
 		else if (isSprinting) speedScale = 1.5f;
 
-		rb.linearVelocity = resolved * speedScale * 10;
+		rb.AddForce(60 * acceleration * speedScale * Time.deltaTime * resolved, ForceMode.Acceleration);
 		FaceMoveDirection(resolved);
 		
 		//Check if throwing
