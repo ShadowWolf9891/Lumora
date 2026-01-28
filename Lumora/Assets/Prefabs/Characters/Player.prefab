@@ -464,7 +464,6 @@ GameObject:
   - component: {fileID: 6481701089280577369}
   - component: {fileID: 8209262538507549975}
   - component: {fileID: 7166657601331200534}
-  - component: {fileID: 2064154333712431666}
   - component: {fileID: 7869366584272912734}
   - component: {fileID: 957667314810470744}
   m_Layer: 6
@@ -576,6 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64004f7d73669f54e8d0cab59e76b23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  sameInputDelay: 0.5
 --- !u!114 &8209262538507549975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,28 +618,11 @@ MonoBehaviour:
   throwSensitivity: 0.1
   lineRenderer: {fileID: 4654983748964475490}
   hitSpherePrefab: {fileID: 2082604938133289944, guid: 75b91f1fc0d94144283479bb535fe587, type: 3}
-  snapDistance: 1
-  detectDistance: 1
-  stealthSpeedModifier: 0.5
   sprintNoiseMade: 8.5
   standingHeight: 1
   crouchedHeight: 0.5
---- !u!114 &2064154333712431666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5350591719694058521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9148a3050585ee4aa82b3942eb8bee5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HideController
-  coverLayerMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  tagToIgnore: NoiseTag
+  stealthSpeedModifier: 0.5
+  stealthSnapDistance: 0.4
 --- !u!114 &7869366584272912734
 MonoBehaviour:
   m_ObjectHideFlags: 0

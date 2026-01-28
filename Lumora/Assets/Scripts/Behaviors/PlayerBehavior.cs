@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(HideController), typeof(Rigidbody), typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class PlayerBehavior : MonoBehaviour
 {
     #region Properties
@@ -44,22 +44,20 @@ public class PlayerBehavior : MonoBehaviour
 	private bool canThrow;
 
 	[Header("Stealth Settings")]
-	[SerializeField] private float detectDistance = 1f;
     [SerializeField] private float sprintNoiseMade = 5f;
     [SerializeField] private float standingHeight = 1f;
     [SerializeField] private float crouchedHeight = 0.5f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
+	[SerializeField] private float stealthSnapDistance = 0.4f;
+	private Collider closestWall = null;
 
-	public bool isCrouching { get; private set; }
-	public bool isSprinting { get; private set; }
-
+	public bool IsCrouching { get; private set; }
+	public bool IsSprinting { get; private set; }
 
 	//Private properties
 	Vector3 startVelocity = Vector3.zero;
-	private HideController hideController;
+	//private HideController hideController;
 	Rigidbody rb;
-	CapsuleCollider playerCollider;
-	private GameObject coverObject;
 	private Camera mainCam;
 	private Vector3 curThrowDirection;
 	private float throwYaw;
@@ -86,10 +84,7 @@ public class PlayerBehavior : MonoBehaviour
     private void GetComponentReferences()
     {
         rb = GetComponent<Rigidbody>();
-        hideController = GetComponent<HideController>();
-        if (hideController == null) Debug.LogError("HideController not found on player!");
 		mainCam = Camera.main;
-		playerCollider = GetComponent<CapsuleCollider>();
 	}
     private void HandleInput(PlayerInputEvent e)
 	{
@@ -133,16 +128,24 @@ public class PlayerBehavior : MonoBehaviour
     #region Movement
     private void Move(Vector3 moveDirection)
 	{
-		Vector3 resolved = hideController.ResolveMovement(moveDirection.normalized, transform.position);
+		Collider newClosest = HideController.GetClosestWall(transform.position);
+		if (closestWall != null && closestWall != newClosest)
+		{
+			closestWall = newClosest;
+			rb.MovePosition(HideController.SnapToWall(transform.position, closestWall, stealthSnapDistance));
+		}
+
+		Vector3 newDirection = closestWall != null ? HideController.GetHideMovement(transform.position, moveDirection, closestWall) : moveDirection;
+		
 		//Calculate how fast to move based on state
 		float speedScale = 1f;
-		
-		if (isCrouching || hideController.IsInCover) speedScale = stealthSpeedModifier;
-		else if (isSprinting) speedScale = 1.5f;
 
-		rb.AddForce(60 * acceleration * speedScale * Time.deltaTime * resolved, ForceMode.Acceleration);
-		FaceMoveDirection(resolved);
-		
+		if (IsCrouching || closestWall != null) speedScale = stealthSpeedModifier;
+		else if (IsSprinting) speedScale = 1.5f;
+
+		rb.AddForce(60 * acceleration * speedScale * Time.fixedDeltaTime * newDirection, ForceMode.Acceleration);
+		FaceMoveDirection(newDirection);
+
 		//Check if throwing
 		if (isThrowing) { UpdateThrow(Vector3.zero); }
 
@@ -153,11 +156,11 @@ public class PlayerBehavior : MonoBehaviour
     private void DoSprint()
     {
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
-		if (isCrouching)
+		if (IsCrouching)
 		{
 			GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Crouch, true));
 		}
-		isSprinting = !isSprinting;
+		IsSprinting = !IsSprinting;
     }
 	public void TriggerSprintNoise()
 	{
@@ -165,7 +168,7 @@ public class PlayerBehavior : MonoBehaviour
 	}
 	private void Crouch()
 	{
-		isCrouching = !isCrouching;
+		IsCrouching = !IsCrouching;
 	}
 	
 	/// <summary>
@@ -179,8 +182,9 @@ public class PlayerBehavior : MonoBehaviour
     }
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{
+		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.deltaTime);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.fixedDeltaTime);
 	}
 
 	/// <summary>
@@ -188,15 +192,15 @@ public class PlayerBehavior : MonoBehaviour
 	/// </summary>
 	private void HandleSpeedControl()
 	{
-		float speedMod = isCrouching ? stealthSpeedModifier : 1f;
+		float speedMod = IsCrouching ? stealthSpeedModifier : 1f;
 
 		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-		if (isSprinting && groundSpeed.magnitude > sprintMaxSpeed)
+		if (IsSprinting && groundSpeed.magnitude > sprintMaxSpeed)
         {
             Vector3 limitedVelocity = groundSpeed.normalized * sprintMaxSpeed;
             rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
         }
-		else if (!isSprinting && groundSpeed.magnitude > maxSpeed * speedMod)
+		else if (!IsSprinting && groundSpeed.magnitude > maxSpeed * speedMod)
 		{
 			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed * speedMod;
 			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
@@ -204,7 +208,8 @@ public class PlayerBehavior : MonoBehaviour
 
         if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
         {
-            rb.AddForce(-stoppingForce * Time.deltaTime * 60 * transform.forward, ForceMode.Acceleration);
+			Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+			rb.AddForce(-horizontalVel * stoppingForce, ForceMode.Acceleration);
             //Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
         }
     }
@@ -306,10 +311,15 @@ public class PlayerBehavior : MonoBehaviour
 		}
 		CameraManager.ReturnToPreviousCamera(0.5f);
 	}
-    #endregion
-    private void Interact()
+	#endregion
+	private void Interact()
 	{
-		//TODO: Raycast to see if the player is interacting with something
+		//If something to interact with
+
+		//else
+		//Set closest wall to null if it have a value, and a value if it was null.
+		closestWall = closestWall == null ? HideController.GetClosestWall(transform.position) : null;
+		rb.MovePosition(HideController.SnapToWall(transform.position, closestWall, stealthSnapDistance));
 	}
 
     #region Stealth
