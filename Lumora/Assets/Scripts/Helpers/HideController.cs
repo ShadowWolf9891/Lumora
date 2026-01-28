@@ -48,22 +48,28 @@ public class HideController : MonoBehaviour
 		curState == CoverState.Snapping ? Color.yellow :
 		Color.green);
 
+		Vector3 horizontalMovement = Vector3.zero;
+
 		switch (curState)
 		{
 			case CoverState.Free:
-				return HandleFree(moveIntent, position);
+				horizontalMovement = HandleFree(moveIntent, position);
+				break;
 
 			case CoverState.Snapping:
-				return HandleSnapping(moveIntent, position);
+				horizontalMovement = HandleSnapping(moveIntent, position);
+				break;
 
 			case CoverState.InCover:
-				return HandleInCover(moveIntent, position);
+				horizontalMovement = HandleInCover(moveIntent, position);
+				break;
 
 			//case CoverState.Detaching:
 				//return HandleDetaching(moveIntent, position);
 		}
 		
-		return moveIntent;
+		horizontalMovement.y = 0;
+		return horizontalMovement;
 	}
 
 	
@@ -91,11 +97,13 @@ public class HideController : MonoBehaviour
 		if (Mathf.Abs(dist - snapDistance) < 0.05f)
 		{
 			curState = CoverState.InCover;
-			return Vector3.zero;
+			return moveIntent;
 		}
 
 		Vector3 wallPoint = closestWall.ClosestPoint(position);
-		return (wallPoint - position).normalized;
+		Vector3 snapDir = wallPoint - position;
+		snapDir.y = 0f;
+		return snapDir.normalized;
 	}
 	private Vector3 HandleInCover(Vector3 moveIntent, Vector3 position)
 	{
@@ -104,8 +112,12 @@ public class HideController : MonoBehaviour
 			curState = CoverState.Free;
 			return moveIntent;
 		}
+
+		Vector3 planarNormal = wallNormal;
+		planarNormal.y = 0f;
+
 		// Project movement along wall plane
-		return moveIntent - wallNormal * Vector3.Dot(moveIntent, wallNormal);
+		return moveIntent - planarNormal * Vector3.Dot(moveIntent, planarNormal);
 	}
 	//private Vector3 HandleDetaching(Vector3 moveIntent, Vector3 position)
 	//{
@@ -141,7 +153,9 @@ public class HideController : MonoBehaviour
 		}
 
 		Vector3 wallPoint = closestWall.ClosestPoint(sourceLocation);
-		wallNormal = (sourceLocation - wallPoint).normalized;
+		wallNormal = (sourceLocation - wallPoint);
+		wallNormal.y = 0;
+		wallNormal.Normalize();
 	}
 	#endregion
 	#region Helpers
@@ -161,8 +175,9 @@ public class HideController : MonoBehaviour
 	}
 	public void SetMoveIntent(Vector3 moveDirection)
 	{
-		CurrentMoveIntent = moveDirection.sqrMagnitude > 0.0001f
-			? moveDirection.normalized
+		Vector3 groundMovement = new Vector3(moveDirection.x, 0, moveDirection.z);
+		CurrentMoveIntent = groundMovement.sqrMagnitude > 0.0001f
+			? groundMovement.normalized
 			: Vector3.zero;
 	}
 	#endregion
