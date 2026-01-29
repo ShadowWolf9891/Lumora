@@ -31,18 +31,21 @@ public class PlayerBehavior : MonoBehaviour
     //throw mechanic
     [Header("Throw Settings")]
 	[SerializeField] GameObject thrownObjPrefab;
-	[SerializeField] Transform throwLocation;
-	[SerializeField] float throwForce = 10;
+	[SerializeField] float throwForce = 1f;
 	[SerializeField] float throwSensitivity = 1f;
-	[SerializeField] Vector3 startVelocity;
+	[SerializeField] float throwCooldown = 2f;
+	[SerializeField] LayerMask throwLayerMask;
 	//line renderer 
 	[SerializeField] LineRenderer lineRenderer;
 	[SerializeField] GameObject hitSpherePrefab;
 	private GameObject activeHitSphere;
 	private int linePoints = 16;
 	private float timeBetweenPoints = 0.15f;
+	private float throwTimer = 0f;
 	private bool isThrowing;
-	private bool canThrow;
+	private bool canThrow, throwOnCooldown;
+	private Vector3 throwOffset = new Vector3 (0, 1.2f, 0);
+	private Vector3 startVelocity = Vector3.zero;
 
 	[Header("Stealth Settings")]
 	[SerializeField] private float detectDistance = 1f;
@@ -104,16 +107,17 @@ public class PlayerBehavior : MonoBehaviour
 	private void Update()
 	{
 		HandleSpeedControl();
+		if(throwOnCooldown && canThrow) ThrowCooldownHandler();
 	}
 	private void HandleInput(PlayerInputEvent e)
-	{
+	{	
 		switch (e.ActionType)
 		{
 			case PlayerInputActionType.Move:
 				Move(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Look:
-				UpdateThrow(e.MoveDirection);
+				if(isThrowing) UpdateThrow(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Interact:
 				Interact();
@@ -128,14 +132,13 @@ public class PlayerBehavior : MonoBehaviour
 				Crouch();
 				break;
 			case PlayerInputActionType.Throw:
-				if (canThrow)
-				{
+				if (canThrow) 
 					PrepareThrow();
-				}
 				break;
 			case PlayerInputActionType.ThrowRelease:
 				if (canThrow)
 				{
+					if(!throwOnCooldown && !CameraManager.IsBlending()) SpawnThrowable(transform.position + throwOffset + transform.forward);
 					ReleaseThrow();
 				}
 				break;
@@ -145,6 +148,10 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		IsCrouching = !IsCrouching;
 		playerCollider.height = IsCrouching ? crouchedHeight : standingHeight;
+
+		Vector3 prevCenter = playerCollider.center;
+		prevCenter.y = playerCollider.height / 2;
+		playerCollider.center = prevCenter;
 	}
 	private void Jump()
 	{
@@ -182,13 +189,10 @@ public class PlayerBehavior : MonoBehaviour
 	private void Move(Vector3 moveDirection)
 	{
 		if (isHiding) HideMove(moveDirection);
-		else
-        {
-			rb.AddForce(acceleration * Time.fixedDeltaTime * 60 * moveDirection, ForceMode.Acceleration);
-            FaceMoveDirection(moveDirection);
-        }
-
-        if (isThrowing) { UpdateThrow(Vector3.zero); }
+		else rb.AddForce(acceleration * Time.fixedDeltaTime * 60 * moveDirection, ForceMode.Acceleration);
+    
+        if (isThrowing)UpdateThrow(Vector3.zero);
+		else FaceMoveDirection(moveDirection);
 	}
     private void DoSprint()
     {
@@ -281,17 +285,15 @@ public class PlayerBehavior : MonoBehaviour
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		//Debug.Log("Preparing throw.");
 		isThrowing = true;
-		
+		startVelocity = Vector3.zero;
 		CameraManager.SetCurrentCamera("ThrowCamera", 0.2f);
 		throwYaw = mainCam.transform.forward.x;
 		throwPitch = -10f; // slight upward bias
-
+		UpdateThrow(new Vector2(0, 0));
 	}
 	private void UpdateThrow(Vector2 lookInput)
 	{
-		if (!isThrowing) return;
-
-		Vector3 startPos = throwLocation.position;
+		Vector3 startPos = transform.position + throwOffset+ (transform.forward * 0.5f);
 
 		// Update aiming angles
 		throwYaw += lookInput.x * throwSensitivity;
@@ -308,7 +310,7 @@ public class PlayerBehavior : MonoBehaviour
 		curThrowDirection = rotation * transform.forward;
 		curThrowDirection.Normalize();
 
-		startVelocity = curThrowDirection.normalized * throwForce;
+		startVelocity = curThrowDirection * throwForce;
 
 		Vector3[] points = new Vector3[linePoints];
 		lineRenderer.positionCount = linePoints;
@@ -326,7 +328,7 @@ public class PlayerBehavior : MonoBehaviour
 				Vector3 dir = position - prevPoint;
 				float dist = dir.magnitude;
 
-				if (Physics.Raycast(prevPoint, dir.normalized, out RaycastHit hit, dist))
+				if (Physics.Raycast(prevPoint, dir.normalized, out RaycastHit hit, dist, throwLayerMask))
 				{
 					if (activeHitSphere == null)
 						activeHitSphere = Instantiate(hitSpherePrefab);
@@ -353,14 +355,29 @@ public class PlayerBehavior : MonoBehaviour
 		//Debug.Log("Release Throw");
 		isThrowing = false;
 		lineRenderer.enabled = false;
-		Destroy(activeHitSphere);
-		if (!CameraManager.IsBlending())
-		{
-			GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
-			Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-			projectileRb.AddForce(startVelocity, ForceMode.Impulse);
-		}
+		if(activeHitSphere) Destroy(activeHitSphere);
 		CameraManager.ReturnToPreviousCamera(0.5f);
+	}
+	private void SpawnThrowable(Vector3 spawnLocation)
+	{
+		if (throwOnCooldown) return;
+
+        GameObject projectile = Instantiate(thrownObjPrefab, spawnLocation, Quaternion.identity);
+		Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+		projectileRb.AddForce(startVelocity, ForceMode.Impulse);
+		throwOnCooldown = true;
+	}
+	private void ThrowCooldownHandler()
+	{
+		if(throwTimer >= throwCooldown )
+		{
+			throwOnCooldown = false;
+			throwTimer = 0;
+		}
+		else
+		{
+			throwTimer += Time.deltaTime;
+		}
 	}
 	#endregion
 
