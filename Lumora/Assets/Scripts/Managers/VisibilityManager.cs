@@ -75,7 +75,7 @@ public class VisibilityManager : MonoBehaviour
 		switch (e.ActionType)
 		{
 			case PlayerInputActionType.Move:
-				if (playerBehavior.isSprinting)
+				if (playerBehavior.IsSprinting)
 				{
 					SetVisibilityLevel(VisibilityLevels.Sprinting);
 				}

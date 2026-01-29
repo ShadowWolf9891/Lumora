@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(HideController), typeof(Rigidbody), typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(HideController))]
 public class PlayerBehavior : MonoBehaviour
 {
     #region Properties
@@ -34,6 +34,7 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] Transform throwLocation;
 	[SerializeField] float throwForce = 10;
 	[SerializeField] float throwSensitivity = 1f;
+	[SerializeField] Vector3 startVelocity;
 	//line renderer 
 	[SerializeField] LineRenderer lineRenderer;
 	[SerializeField] GameObject hitSpherePrefab;
@@ -45,27 +46,30 @@ public class PlayerBehavior : MonoBehaviour
 
 	[Header("Stealth Settings")]
 	[SerializeField] private float detectDistance = 1f;
+	[SerializeField] private float stealthSpeedModifier = 0.5f;
     [SerializeField] private float sprintNoiseMade = 5f;
     [SerializeField] private float standingHeight = 1f;
     [SerializeField] private float crouchedHeight = 0.5f;
-	[SerializeField] private float stealthSpeedModifier = 0.5f;
+	[SerializeField] private float stealthSnapDistance = 0.6f;
+	private Collider coverObject;
 
-	public bool isCrouching { get; private set; }
-	public bool isSprinting { get; private set; }
-
+	public bool IsCrouching { get; private set; }
+	public bool IsSprinting { get; private set; }
 
 	//Private properties
-	Vector3 startVelocity = Vector3.zero;
 	private HideController hideController;
+	bool isHiding;
+	public bool isSprinting { get; private set; }
 	Rigidbody rb;
 	CapsuleCollider playerCollider;
-	private GameObject coverObject;
+	private Vector3 lastWallNormal = Vector3.zero;
 	private Camera mainCam;
 	private Vector3 curThrowDirection;
 	private float throwYaw;
 	private float throwPitch;
 	#endregion
 
+	#region Initializing
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Awake()
     {
@@ -81,17 +85,27 @@ public class PlayerBehavior : MonoBehaviour
     {
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
+
     }
+
     private void GetComponentReferences()
     {
         rb = GetComponent<Rigidbody>();
         hideController = GetComponent<HideController>();
-        if (hideController == null) Debug.LogError("HideController not found on player!");
+        playerCollider = GetComponent<CapsuleCollider>();
 		mainCam = Camera.main;
-		playerCollider = GetComponent<CapsuleCollider>();
 	}
-    private void HandleInput(PlayerInputEvent e)
+	#endregion
+
+	#region Handle Input
+	private void Update()
+	{
+		HandleSpeedControl();
+	}
+	private void HandleInput(PlayerInputEvent e)
 	{
 		switch (e.ActionType)
 		{
@@ -125,102 +139,144 @@ public class PlayerBehavior : MonoBehaviour
 					ReleaseThrow();
 				}
 				break;
-
 		}
-	}
-
-    //Contains basic movement, crouched movement, jumping, and all helpers associated
-    #region Movement
-    private void Move(Vector3 moveDirection)
-	{
-		Vector3 resolved = hideController.ResolveMovement(moveDirection.normalized, transform.position);
-		//Calculate how fast to move based on state
-		float speedScale = 1f;
-		
-		if (isCrouching || hideController.IsInCover) speedScale = stealthSpeedModifier;
-		else if (isSprinting) speedScale = 1.5f;
-
-		rb.AddForce(60 * acceleration * speedScale * Time.deltaTime * resolved, ForceMode.Acceleration);
-		FaceMoveDirection(resolved);
-		
-		//Check if throwing
-		if (isThrowing) { UpdateThrow(Vector3.zero); }
-
-		//Limit speed
-		HandleSpeedControl();
-	}
-
-    private void DoSprint()
-    {
-		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
-		if (isCrouching)
-		{
-			GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Crouch, true));
-		}
-		isSprinting = !isSprinting;
-    }
-	public void TriggerSprintNoise()
-	{
-		GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
 	}
 	private void Crouch()
 	{
-		isCrouching = !isCrouching;
+		IsCrouching = !IsCrouching;
+		playerCollider.height = IsCrouching ? crouchedHeight : standingHeight;
 	}
-	
-	/// <summary>
-	/// Checks if the player is on the ground or not.
-	/// </summary>
-	/// <returns></returns>
-	private bool IsGrounded()
+	private void Jump()
 	{
-		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), UnityEngine.Color.darkRed);
-        return Physics.Raycast(transform.position, Vector3.down, playerHeight, groundedLayers);
-    }
-	private void FaceMoveDirection(Vector3 moveDirection)
-	{
-		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.deltaTime);
-	}
-
-	/// <summary>
-	/// Clamp velocity to the max speed.
-	/// </summary>
-	private void HandleSpeedControl()
-	{
-		float speedMod = isCrouching ? stealthSpeedModifier : 1f;
-
-		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-		if (isSprinting && groundSpeed.magnitude > sprintMaxSpeed)
-        {
-            Vector3 limitedVelocity = groundSpeed.normalized * sprintMaxSpeed;
-            rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
-        }
-		else if (!isSprinting && groundSpeed.magnitude > maxSpeed * speedMod)
+		if (IsGrounded())
 		{
-			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed * speedMod;
-			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
+			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
+		}
+	}
+	private void Interact()
+	{
+		//If something to interact with
+
+		//else
+
+		//Stop hiding if you were hiding previously
+		if (isHiding)
+		{
+			coverObject = null;
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
+		}
+		else
+		{
+			//If not hiding, get the closest object. If there is one within range, enter stealth.
+			Collider closest = hideController.GetClosestWall(transform.position);
+			coverObject = closest ? closest : null;
+			if (coverObject != null)
+			{
+				//Toggle hiding
+				GameEvents<EnterStealthEvent>.Raise(new EnterStealthEvent("enter_Stealth"));
+			}
+		}
+	}
+	//Contains basic movement, crouched movement, jumping, and all helpers associated
+	#region Movement
+	private void Move(Vector3 moveDirection)
+	{
+		if (isHiding) HideMove(moveDirection);
+		else
+        {
+			rb.AddForce(acceleration * Time.fixedDeltaTime * 60 * moveDirection, ForceMode.Acceleration);
+            FaceMoveDirection(moveDirection);
+        }
+
+        if (isThrowing) { UpdateThrow(Vector3.zero); }
+	}
+    private void DoSprint()
+    {
+		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
+		if (IsCrouching)
+		{
+			GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Crouch, true));
+		}
+		if(isHiding) 
+		{
+			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
 		}
 
-        if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
-        {
-            rb.AddForce(-stoppingForce * Time.deltaTime * 60 * transform.forward, ForceMode.Acceleration);
-            //Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
-        }
+		if (!isSprinting)
+		{
+			isSprinting = true;
+		}
+		else isSprinting = false;
     }
-
-    private void Jump()
+	public void TriggerSprintNoise()
     {
-        if (IsGrounded())
-        {
-            rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
-        }
+        GameEvents<SpawnVisibleNoiseEvent>.Raise(new SpawnVisibleNoiseEvent("VisibleNoise", true, transform.position, sprintNoiseMade));
+	}
+    private void HideMove(Vector3 moveDirection)
+	{
+		Vector3 nextPosition = transform.position + moveDirection;
+		if (coverObject == null) return;
+
+		Collider currentCollider = hideController.GetClosestWall(transform.position);
+		if (currentCollider == null) return;
+
+		// Get wall contact point and normal
+		Vector3 wallPoint = currentCollider.ClosestPoint(transform.position);
+		Vector3 wallNormal = (transform.position - wallPoint).normalized;
+
+		if (wallNormal.sqrMagnitude > 0.0001f)
+			lastWallNormal = wallNormal; // Cache for stability
+
+		Vector3 projectedNextPosition = nextPosition - lastWallNormal * Vector3.Dot(nextPosition - wallPoint, lastWallNormal);
+
+		Vector3 movementAlongPlane = (projectedNextPosition - transform.position);
+		rb.AddForce(acceleration * Time.fixedDeltaTime * 60 * stealthSpeedModifier * movementAlongPlane, ForceMode.Acceleration);
+
+		float distanceToWall = Vector3.Dot(transform.position - wallPoint, lastWallNormal);
+		if (Mathf.Abs(distanceToWall - stealthSnapDistance) > 0.01f)
+		{
+			Vector3 snapTarget = transform.position - lastWallNormal * (distanceToWall - stealthSnapDistance);
+			rb.MovePosition(Vector3.Lerp(transform.position, snapTarget, 0.5f));
+		}
+
+		FaceMoveDirection(moveDirection);
+		//Debug for crouch movement, uncomment to re-enable.
+		Debug.DrawLine(transform.position, projectedNextPosition, UnityEngine.Color.green);
+		Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), UnityEngine.Color.red);
+		Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), UnityEngine.Color.red);
+		Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), UnityEngine.Color.orange);
+		Debug.DrawLine(transform.position, transform.position + wallNormal, UnityEngine.Color.blue);
+	}
+
+	#endregion
+
+	#endregion
+
+	#region Stealth Events
+	/// <summary>
+	/// Behavior for when player is spotted. Runs via gamecontext event
+	/// </summary>
+	private void GetSpotted(PlayerSpottedEvent e)
+    {
+		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
     }
+    private void EnterHide(EnterStealthEvent e)
+    {
+        isSprinting = false;
+        isHiding = true;
+		coverObject = hideController.GetClosestWall(transform.position);
+		if (coverObject == null) { GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth")); }
+	}
+	private void LeaveHide(LeaveStealthEvent e)
+	{
+		isHiding = false;
+		coverObject = null;
+		lastWallNormal = Vector3.zero;
+	}
+	#endregion
 
-    #endregion
-
-    #region Throwing
-    private void PrepareThrow()
+	#region Throwing
+	private void PrepareThrow()
 	{
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		//Debug.Log("Preparing throw.");
@@ -306,22 +362,6 @@ public class PlayerBehavior : MonoBehaviour
 		}
 		CameraManager.ReturnToPreviousCamera(0.5f);
 	}
-    #endregion
-    private void Interact()
-	{
-		//TODO: Raycast to see if the player is interacting with something
-	}
-
-    #region Stealth
-   
-	/// <summary>
-	/// behavior for when player is spotted. Runs via gamecontext event
-	/// </summary>
-	private void GetSpotted(PlayerSpottedEvent e)
-    {
-		GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
-    }
-    
 	#endregion
 
 	#region EventStuff
@@ -345,5 +385,50 @@ public class PlayerBehavior : MonoBehaviour
 	}
 
 
+	#endregion
+
+	#region Helpers
+	/// <summary>
+	/// Checks if the player is on the ground or not.
+	/// </summary>
+	/// <returns></returns>
+	private bool IsGrounded()
+	{
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), UnityEngine.Color.darkRed);
+		return Physics.Raycast(transform.position, Vector3.down, playerHeight, groundedLayers);
+	}
+	private void FaceMoveDirection(Vector3 moveDirection)
+	{
+		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
+		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.fixedDeltaTime);
+	}
+
+	/// <summary>
+	/// Clamp velocity to the max speed.
+	/// </summary>
+	private void HandleSpeedControl()
+	{
+		float speedMod = IsCrouching ? stealthSpeedModifier : 1f;
+
+		Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+		if (IsSprinting && groundSpeed.magnitude > sprintMaxSpeed)
+		{
+			Vector3 limitedVelocity = groundSpeed.normalized * sprintMaxSpeed;
+			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
+		}
+		else if (!IsSprinting && groundSpeed.magnitude > maxSpeed * speedMod)
+		{
+			Vector3 limitedVelocity = groundSpeed.normalized * maxSpeed * speedMod;
+			rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
+		}
+
+		if (IsGrounded() && rb.linearVelocity.magnitude > 0.1f)
+		{
+			Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+			rb.AddForce(-horizontalVel * stoppingForce, ForceMode.Acceleration);
+			//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+		}
+	}
 	#endregion
 }
