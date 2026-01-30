@@ -4,12 +4,10 @@ using System.Linq;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField, Tooltip("How long to wait between inputs before registering the same press. Used to wait for animations to finish.")] 
-	private float sameInputDelay = 0.5f;
+
 	//Private variables
 	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
 	private Vector2 moveInput;
@@ -17,10 +15,7 @@ public class PlayerController : MonoBehaviour
 	private bool sprinting;
 	private Camera mainCam;
 
-	private TimeValue lastCrouch;
-	
-
-	private void Start()
+    private void Start()
 	{
 		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChanged);
 		//GameContext.Instance.OnPauseGame += FreezePlayer;
@@ -82,11 +77,7 @@ public class PlayerController : MonoBehaviour
 			}
 			if (crouchAction.WasPressedThisFrame())
 			{
-				if (Time.time - lastCrouch.value >= sameInputDelay)
-				{
-					GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Crouch, true));
-					lastCrouch = Time.time;
-				}
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("crouch", PlayerInputActionType.Crouch, true));
 			}
 			if (jumpAction.WasPressedThisFrame())
 			{

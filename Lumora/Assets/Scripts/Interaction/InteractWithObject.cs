@@ -10,7 +10,7 @@ public class InteractWithObject : MonoBehaviour
     IInteractable currentInteractable;
 	[SerializeField] float interactRange = 2f;
 	[SerializeField] LayerMask interactableLayer;
-	[SerializeField] TextMeshProUGUI interactionUI;
+	//[SerializeField] TextMeshProUGUI interactionUI;
 
     private void Start()
     {
@@ -44,18 +44,18 @@ public class InteractWithObject : MonoBehaviour
 			if (hit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))
             {
                 currentInteractable = interactable;
-				interactionUI.text = (currentInteractable.GetInteractionPrompt());
+				//interactionUI.text = (currentInteractable.GetInteractionPrompt());
 				return;
             }
         }
 		currentInteractable = null;
-		interactionUI.text = "";
+		//interactionUI.text = "";
 	}
 
 	public void OnInteract()
 	{
 		currentInteractable?.OnInteractStart();
-		interactionUI.text = "";
+		//interactionUI.text = "";
 	}
 
 
