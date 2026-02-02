@@ -32,7 +32,7 @@ public class InteractWithObject : MonoBehaviour
 		{
 			CanSetClosestToCurrentInteratable();
 		}
-        //ensure correct object in range is highlighted here? 
+        //ensure correct object in range is highlighted / displays instructional image here? 
     }
     private bool CanSetClosestToCurrentInteratable()
     {
@@ -41,7 +41,6 @@ public class InteractWithObject : MonoBehaviour
 
         if (count == 0)
         {
-            Debug.Log("InteractWithObject - 0 things in overlap sphere");
             return false;
         }
 
@@ -59,14 +58,14 @@ public class InteractWithObject : MonoBehaviour
             }
         }
         currentInteractable = closestInteracrable.GetComponentInParent<IInteractable>();
-        Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
+        //Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
         return true;
     }
 
     public void OnInteract()
 	{
         if (currentInteractable == null) return;
-        Debug.Log("InteractWithObject - Running on Interact");
+        //Debug.Log("InteractWithObject - Running on Interact");
 		currentInteractable.OnInteractStart();
 	}
 
