@@ -50,7 +50,7 @@ public class NoiseBehaviors : MonoBehaviour
         //NOTE: Ensure enemies have an object with a working collider, rigidbody, AND enemy tag for detection! 
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponentInParent<EnemyBehavior>().OnHearNoise(transform.position, isPlayerDetectionNoise);
+            other.GetComponentInParent<EnemyBehavior>().OnHearNoise(transform.position);
         }
     }
 
