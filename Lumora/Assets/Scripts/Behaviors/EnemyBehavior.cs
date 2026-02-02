@@ -21,6 +21,8 @@ public class EnemyBehavior : MonoBehaviour
 	float angleOfVision = 30f;
 	[SerializeField]
 	float attackRange = 1f;
+	[SerializeField]
+	Vector3 eyeLocation = new Vector3(0,1.6f,0);
 
 	[Header("Patrol Points")]
 	[SerializeField]
@@ -112,9 +114,8 @@ public class EnemyBehavior : MonoBehaviour
 		bool canSee = false;
 
 		// Only do expensive raycast if within alert range
-		if (distance <= alertRange)
+		if (Mathf.Abs(distance) <= alertRange)
 		{
-			
 			canSee = CanSeeTarget(playerRef, alertRange);
 			if (canSee && !bb.Get<bool>(bb_IsAlerted))
 			{
@@ -305,7 +306,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player", "Obstacles"));
+        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, eyeLocation, LayerMask.GetMask("Default", "Player", "Obstacles"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
@@ -448,7 +449,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// To be called from NoiseBehavior upon collision with a noise ping. 
 	/// Dependent on ping info, causes enemy to alert and investigate, or chase the player.
 	/// </summary>
-	public void OnHearNoise(Vector3 noiseLocation, bool isPlayerDetectionNoise)
+	public void OnHearNoise(Vector3 noiseLocation)
 	{
 		Debug.Log($"{gameObject.name} heard Noise. Alert state = {curState}");
 
@@ -459,17 +460,8 @@ public class EnemyBehavior : MonoBehaviour
 		}
 		else
         {
-            if (!CanSeeTarget(playerRef, alertRange))
-            {
-                bb.Set<bool>(bb_IsAlerted, true);
-                agent.SetDestination(noiseLocation);
-            }
-            else if (isPlayerDetectionNoise )
-            {
-                //do i need to do all this? anyways-
-                bb.Set<bool>(bb_IsAlerted, true);
-                agent.SetDestination(noiseLocation);
-            }
+			bb.Set<bool>(bb_IsAlerted, true);
+			agent.SetDestination(noiseLocation);
         }
 		
 	}
