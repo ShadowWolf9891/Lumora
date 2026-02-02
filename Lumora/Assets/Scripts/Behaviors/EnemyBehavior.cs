@@ -22,9 +22,9 @@ public class EnemyBehavior : MonoBehaviour
 	[SerializeField]
 	float attackRange = 1f;
 
-	[Header("Partol Points")]
+	[Header("Patrol Points")]
 	[SerializeField]
-	List<Transform> patrolPoints;
+	WaypointPath patrolPath;
 	[SerializeField]
 	float timeAtEachPatrolPoint = 2f;
 
@@ -154,15 +154,15 @@ public class EnemyBehavior : MonoBehaviour
 			OnChangeState();
 		}
 
-		if (patrolPoints.Count == 0) return;
+		if (patrolPath.points.Count == 0) return;
 
 		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
 		{
 			waitTimer += Time.deltaTime;
 			if (waitTimer >= timeAtEachPatrolPoint)
 			{
-				curPatrolPoint = (curPatrolPoint + 1) % patrolPoints.Count;
-				agent.SetDestination(patrolPoints[curPatrolPoint].position);
+				curPatrolPoint = (curPatrolPoint + 1) % patrolPath.points.Count;
+				agent.SetDestination(patrolPath.GetPointWorld(curPatrolPoint));
 				waitTimer = 0f;
 			}
 		}
@@ -180,13 +180,18 @@ public class EnemyBehavior : MonoBehaviour
 		if (waitTimer >= alertedTime) //Wait an amount of time alerted
 		{
 			waitTimer = 0f;
-			if (patrolPoints.Count > 0)
+			if (patrolPath.points.Count > 0)
 			{
-				agent.SetDestination(GetClosestPoint(transform.position, patrolPoints)); //Go back to patrol path
+				List<Vector3> worldPoints = new List<Vector3>();
+				for (int i = 0; i < patrolPath.points.Count; i++) 
+				{
+					worldPoints.Add(patrolPath.GetPointWorld(i));
+				}
+				agent.SetDestination(GetClosestPoint(transform.position, worldPoints)); //Go back to patrol path
 			}
 
 			bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
-            agent.SetDestination(patrolPoints[curPatrolPoint].position);
+            agent.SetDestination(patrolPath.GetPointWorld(curPatrolPoint));
             waitTimer = 0f;
         }
     }
@@ -350,23 +355,6 @@ public class EnemyBehavior : MonoBehaviour
 		
 		result = Vector3.zero;
 		return false;
-	}
-
-	/// <summary>
-	/// Gets the closest point of a list of transforms
-	/// </summary>
-	/// <param name="startPos"></param>
-	/// <param name="points"></param>
-	/// <returns></returns>
-	private Vector3 GetClosestPoint(Vector3 startPos, List<Transform> points)
-	{
-		List<Vector3> v3Points = new List<Vector3>();
-		foreach(var point in points)
-		{
-			v3Points.Add(point.position);
-		}
-		return GetClosestPoint(startPos, v3Points);
-
 	}
 	/// <summary>
 	/// Gets the closest point of a list of vector3's

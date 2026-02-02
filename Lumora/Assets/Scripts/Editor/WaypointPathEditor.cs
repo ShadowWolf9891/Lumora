@@ -26,11 +26,15 @@ public class WaypointPathEditor : Editor
 		}
 		if (GUILayout.Button("Remove Last Point"))
 		{
-			//Track last change
-			Undo.RecordObject(path, "Remove Waypoint");
-			//Set the new point to be offset from the previous point if it exists
-			path.points.RemoveAt(path.points.Count - 1);
-			EditorUtility.SetDirty(path);
+			if (path.points.Count > 0)
+			{
+				//Track last change
+				Undo.RecordObject(path, "Remove Waypoint");
+				//Set the new point to be offset from the previous point if it exists
+
+				path.points.RemoveAt(path.points.Count - 1);
+				EditorUtility.SetDirty(path);
+			}
 		}
 	}
 
@@ -64,7 +68,7 @@ public class WaypointPathEditor : Editor
 
 		if(path.loop && path.points.Count > 1)
 		{
-			Handles.DrawLine(path.points[path.points.Count - 1], path.points[0]);
+			Handles.DrawLine(path.GetPointWorld(path.points.Count - 1), path.GetPointWorld(0));
 		}
 
 	}
