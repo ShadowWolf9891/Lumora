@@ -192,6 +192,27 @@ public class ProgressQuestEvent : GameEventType
 }
 #endregion
 
+#region Item and Resource Events
+public enum COLLECTABLE_TYPES
+{
+    LOST_CHAPTER,
+    HEAL_CRYSTAL,
+    DISTRACTION_CRYSTAL,
+}
+public class CollectionEvent : GameEventType
+{
+    public COLLECTABLE_TYPES Type;
+    public int Count;
+    public CollectionEvent(string id, COLLECTABLE_TYPES type , int count) : base(id)
+    {
+        Type = type;
+        Count = count;
+    }
+}
+
+
+#endregion
+
 #region Stealth Events
 public class EnterStealthEvent : GameEventType
 { 
