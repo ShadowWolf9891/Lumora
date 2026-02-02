@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8120119262960019303}
   - component: {fileID: 5674887784385726438}
   - component: {fileID: 8316786636513626804}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 8197268269370012347}
   - component: {fileID: 6446747966393379407}
   - component: {fileID: 6718985207871276008}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6072573532894319396}
   - component: {fileID: 6076886104099956291}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collectable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,8 +272,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7992d2938c6b949bf79163bb1156fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollectibleBehaviour
-  interactionPrompt: 
-  interactionPromptImage: {fileID: 0}
+  collectableType: 0
+  value: 1
+  interactionPrompt: Press Y to Collect
   interactionPromptImageObject: {fileID: 9154225275811329474}
 --- !u!1 &9154225275811329474
 GameObject:
@@ -286,13 +287,13 @@ GameObject:
   - component: {fileID: 3148121337879377934}
   - component: {fileID: 5457319201288596150}
   - component: {fileID: 7736577759981268438}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Interaction Prompt Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3148121337879377934
 RectTransform:
   m_ObjectHideFlags: 0
@@ -340,7 +341,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 79271ef5c16fcba41953c61e542bef18, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4a0320565e1162d4cb77040fb280f6f5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

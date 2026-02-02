@@ -1,12 +1,18 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CollectibleBehaviour : MonoBehaviour, IInteractable
 {
+    [Header("Collectable Values")]
+    [SerializeField]
+    COLLECTABLE_TYPES collectableType;
+    [SerializeField]
+    int value;
+
+    [Header("Display variables")]
     [SerializeField]
     string interactionPrompt;
-    [SerializeField]
-    Sprite interactionPromptImage;
     [SerializeField]
     GameObject interactionPromptImageObject;
     public string GetInteractionPrompt()
@@ -27,8 +33,7 @@ public class CollectibleBehaviour : MonoBehaviour, IInteractable
 
     public void OnInteractStart()
     {
-        //DO COLLECTION BEHAVIOR HERE
-
+        GameEvents<CollectionEvent>.Raise(new CollectionEvent($"Collection Event: {collectableType}, {value}", collectableType, value));
         Destroy(this.gameObject);
     }
 
