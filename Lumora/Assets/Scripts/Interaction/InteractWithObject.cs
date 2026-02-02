@@ -8,8 +8,9 @@ public class InteractWithObject : MonoBehaviour
 {
 
     IInteractable currentInteractable;
+	[SerializeField] float interactRange = 2f;
 	[SerializeField] LayerMask interactableLayer;
-	[SerializeField] TextMeshProUGUI interactionUI;
+	//[SerializeField] TextMeshProUGUI interactionUI;
 
     private void Start()
     {
@@ -26,47 +27,36 @@ public class InteractWithObject : MonoBehaviour
 
     void Update()
     {
-        //CheckForInteractable();
+        CheckForInteractable();
     }
-    
+
+    /// <summary>
+    /// Raycast for prompt before interacting
+    /// </summary>
 	private void CheckForInteractable()
 	{
-
+		//adjusted Ray to work with 3rd person movement.
+		//Ray is cast in front of player.
+		Ray ray = new Ray(gameObject.transform.position, gameObject.transform.forward); // Adjust origin as needed
+		Debug.DrawRay(gameObject.transform.position, gameObject.transform.forward);
+		if (Physics.Raycast(gameObject.transform.position, gameObject.transform.forward, out RaycastHit hit, interactRange, interactableLayer))
+		{
+			if (hit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))
+            {
+                currentInteractable = interactable;
+				//interactionUI.text = (currentInteractable.GetInteractionPrompt());
+				return;
+            }
+        }
+		currentInteractable = null;
+		//interactionUI.text = "";
 	}
 
 	public void OnInteract()
 	{
-        if (currentInteractable != null)
-        {
-            currentInteractable?.OnInteractStart();
-            interactionUI.text = "";
-
-            //check to see if current interactable destroyed itself?
-            currentInteractable = null;
-        }
-        else
-        {
-            Debug.Log("oninteract - no current interactable");
-        }
+		currentInteractable?.OnInteractStart();
+		//interactionUI.text = "";
 	}
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == interactableLayer)
-        {
-            Debug.Log($"ontrigger enter - {other.gameObject.name}");
-            IInteractable interactable = other.gameObject.GetComponentInParent<IInteractable>();
-            Debug.Log($"Current Interactable: {interactable}");
-            currentInteractable = interactable;
-        }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == interactableLayer)
-        {
-            Debug.Log($"Current Interactable: null");
-            currentInteractable = null;
-        }
-    }
 }

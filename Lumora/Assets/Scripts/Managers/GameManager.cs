@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,13 +6,13 @@ public class GameManager : MonoBehaviour
 {
 	[SerializeField] GameObject playerRef;
 	[SerializeField] SpawnableObjects spawnableObjects;
+	[SerializeField] LayerMask coverLayerMask;
 
 	private void Awake()
 	{
         NPCManager.Load();
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
-
 	}
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
