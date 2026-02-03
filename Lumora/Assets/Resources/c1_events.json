@@ -18,6 +18,10 @@
         {
             "type": "PathEvent",
             "id": "ShiftLeader_Walking_1",
+            "eventsOnComplete":
+            [
+                "Crouch_Warning"
+            ],
             "parameters":
             {   "npcName" : "ShiftLeader",
                 "newStatus" : 0
@@ -39,7 +43,6 @@
             "id": "Bridge_Dialogue",
             "eventsOnComplete":
             [
-                "ShiftLeader_Walking_2",
                 "Pit_Cold_Trigger"
             ],
             "parameters" :
@@ -49,11 +52,25 @@
             }
         },
         {
-            "type": "BeginCutsceneEvent",
+            "type": "DialogueEvent",
+            "id": "Crouch_Warning",
+            "eventsOnComplete":
+            [
+                "ShiftLeader_Walking_2"
+            ],
+            "parameters":
+            {
+                "chapter": "1",
+                "scene": "3"
+            }
+        },
+        {
+            "type": "PathEvent",
             "id": "ShiftLeader_Walking_2",
             "parameters":
             {
-                "timelineName": "SLWalkingContTimeline"
+                "npcName":"ShiftLeader",
+                "newStatus": 3
             }
         },
         {
