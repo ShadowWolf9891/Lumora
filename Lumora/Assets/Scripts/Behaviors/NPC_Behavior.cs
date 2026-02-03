@@ -58,6 +58,7 @@ public class NPC_Behavior : MonoBehaviour
 				if (currentPathIndex < paths.Count - 1)
 				{
 					currentPathIndex++;
+					curPathPoint = 0;
 					agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
 					eventID = e.Id;
 				}
@@ -66,6 +67,7 @@ public class NPC_Behavior : MonoBehaviour
 				if (currentPathIndex > 0)
 				{
 					currentPathIndex--;
+					curPathPoint = 0;
 					agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
 					eventID = e.Id;
 				}
