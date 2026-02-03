@@ -10,7 +10,10 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
     {
         return ("Press E to use ladder.");
     }
+    public void DisableInteractionPrompt()
+    {
 
+    }
     public bool IsHoldInteraction()
     {
         return false;
