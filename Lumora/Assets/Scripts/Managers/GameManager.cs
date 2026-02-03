@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
 
 	private void Awake()
 	{
-        NPCManager.Load();
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
 	}

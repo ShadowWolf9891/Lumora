@@ -86,16 +86,19 @@ public static class EventManager
 					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
 				}
 				break;
-			case "NPCMovementEvent":
+			case "PathEvent":
 
-				if (def.parameters.ContainsKey("npcToMove") && TryParseVector3(def.parameters["targetLocation"], out Vector3 location))
+				if (def.parameters.ContainsKey("npcName") && int.TryParse(def.parameters["newStatus"], out int newStatus))
 				{
-					Vector3 rotation = Vector3.zero;
-					if(def.parameters.ContainsKey("targetRotation"))
+					if (newStatus < 0 || newStatus > (int)PathStatus.END_EARLY) //Change this if adding new statuses!
 					{
-						TryParseVector3(def.parameters["targetRotation"], out rotation);
+						Debug.LogError($"Error parsing json events. newStatus is out of range of valid statuses.");
 					}
-					e = new NPCMovementEvent(def.id, def.parameters["npcToMove"], location, rotation);
+					else
+					{
+						PathStatus ps = (PathStatus)newStatus;
+						e = new PathEvent(def.id, def.parameters["npcName"], ps);
+					}
 				}
 				else
 				{
