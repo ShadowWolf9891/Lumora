@@ -21,10 +21,12 @@ public class EnemyBehavior : MonoBehaviour
 	float angleOfVision = 30f;
 	[SerializeField]
 	float attackRange = 1f;
-
-	[Header("Partol Points")]
 	[SerializeField]
-	List<Transform> patrolPoints;
+	Vector3 eyeLocation = new Vector3(0,1.6f,0);
+
+	[Header("Patrol Points")]
+	[SerializeField]
+	WaypointPath patrolPath;
 	[SerializeField]
 	float timeAtEachPatrolPoint = 2f;
 
@@ -58,7 +60,7 @@ public class EnemyBehavior : MonoBehaviour
 	float waitTimer = 0; //Amount of time to wait at each patrol point.
 	List<Vector3> searchPoints = new(); //List of points generated when lost sight of player
 	int curPatrolPoint = 0;
-	Vector3 previousVelocity;
+	Vector3 previousVelocity; //Before / after freezing
 
 	string bb_CanSeePlayer = "CanSeePlayer";
 	string bb_IsAlerted = "IsAlerted";
@@ -112,9 +114,8 @@ public class EnemyBehavior : MonoBehaviour
 		bool canSee = false;
 
 		// Only do expensive raycast if within alert range
-		if (distance <= alertRange)
+		if (Mathf.Abs(distance) <= alertRange)
 		{
-			
 			canSee = CanSeeTarget(playerRef, alertRange);
 			if (canSee && !bb.Get<bool>(bb_IsAlerted))
 			{
@@ -154,15 +155,15 @@ public class EnemyBehavior : MonoBehaviour
 			OnChangeState();
 		}
 
-		if (patrolPoints.Count == 0) return;
+		if (patrolPath.points.Count == 0) return;
 
 		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
 		{
 			waitTimer += Time.deltaTime;
 			if (waitTimer >= timeAtEachPatrolPoint)
 			{
-				curPatrolPoint = (curPatrolPoint + 1) % patrolPoints.Count;
-				agent.SetDestination(patrolPoints[curPatrolPoint].position);
+				curPatrolPoint = (curPatrolPoint + 1) % patrolPath.points.Count;
+				agent.SetDestination(patrolPath.GetPointWorld(curPatrolPoint));
 				waitTimer = 0f;
 			}
 		}
@@ -180,13 +181,18 @@ public class EnemyBehavior : MonoBehaviour
 		if (waitTimer >= alertedTime) //Wait an amount of time alerted
 		{
 			waitTimer = 0f;
-			if (patrolPoints.Count > 0)
+			if (patrolPath.points.Count > 0)
 			{
-				agent.SetDestination(GetClosestPoint(transform.position, patrolPoints)); //Go back to patrol path
+				List<Vector3> worldPoints = new List<Vector3>();
+				for (int i = 0; i < patrolPath.points.Count; i++) 
+				{
+					worldPoints.Add(patrolPath.GetPointWorld(i));
+				}
+				agent.SetDestination(GetClosestPoint(transform.position, worldPoints)); //Go back to patrol path
 			}
 
 			bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
-            agent.SetDestination(patrolPoints[curPatrolPoint].position);
+            agent.SetDestination(patrolPath.GetPointWorld(curPatrolPoint));
             waitTimer = 0f;
         }
     }
@@ -300,7 +306,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, LayerMask.GetMask("Default", "Player", "Obstacles"));
+        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, eyeLocation, LayerMask.GetMask("Default", "Player", "Obstacles"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
@@ -350,23 +356,6 @@ public class EnemyBehavior : MonoBehaviour
 		
 		result = Vector3.zero;
 		return false;
-	}
-
-	/// <summary>
-	/// Gets the closest point of a list of transforms
-	/// </summary>
-	/// <param name="startPos"></param>
-	/// <param name="points"></param>
-	/// <returns></returns>
-	private Vector3 GetClosestPoint(Vector3 startPos, List<Transform> points)
-	{
-		List<Vector3> v3Points = new List<Vector3>();
-		foreach(var point in points)
-		{
-			v3Points.Add(point.position);
-		}
-		return GetClosestPoint(startPos, v3Points);
-
 	}
 	/// <summary>
 	/// Gets the closest point of a list of vector3's
@@ -460,7 +449,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// To be called from NoiseBehavior upon collision with a noise ping. 
 	/// Dependent on ping info, causes enemy to alert and investigate, or chase the player.
 	/// </summary>
-	public void OnHearNoise(Vector3 noiseLocation, bool isPlayerDetectionNoise)
+	public void OnHearNoise(Vector3 noiseLocation)
 	{
 		Debug.Log($"{gameObject.name} heard Noise. Alert state = {curState}");
 
@@ -471,17 +460,8 @@ public class EnemyBehavior : MonoBehaviour
 		}
 		else
         {
-            if (!CanSeeTarget(playerRef, alertRange))
-            {
-                bb.Set<bool>(bb_IsAlerted, true);
-                agent.SetDestination(noiseLocation);
-            }
-            else if (isPlayerDetectionNoise )
-            {
-                //do i need to do all this? anyways-
-                bb.Set<bool>(bb_IsAlerted, true);
-                agent.SetDestination(noiseLocation);
-            }
+			bb.Set<bool>(bb_IsAlerted, true);
+			agent.SetDestination(noiseLocation);
         }
 		
 	}
