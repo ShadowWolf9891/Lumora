@@ -128,6 +128,9 @@ namespace EasyBehaviorTree
 			EditorUtility.SetDirty(tree);
 			EditorUtility.SetDirty(bb);
 
+			rootNode.SetBlackboard(bb);
+			EditorUtility.SetDirty(rootNode);
+
 			// Save and refresh
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
