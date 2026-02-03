@@ -31,6 +31,7 @@ public class NPC_Behavior : MonoBehaviour
 				paths.Add(wp);
 			}
 		}
+		ChangePathStatus(new PathEvent(this.eventID, this.name, curStatus));
     }
 
 	private void ChangePathStatus(PathEvent e)
@@ -115,6 +116,11 @@ public class NPC_Behavior : MonoBehaviour
 	private void StayCloseToTarget()
 	{
 		agent.isStopped = Mathf.Abs(Vector3.Distance(transform.position, playerRef.transform.position)) > distanceThreshold && !agent.isStopped;
+		if(agent.isStopped ) 
+		{
+			previousVelocity = agent.velocity;
+			agent.velocity = Vector3.zero;
+		}
 	}
 
 	/// <summary>
