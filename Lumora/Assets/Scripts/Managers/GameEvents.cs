@@ -135,6 +135,16 @@ public class UnlockAbilityEvent : GameEventType
     }
 }
 
+public class TeleportPlayerEvent : GameEventType
+{
+    Vector3 PositionToGoTo, PlayerPositionOnStart;
+    public TeleportPlayerEvent(string id, Vector3 positionToGoTo, Vector3 playerPositionOnStart) : base(id) 
+    {
+        PositionToGoTo = positionToGoTo;
+        PlayerPositionOnStart = playerPositionOnStart;
+    }
+}
+
 #endregion
 
 #region NPC and Quest Events
@@ -149,19 +159,17 @@ public class DialogueEvent : GameEventType
         Scene = scene;
     }
 }
-public class NPCMovementEvent : GameEventType
+public enum PathStatus{START, PAUSE, RESUME, NEXT_PATH, PREV_PATH, END_EARLY};
+public class PathEvent : GameEventType
 { 
-    public string NPCToMove {  get; private set; }
-    public Vector3 TargetLocation { get; private set; }
-	public Vector3 TargetRotation { get; private set; }
-	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
+    public string NPCName {  get; private set; }
+    public PathStatus NewStatus { get; private set; }
+	public PathEvent(string id, string npcName, PathStatus newStatus) : base(id)
 	{
-		NPCToMove = npc;
-		TargetLocation = targetLocation;
-		TargetRotation = targetRotation;
+		NPCName = npcName;
+		NewStatus = newStatus;
 	}
 }
-
 
 public class StartQuestEvent : GameEventType
 {
@@ -180,6 +188,27 @@ public class ProgressQuestEvent : GameEventType
         QuestID = questID;
     }
 }
+#endregion
+
+#region Item and Resource Events
+public enum COLLECTABLE_TYPES
+{
+    LOST_CHAPTER,
+    HEAL_CRYSTAL,
+    DISTRACTION_CRYSTAL,
+}
+public class CollectionEvent : GameEventType
+{
+    public COLLECTABLE_TYPES Type;
+    public int Count;
+    public CollectionEvent(string id, COLLECTABLE_TYPES type , int count) : base(id)
+    {
+        Type = type;
+        Count = count;
+    }
+}
+
+
 #endregion
 
 #region Stealth Events
