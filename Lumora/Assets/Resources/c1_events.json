@@ -139,7 +139,7 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
-                "Pit_Shaw_Trigger"
+                "Spawn_Foreman"
             ],
             "parameters" :
             {
@@ -152,22 +152,60 @@
             "id" : "Pit_Shaw_Trigger",
             "parameters" : 
             {
-                "worldLocation" : "412.16, 0.49, 331.22",
+                "worldLocation" : "413.58, 0.03, 329.04",
                 "radius" : "1",
                 "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Shaw_Enter"
+                "eventToRaiseOnTrigger" : "Spawn_Foreman"
             }
         },
         {
-            "type": "BeginCutsceneEvent",
+            "type": "SpawnObjectEvent",
+            "id": "Spawn_Shaw",
+            "eventsOnComplete":
+            [
+                "Shaw_Enter",
+                "Foreman_Enter"
+            ],
+            "parameters":
+            {
+                "prefabName": "Shaw",
+                "worldLocation": "436.21, 6.88, 362"
+            }
+        },
+        {
+            "type": "SpawnObjectEvent",
+            "id": "Spawn_Foreman",
+            "eventsOnFire":
+            [
+                "Spawn_Shaw"
+            ],
+            "parameters":
+            {
+                "prefabName": "Foreman",
+                "worldLocation": "437.50, 5.71, 359.47"
+            },
+            "isCompleted": "true"
+        },
+        {
+            "type": "PathEvent",
             "id": "Shaw_Enter",
-            "eventsToFire": 
+            "eventsOnComplete":
             [
                 "Shaw_2"
             ],
             "parameters":
             {
-                "timelineName": "ShawWalkingTimeline"
+                "npcName": "Shaw",
+                "newStatus": 0
+            }
+        },
+                {
+            "type": "PathEvent",
+            "id": "Foreman_Enter",
+            "parameters":
+            {
+                "npcName": "Foreman",
+                "newStatus": 0
             }
         },
         {
