@@ -94,7 +94,7 @@ public class NPC_Behavior : MonoBehaviour
 
 		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
 		{
-			if(curPathPoint < paths[currentPathIndex].points.Count)
+			if(curPathPoint < paths[currentPathIndex].points.Count -1)
 			{
 				curPathPoint++;
 				agent.SetDestination(paths[currentPathIndex].GetPointWorld(curPathPoint));
