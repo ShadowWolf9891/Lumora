@@ -31,7 +31,6 @@ public class NPC_Behavior : MonoBehaviour
 				paths.Add(wp);
 			}
 		}
-		ChangePathStatus(new PathEvent(this.eventID, this.name, curStatus));
     }
 
 	private void ChangePathStatus(PathEvent e)
@@ -59,8 +58,8 @@ public class NPC_Behavior : MonoBehaviour
 				if (currentPathIndex < paths.Count - 1)
 				{
 					currentPathIndex++;
+					curPathPoint = 0;
 					agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
-					EventManager.MarkEventCompleted(eventID);
 					eventID = e.Id;
 				}
                 break;
@@ -68,8 +67,8 @@ public class NPC_Behavior : MonoBehaviour
 				if (currentPathIndex > 0)
 				{
 					currentPathIndex--;
+					curPathPoint = 0;
 					agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
-					EventManager.MarkEventCompleted(eventID);
 					eventID = e.Id;
 				}
                 break;
@@ -105,9 +104,10 @@ public class NPC_Behavior : MonoBehaviour
 				curPathPoint = 0;
 				agent.SetDestination(paths[currentPathIndex].GetPointWorld(curPathPoint));
 			}
-			else
+			else if(eventID != null)
 			{
 				EventManager.MarkEventCompleted(eventID);
+				eventID = null;
 			}
 		}
 		StayCloseToTarget();
