@@ -149,19 +149,17 @@ public class DialogueEvent : GameEventType
         Scene = scene;
     }
 }
-public class NPCMovementEvent : GameEventType
+public enum PathStatus{START, PAUSE, RESUME, NEXT_PATH, PREV_PATH, END_EARLY};
+public class PathEvent : GameEventType
 { 
-    public string NPCToMove {  get; private set; }
-    public Vector3 TargetLocation { get; private set; }
-	public Vector3 TargetRotation { get; private set; }
-	public NPCMovementEvent(string id, string npc, Vector3 targetLocation, Vector3 targetRotation) : base(id)
+    public string NPCName {  get; private set; }
+    public PathStatus NewStatus { get; private set; }
+	public PathEvent(string id, string npcName, PathStatus newStatus) : base(id)
 	{
-		NPCToMove = npc;
-		TargetLocation = targetLocation;
-		TargetRotation = targetRotation;
+		NPCName = npcName;
+		NewStatus = newStatus;
 	}
 }
-
 
 public class StartQuestEvent : GameEventType
 {
