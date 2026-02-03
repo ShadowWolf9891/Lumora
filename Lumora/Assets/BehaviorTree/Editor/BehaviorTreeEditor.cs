@@ -521,7 +521,14 @@ namespace EasyBehaviorTree
 			tree.rootNode?.ResetStatus();
 			GUI.changed = true;
 		}
-
+		private void OnDisable()
+		{
+			if (nodeEditor != null)
+			{
+				DestroyImmediate(nodeEditor);
+				nodeEditor = null;
+			}
+		}
 	}
 }
 #endif
