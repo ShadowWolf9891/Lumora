@@ -6,6 +6,7 @@ using System;
 using Random = UnityEngine.Random;
 using UnityEngine.InputSystem.XR;
 
+[RequireComponent(typeof(PathObjectBehavior))]
 public class EnemyBehavior : MonoBehaviour
 {
 	#region Properties
@@ -25,8 +26,6 @@ public class EnemyBehavior : MonoBehaviour
 	Vector3 eyeLocation = new Vector3(0,1.6f,0);
 
 	[Header("Patrol Points")]
-	[SerializeField]
-	WaypointPath patrolPath;
 	[SerializeField]
 	float timeAtEachPatrolPoint = 2f;
 
@@ -53,6 +52,7 @@ public class EnemyBehavior : MonoBehaviour
 	GameObject playerRef;
 	BehaviorTree bt;
 	BTBlackboard bb;
+	PathObjectBehavior pathBehavior;
 
 	EnemyAlertController alertController;
 	Vector3 lastKnownPlayerLocation;
@@ -76,6 +76,8 @@ public class EnemyBehavior : MonoBehaviour
 		agent = GetComponent<NavMeshAgent>();
 		playerRef = GameObject.FindGameObjectWithTag("Player");
 		animController = GetComponentInChildren<EnemyAnimatorController>();
+		pathBehavior = GetComponent<PathObjectBehavior>();
+		agent.SetDestination(pathBehavior.RestartPath());
 
 		bb = ScriptableObject.CreateInstance<BTBlackboard>();
 		bt = DeepCloneBehaviorTree(btAsset);
@@ -155,15 +157,12 @@ public class EnemyBehavior : MonoBehaviour
 			OnChangeState();
 		}
 
-		if (patrolPath.points.Count == 0) return;
-
-		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
+		if (pathBehavior.IsAtPoint(transform.position, agent.stoppingDistance))
 		{
 			waitTimer += Time.deltaTime;
 			if (waitTimer >= timeAtEachPatrolPoint)
 			{
-				curPatrolPoint = (curPatrolPoint + 1) % patrolPath.points.Count;
-				agent.SetDestination(patrolPath.GetPointWorld(curPatrolPoint));
+				agent.SetDestination(pathBehavior.GetNextPoint());
 				waitTimer = 0f;
 			}
 		}
@@ -176,24 +175,14 @@ public class EnemyBehavior : MonoBehaviour
 			curState = AlertStates.ALERT;
 			OnChangeState();
 		}
-
+		//TODO: Have enemy look around
 		waitTimer += Time.deltaTime;
 		if (waitTimer >= alertedTime) //Wait an amount of time alerted
 		{
 			waitTimer = 0f;
-			if (patrolPath.points.Count > 0)
-			{
-				List<Vector3> worldPoints = new List<Vector3>();
-				for (int i = 0; i < patrolPath.points.Count; i++) 
-				{
-					worldPoints.Add(patrolPath.GetPointWorld(i));
-				}
-				agent.SetDestination(GetClosestPoint(transform.position, worldPoints)); //Go back to patrol path
-			}
+			agent.SetDestination(pathBehavior.GetNextPoint());
 
 			bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
-            agent.SetDestination(patrolPath.GetPointWorld(curPatrolPoint));
-            waitTimer = 0f;
         }
     }
 

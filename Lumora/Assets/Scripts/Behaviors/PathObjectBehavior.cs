@@ -33,17 +33,12 @@ public class PathObjectBehavior : MonoBehaviour
     /// <returns>The world location of the next point.</returns>
     public Vector3 GetNextPoint()
     {
-        ErrorCheck();
+		if (paths.Count == 0) LoadPath();
+		ErrorCheck();
         if(currentPoint >= paths[currentPath].points.Count - 1)
         {
-			if (paths[currentPath].loop)
-			{
-				return paths[currentPath].GetPointWorld(0);
-			}
-            else
-            {
-				return paths[currentPath].GetPointWorld(currentPoint);
-			}
+			if (paths[currentPath].loop)  currentPoint = 0;
+			return paths[currentPath].GetPointWorld(currentPoint);
 		}
         currentPoint++;
         return paths[currentPath].GetPointWorld(currentPoint);
