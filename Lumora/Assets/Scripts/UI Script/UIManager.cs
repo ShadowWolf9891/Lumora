@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void OnMenuAction(SpawnPauseMenuEvent a)
+    private void OnMenuAction(SpawnPauseMenuEvent a)
     {
         //opens pause menu
         if (currentCanvas == null)

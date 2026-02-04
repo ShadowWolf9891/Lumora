@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshAgent), typeof(PathObjectBehavior))]
 public class NPC_Behavior : MonoBehaviour
 {
-    [SerializeField] List<GameObject> gamePaths;
 	[SerializeField] PathStatus curStatus = PathStatus.PAUSE;
 	[SerializeField] bool stayCloseToPlayer = false;
 	[SerializeField] float distanceThreshold = 5.0f;
-    int currentPathIndex = 0; //Which path we are navigating
-	int curPathPoint = 0; //Which point on the path is our destination
-	List<WaypointPath> paths = new();
+
+	PathObjectBehavior pathBehavior;
+
     NavMeshAgent agent;
 	GameObject playerRef;
 	Vector3 previousVelocity;
@@ -24,26 +23,19 @@ public class NPC_Behavior : MonoBehaviour
         GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
         agent = GetComponent<NavMeshAgent>();
 		playerRef = GameObject.Find("Player");
-		foreach (GameObject go in gamePaths) 
-		{
-			if(go.TryGetComponent(out WaypointPath wp))
-			{
-				paths.Add(wp);
-			}
-		}
+		pathBehavior = GetComponent<PathObjectBehavior>();
     }
 
 	private void ChangePathStatus(PathEvent e)
 	{
         //Return early if irrelevent
         if (e.NPCName != gameObject.name) return;
-        if (paths == null || paths.Count == 0 || paths[currentPathIndex].points == null || paths[currentPathIndex].points.Count == 0) return;
         if (curStatus == e.NewStatus) return;
 
         switch (e.NewStatus)
         {
             case PathStatus.START:
-                agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
+				agent.SetDestination(pathBehavior.RestartPath());
 				eventID = e.Id;
                 break;
             case PathStatus.PAUSE:
@@ -55,22 +47,12 @@ public class NPC_Behavior : MonoBehaviour
 				EventManager.MarkEventCompleted(e.Id);
 				break;
             case PathStatus.NEXT_PATH:
-				if (currentPathIndex < paths.Count - 1)
-				{
-					currentPathIndex++;
-					curPathPoint = 0;
-					agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
-					eventID = e.Id;
-				}
+				agent.SetDestination(pathBehavior.GoToNextPath());
+				eventID = e.Id;
                 break;
             case PathStatus.PREV_PATH:
-				if (currentPathIndex > 0)
-				{
-					currentPathIndex--;
-					curPathPoint = 0;
-					agent.SetDestination(paths[currentPathIndex].GetPointWorld(0));
-					eventID = e.Id;
-				}
+				agent.SetDestination(pathBehavior.GoToPreviousPath());
+				eventID = e.Id;
                 break;
             case PathStatus.END_EARLY:
                 agent.isStopped = true;
@@ -85,32 +67,24 @@ public class NPC_Behavior : MonoBehaviour
 
 	private void Update()
 	{
-        if(curStatus != PathStatus.PAUSE) MoveNPCAlongPath(); //Switch to behavior tree for more complex stuff.
+        if(curStatus != PathStatus.PAUSE && pathBehavior.HasPath()) MoveNPCAlongPath(); //Switch to behavior tree for more complex stuff.
 	}
 
 	private void MoveNPCAlongPath()
 	{
-		if (paths[currentPathIndex].points.Count == 0) return;
-
-		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
+		if(pathBehavior.IsAtPoint(transform.position))
 		{
-			if(curPathPoint < paths[currentPathIndex].points.Count -1)
-			{
-				curPathPoint++;
-				agent.SetDestination(paths[currentPathIndex].GetPointWorld(curPathPoint));
-			}
-			else if(paths[currentPathIndex].loop)
-			{
-				curPathPoint = 0;
-				agent.SetDestination(paths[currentPathIndex].GetPointWorld(curPathPoint));
-			}
-			else if(eventID != null)
-			{
-				EventManager.MarkEventCompleted(eventID);
-				eventID = null;
-			}
+			agent.SetDestination(pathBehavior.GetNextPoint());
 		}
-		StayCloseToTarget();
+
+		if(pathBehavior.IsDonePath(transform.position) && eventID != null)
+		{
+			agent.ResetPath();
+			EventManager.MarkEventCompleted(eventID);
+			eventID = null;
+		}
+			
+		if(stayCloseToPlayer) StayCloseToTarget();
 	}
 
 	private void StayCloseToTarget()

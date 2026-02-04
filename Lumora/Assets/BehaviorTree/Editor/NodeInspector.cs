@@ -25,23 +25,23 @@ namespace EasyBehaviorTree
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("Blackboard (Preview)", EditorStyles.boldLabel);
 
-			foreach (var entry in bb.Entries)
-			{
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(entry.Key);
+			var entries = bb.Entries.ToArray();
 
+			foreach (var entry in entries)
+			{
 				string val = entry.Type switch
 				{
 					ValueType.String => entry.StringValue,
 					ValueType.Int => entry.IntValue.ToString(),
 					ValueType.Float => entry.FloatValue.ToString("F2"),
 					ValueType.Bool => entry.BoolValue.ToString(),
-					ValueType.GameObject => entry.GameObjectValue != null ? entry.GameObjectValue.name : "null",
+					ValueType.GameObject => entry.GameObjectValue ? entry.GameObjectValue.name : "null",
 					ValueType.Vector3 => entry.Vector3Value.ToString(),
 					_ => "Unknown"
 				};
 
-				EditorGUILayout.LabelField(val);
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.LabelField(entry.Key, val);
 				EditorGUILayout.EndHorizontal();
 			}
 

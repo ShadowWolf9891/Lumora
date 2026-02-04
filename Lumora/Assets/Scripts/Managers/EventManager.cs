@@ -270,7 +270,7 @@ public static class EventManager
 			}
 
 			raiseMethod?.Invoke(null, new object[] { evt });
-			Debug.Log($"Raising event via {raiseMethod?.DeclaringType}::{raiseMethod?.Name}");
+			Debug.Log($"Raising event via {raiseMethod?.DeclaringType}");
 		}
     }
 

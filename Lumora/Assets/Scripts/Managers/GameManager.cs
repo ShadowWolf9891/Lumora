@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-		EventManager.Raise("Chapter1_Intro");
+		EventManager.Raise("ShiftLeader_Enter");
 		Debug.Log($"Frame {Time.frameCount} QueueCount={EventManager.EventQueue.Count}");
 		//EventManager.Raise("Chapter2_Intro");
 		//EventManager.Raise("UnlockThrow");
