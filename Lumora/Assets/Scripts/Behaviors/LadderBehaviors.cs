@@ -25,16 +25,22 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         //Is top point or bottom point closer? teleport player to opposite point
         if (IsPlayerCloserToTopPoint(playerRef))
         {
-            //Raise Event Tp player top
+            GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
+                $"Teleporting Player to: {bottomLadderPoint} from: {topLadderPoint}", 
+                bottomLadderPoint.position, topLadderPoint.position));
+
         }
         else
         {
-            //Raise Event TP player bot
+            GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
+                $"Teleporting Player to: {topLadderPoint} from: {bottomLadderPoint}", 
+                topLadderPoint.position, bottomLadderPoint.position));
         }
 
         //Teleporting player will be an event raised by this behavior that player listens for.
         //upon hearing event, players will disable their model, begin movement, emit particles as they travel, then re-enable model at end point 
 
+        //returning false, as this interaction doesn't destroy the ladder
         return false;
     }
 
