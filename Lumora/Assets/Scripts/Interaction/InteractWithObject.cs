@@ -8,29 +8,29 @@ public class InteractWithObject : MonoBehaviour
 {
 
     IInteractable currentInteractable;
-	[SerializeField] float interactRange = 2f;
-	[SerializeField] LayerMask interactableLayer;
-	[SerializeField] Collider[] sphereResults = new Collider[16];
-	//[SerializeField] TextMeshProUGUI interactionUI;
-	bool objectInRange;
+    [SerializeField] float interactRange = 2f;
+    [SerializeField] LayerMask interactableLayer;
+    Collider[] sphereResults = new Collider[16];
+    //[SerializeField] TextMeshProUGUI interactionUI;
+    bool objectInRange;
 
     private void Start()
     {
-		GameEvents<PlayerInputEvent>.Subscribe(e =>
-		{
-			if (e.ActionType == PlayerInputActionType.Interact && e.IsPressed) //Only check if the player presses the next dialogue button
-			{
-				OnInteract();
-			}
-		}
-	   );
+        GameEvents<PlayerInputEvent>.Subscribe(e =>
+        {
+            if (e.ActionType == PlayerInputActionType.Interact && e.IsPressed) //Only check if the player presses the next dialogue button
+            {
+                OnInteract();
+            }
+        }
+       );
     }
     private void Update()
     {
         if (objectInRange)
-		{
-			CanSetClosestToCurrentInteratable();
-		}
+        {
+            CanSetClosestToCurrentInteratable();
+        }
         //ensure correct object in range is highlighted / displays instructional image here? 
     }
     private bool CanSetClosestToCurrentInteratable()
@@ -40,6 +40,12 @@ public class InteractWithObject : MonoBehaviour
 
         if (count == 0)
         {
+            objectInRange = false;
+            if (currentInteractable != null)
+            {
+                currentInteractable.DisableInteractionPrompt();
+                currentInteractable = null;
+            }
             return false;
         }
 
@@ -56,50 +62,45 @@ public class InteractWithObject : MonoBehaviour
                 closestInteracrable = c.gameObject;
             }
         }
-        currentInteractable = closestInteracrable.GetComponentInParent<IInteractable>();
+
+        //assign closest interactable and disable prompt from other former closest
+        IInteractable tempInteractable = closestInteracrable.GetComponentInParent<IInteractable>();
+        if (tempInteractable != currentInteractable && tempInteractable != null && currentInteractable != null)
+        {
+            //Debug.Log("Scan says closest interactable has changed");
+            currentInteractable.DisableInteractionPrompt();
+        }
+        currentInteractable = tempInteractable;
+
+        //NOTE: this returns a string, so we can set some UI to the interaction prompt here
+        currentInteractable.GetInteractionPrompt();
         //Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
         return true;
     }
 
     public void OnInteract()
-	{
+    {
         if (currentInteractable == null) return;
         //Debug.Log("InteractWithObject - Running on Interact");
-		currentInteractable.OnInteractStart();
-	}
+        currentInteractable.OnInteractStart();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-		if (!objectInRange)
-		{
-			objectInRange = true;
-		}
+        if (!objectInRange)
+        {
+            objectInRange = true;
+        }
 
         if (CanSetClosestToCurrentInteratable())
         {
-            
+
         }
         else
         {
             Debug.LogWarning("OnTriggerEnter running on InteractWithObject.cs, but encountered error on Closest Interactable scan. Consider re-setting interact range variable");
         }
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (objectInRange)
-        {
-            if (CanSetClosestToCurrentInteratable())
-            {
-                //bool check should reset current interactable, we can do stuff here, but we shouldnt need to.
-            }
-            else
-            {
-                currentInteractable = null;
-            }
-        }
-        else { currentInteractable = null; }
-    }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

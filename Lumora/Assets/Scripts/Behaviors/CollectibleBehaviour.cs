@@ -15,14 +15,21 @@ public class CollectibleBehaviour : MonoBehaviour, IInteractable
     string interactionPrompt;
     [SerializeField]
     GameObject interactionPromptImageObject;
+
+    public bool isInteractionPromptVisible { get; private set; }
     public string GetInteractionPrompt()
     {
-        interactionPromptImageObject.SetActive(true);
+        if (!isInteractionPromptVisible)
+        {
+            isInteractionPromptVisible = true;
+            interactionPromptImageObject.SetActive(true);
+        }
         return interactionPrompt;
     }
 
-    public void PlayerLeavesInteractRange()
+    public void DisableInteractionPrompt()
     {
+        isInteractionPromptVisible = false;
         interactionPromptImageObject.SetActive(false);
     }
 
@@ -31,10 +38,11 @@ public class CollectibleBehaviour : MonoBehaviour, IInteractable
         return false;
     }
 
-    public void OnInteractStart()
+    public bool OnInteractStart()
     {
         GameEvents<CollectionEvent>.Raise(new CollectionEvent($"Collection Event: {collectableType}, {value}", collectableType, value));
         Destroy(this.gameObject);
+        return true;
     }
 
     public void OnInteractStop()
