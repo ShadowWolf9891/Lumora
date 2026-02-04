@@ -8,7 +8,7 @@ public interface IInteractable
 	string GetInteractionPrompt(); //"Press 'E' to open"
 	void DisableInteractionPrompt();
 	bool IsHoldInteraction(); //Should the button be held down to interact
-	void OnInteractStart(); //When the button is first held down
+	bool OnInteractStart(); //When the button is first held down, RETURN TRUE IF OBJECT DESTROYS ITSELF!! <3
 	void OnInteractStop(); //When the button is released or canceled
 
 }

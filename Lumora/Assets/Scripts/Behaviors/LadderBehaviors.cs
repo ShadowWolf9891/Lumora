@@ -19,7 +19,7 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         return false;
     }
 
-    public void OnInteractStart()
+    public bool OnInteractStart()
     {
         GameObject playerRef = GameObject.FindWithTag("Player");
         //Is top point or bottom point closer? teleport player to opposite point
@@ -34,6 +34,8 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
 
         //Teleporting player will be an event raised by this behavior that player listens for.
         //upon hearing event, players will disable their model, begin movement, emit particles as they travel, then re-enable model at end point 
+
+        return false;
     }
 
     public void OnInteractStop()

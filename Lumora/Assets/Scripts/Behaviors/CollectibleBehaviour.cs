@@ -38,10 +38,11 @@ public class CollectibleBehaviour : MonoBehaviour, IInteractable
         return false;
     }
 
-    public void OnInteractStart()
+    public bool OnInteractStart()
     {
         GameEvents<CollectionEvent>.Raise(new CollectionEvent($"Collection Event: {collectableType}, {value}", collectableType, value));
         Destroy(this.gameObject);
+        return true;
     }
 
     public void OnInteractStop()

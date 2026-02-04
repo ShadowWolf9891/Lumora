@@ -10,7 +10,7 @@ public class InteractWithObject : MonoBehaviour
     IInteractable currentInteractable;
     [SerializeField] float interactRange = 2f;
     [SerializeField] LayerMask interactableLayer;
-    [SerializeField] Collider[] sphereResults = new Collider[16];
+    Collider[] sphereResults = new Collider[16];
     //[SerializeField] TextMeshProUGUI interactionUI;
     bool objectInRange;
 
