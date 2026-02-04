@@ -128,6 +128,9 @@ namespace EasyBehaviorTree
 			EditorUtility.SetDirty(tree);
 			EditorUtility.SetDirty(bb);
 
+			rootNode.SetBlackboard(bb);
+			EditorUtility.SetDirty(rootNode);
+
 			// Save and refresh
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
@@ -521,7 +524,14 @@ namespace EasyBehaviorTree
 			tree.rootNode?.ResetStatus();
 			GUI.changed = true;
 		}
-
+		private void OnDisable()
+		{
+			if (nodeEditor != null)
+			{
+				DestroyImmediate(nodeEditor);
+				nodeEditor = null;
+			}
+		}
 	}
 }
 #endif
