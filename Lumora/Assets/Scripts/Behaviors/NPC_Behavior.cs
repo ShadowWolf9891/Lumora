@@ -67,7 +67,7 @@ public class NPC_Behavior : MonoBehaviour
 
 	private void Update()
 	{
-        if(curStatus != PathStatus.PAUSE) MoveNPCAlongPath(); //Switch to behavior tree for more complex stuff.
+        if(curStatus != PathStatus.PAUSE && pathBehavior.HasPath()) MoveNPCAlongPath(); //Switch to behavior tree for more complex stuff.
 	}
 
 	private void MoveNPCAlongPath()

@@ -156,6 +156,7 @@ public class EnemyBehavior : MonoBehaviour
 			curState = AlertStates.IDLE;
 			OnChangeState();
 		}
+		if (!pathBehavior.HasPath()) return;
 
 		if (pathBehavior.IsAtPoint(transform.position, agent.stoppingDistance))
 		{

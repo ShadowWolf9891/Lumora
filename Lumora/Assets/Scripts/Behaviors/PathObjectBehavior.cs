@@ -15,6 +15,7 @@ public class PathObjectBehavior : MonoBehaviour
             paths.Add(pathObjects[i].GetComponent<WaypointPath>());
         }
     }
+    public bool HasPath() => paths.Count > 0;
     /// <summary>
     /// Go back to the start of the first path in the list.
     /// </summary>
