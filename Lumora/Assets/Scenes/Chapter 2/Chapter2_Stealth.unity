@@ -28159,9 +28159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a520789441b9ef54c8d9ca82751ee56b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
-  DialoguePanel: {fileID: 0}
-  SpeakerName: {fileID: 0}
-  DialogueText: {fileID: 0}
+  DialoguePanel: {fileID: 1348141068}
+  SpeakerName: {fileID: 1348141067}
+  DialogueText: {fileID: 1348141066}
 --- !u!4 &1140937314
 Transform:
   m_ObjectHideFlags: 0
@@ -33275,6 +33275,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2019234497851480644, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5755050513749311266, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
       propertyPath: m_Name
       value: ---UI---
@@ -33284,6 +33288,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
+--- !u!114 &1348141066 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7645449744131164738, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
+  m_PrefabInstance: {fileID: 1348141065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!114 &1348141067 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9022439766108739343, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
+  m_PrefabInstance: {fileID: 1348141065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!1 &1348141068 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2019234497851480644, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
+  m_PrefabInstance: {fileID: 1348141065}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1351736736
 PrefabInstance:
   m_ObjectHideFlags: 0
