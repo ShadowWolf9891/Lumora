@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Unity.Cinemachine;
 using System.Linq;
 using System.Collections;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class AllEvents
@@ -57,140 +58,54 @@ public static class EventManager
 
 	private static void CreateEvent(GameEventDefinition def)
 	{
-		GameEventType e = null;
-
-		switch (def.type)
+		GameEventType e = def.type switch
 		{
-			case "TestEvent":
-				return;
-			case "ChangeGameStateEvent":
-
-				if (int.TryParse(def.parameters["state"], out int state))
-				{
-					e = new ChangeGameStateEvent(def.id, (GameStates)state);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys} or state cannot be parsed.");
-				}
-
-				break;
-			case "DialogueEvent":
-
-				if (int.TryParse(def.parameters["chapter"], out int chapter) && int.TryParse(def.parameters["scene"], out int scene))
-				{
-					e = new DialogueEvent(def.id, chapter, scene);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			case "PathEvent":
-
-				if (def.parameters.ContainsKey("npcName") && int.TryParse(def.parameters["newStatus"], out int newStatus))
-				{
-					if (newStatus < 0 || newStatus > (int)PathStatus.END_EARLY) //Change this if adding new statuses!
-					{
-						Debug.LogError($"Error parsing json events. newStatus is out of range of valid statuses.");
-					}
-					else
-					{
-						PathStatus ps = (PathStatus)newStatus;
-						e = new PathEvent(def.id, def.parameters["npcName"], ps);
-					}
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			case "SpawnObjectEvent":
-				if(def.parameters.ContainsKey("prefabName") && TryParseVector3(def.parameters["worldLocation"], out Vector3 spawnLocation))
-				{
-					Vector3 spawnRotation = Vector3.zero;
-					if (def.parameters.ContainsKey("worldRotation"))
-					{
-						TryParseVector3(def.parameters["worldRotation"], out spawnRotation);
-					}
-					e = new SpawnObjectEvent(def.id, def.parameters["prefabName"], spawnLocation, spawnRotation);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			case "SpawnTriggerEvent":
-				if (def.parameters.ContainsKey("eventToRaiseOnTrigger") && TryParseVector3(def.parameters["worldLocation"], out Vector3 triggerSpawnLocation))
-				{
-					float triggerRadius = 1f;
-					LayerMask mask = ~0; //Everything
-					if (def.parameters.ContainsKey("radius"))
-					{
-						 triggerRadius = float.TryParse(def.parameters["radius"], out float radius) ? radius : 1f;
-					}
-					
-					if(def.parameters.ContainsKey("layerMask"))
-					{
-						string layerMaskName = def.parameters["layerMask"];
-						mask = LayerMask.GetMask(layerMaskName);
-					}
-					e = new SpawnTriggerEvent(def.id, triggerSpawnLocation, def.parameters["eventToRaiseOnTrigger"], mask, triggerRadius);
-					
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			case "UIEvent":
-				bool menuPopup = false;
-				if (def.parameters.ContainsKey("menuPopup"))
-				{
-					menuPopup = bool.TryParse(def.parameters["menuPopup"], out bool popup) ? popup : false;
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				e = new SpawnPauseMenuEvent(def.id, menuPopup);
-				break;
-			case "UnlockAbilityEvent":
-				if (def.parameters.ContainsKey("abilityName"))
-				{
-					e = new UnlockAbilityEvent(def.id, def.parameters["abilityName"]);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			case "BeginCutsceneEvent":
-				if (def.parameters.ContainsKey("timelineName"))
-				{
-					float startTime = 0f;
-					float endTime = -1f;
-					if (def.parameters.ContainsKey("startTime"))
-					{
-						startTime = float.TryParse(def.parameters["startTime"], out float sTime) ? sTime : 0f;
-					}
-					if (def.parameters.ContainsKey("endTime"))
-					{
-						endTime = float.TryParse(def.parameters["endTime"], out float eTime) ? eTime : -1f;
-					}
-
-					e = new BeginCutsceneEvent(def.id, def.parameters["timelineName"], startTime, endTime);
-				}
-				else
-				{
-					Debug.LogError($"Error parsing json events. {def.type} does not contain a definition for {def.parameters.Keys}");
-				}
-				break;
-			default:
-				Debug.LogError($"Invalid type {def.type}");
-				return;
-
-		}
+			"TestEvent" => null,
+			"DummyEvent" => new DummyEvent(def.id),
+			"ChangeGameStateEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("state"), out int state) ?
+				new ChangeGameStateEvent(def.id, (GameStates)state) : null,
+			"DialogueEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("chapter"), out int chapter) &&
+				IsValidParam(def.parameters.GetValueOrDefault("scene"), out int scene) ?
+				new DialogueEvent(def.id, chapter, scene) : null,
+			"PathEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("npcName"), out string npcName) &&
+				IsValidParam(def.parameters.GetValueOrDefault("newStatus"), out PathStatus newStatus) ?
+				new PathEvent(def.id, npcName, newStatus) : null,
+			"ChangeNPCWalkTypeEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("npcName"), out string npcName) &&
+				IsValidParam(def.parameters.GetValueOrDefault("mode"), out WalkType mode) &&
+				IsValidParam(def.parameters.GetValueOrDefault("target"), out string target, true) &&
+				IsValidParam(def.parameters.GetValueOrDefault("followDistance"), out int distance, true) ?
+				new ChangeNPCWalkTypeEvent(def.id, npcName, mode,
+					target != default ? target : mode == WalkType.NORMAL || mode == WalkType.PAUSE ? null : "Player",
+					distance != default ? distance : 5f) : null,
+			"SpawnObjectEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("prefabName"), out string prefabName) &&
+				IsValidParam(def.parameters.GetValueOrDefault("worldLocation"), out Vector3 worldLocation) &&
+				IsValidParam(def.parameters.GetValueOrDefault("worldRotation"), out Vector3 worldRotation, true) ?
+				new SpawnObjectEvent(def.id, prefabName, worldLocation, worldRotation != default ? worldRotation : Vector3.zero) : null,
+			"SpawnTriggerEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("worldLocation"), out Vector3 worldLocation) &&
+				IsValidParam(def.parameters.GetValueOrDefault("radius"), out float radius, true) &&
+				IsValidParam(def.parameters.GetValueOrDefault("layerMask"), out LayerMask mask, true) &&
+				IsValidParam(def.parameters.GetValueOrDefault("eventToRaiseOnTrigger"), out string eventName) ?
+				new SpawnTriggerEvent(def.id, worldLocation, eventName, mask != default ? mask : ~0, radius != default ? radius : 1f) : null,
+			"UIEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("menuPopup"), out bool menuPopup) ?
+				new SpawnPauseMenuEvent(def.id, menuPopup != default && menuPopup) : null,
+			"UnlockAbilityEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("abilityName"), out string abilityName) ?
+				new UnlockAbilityEvent(def.id, abilityName) : null,
+			"BeginCutsceneEvent" =>
+			IsValidParam(def.parameters.GetValueOrDefault("timelineName"), out string timelineName) &&
+			IsValidParam(def.parameters.GetValueOrDefault("startTime"), out float startTime, true) &&
+			IsValidParam(def.parameters.GetValueOrDefault("endTime"), out float endTime, true) ?
+			new BeginCutsceneEvent(def.id, timelineName, startTime != default ? startTime : 0f, endTime != default ? endTime : 0f) : null,
+			"" =>null,
+			_ => throw new NotImplementedException()
+		};
 
 		if (e != null)
 		{
@@ -239,8 +154,9 @@ public static class EventManager
 			}
 		}
 
-		EventQueue.Enqueue(evt);
-
+		//Queue this event if it is not a dummy event
+		if(evt is not DummyEvent) EventQueue.Enqueue(evt);
+		
 		//Trigger events that are raised when this event is raised
 		if (evt.EventsToFire != null && evt.EventsToFire.Length > 0) 
 		{
@@ -304,7 +220,11 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		
+		if(evt is DummyEvent)
+		{
+			//Exit if not all events to fire have been marked complete for dummy
+			if(!CheckDummyComplete(evt as DummyEvent)) return; 
+		}
 		evt.IsCompleted = true;
 		Debug.Log($"Completed event {eventID}");
 
@@ -319,7 +239,20 @@ public static class EventManager
 		}
 
 		CheckLazyEvents(eventID);
-		
+	}
+
+	private static bool CheckDummyComplete(DummyEvent e)
+	{
+		foreach (var checkEvent in e.EventsToFire)
+		{
+			if (!_events.TryGetValue(checkEvent, out var evt))
+			{
+				Debug.LogWarning($"Invalid event with id: {checkEvent}. Skipping...");
+				return false;
+			}
+			if(!evt.IsCompleted)return false;
+		}
+		return true;
 	}
 
 	/// <summary>
@@ -350,10 +283,44 @@ public static class EventManager
 			parsedVec = new Vector3(x, y, z);
 			return true;
 		}
-
-		Debug.LogWarning($"Failed to parse Vector3: {vector3AsString}");
 		return false;
 	}
-
-
+	/// <summary>
+	/// Dictionary that checks to see if a string is valid as a specific type and returns the parsed value
+	/// </summary>
+	private static Dictionary<Type, Func<string, (bool success, object value)>> parsers = new Dictionary<Type, Func<string, (bool success, object value)>>()
+	{
+		[typeof(int)] = s => (int.TryParse(s, out int v), v),
+		[typeof(float)] = s => (float.TryParse(s, out float v), v),
+		[typeof(bool)] = s => (bool.TryParse(s, out bool v), v),
+		[typeof(Vector3)] = s =>(TryParseVector3(s, out Vector3 v),v),
+		[typeof(string)] = s => (true, s),
+		[typeof(PathStatus)] = s =>(int.TryParse(s, out int v), (PathStatus)v),
+		[typeof(WalkType)] = s => (int.TryParse(s, out int v), (WalkType)v),
+		[typeof(LayerMask)] = s => (LayerMask.GetMask(s)!=default, LayerMask.GetMask(s))
+		
+	};
+	/// <summary>
+	/// Check if a parameter value is valid for the type it is trying to be parsed to. Passes the parsed value back if successful.
+	/// </summary>
+	/// <typeparam name="T">The type to try and parse to</typeparam>
+	/// <param name="paramValue">The string of the parameter's value from the json file</param>
+	/// <param name="parsedValue">The parsed value that is passed back out if successful. If unsuccessful, this is null</param>
+	/// <returns></returns>
+	private static bool IsValidParam<T>(string paramValue, out T parsedValue, bool isOptional = false)
+	{
+		parsedValue = default;
+		if (paramValue == null || paramValue == "") return isOptional; //Optional values are valid if they don't exist and will use a default value.
+		if (!parsers.TryGetValue(typeof(T), out var parser)) return false;
+		var (success, value) = parser(paramValue);
+		if (!success)
+		{
+			Debug.LogError($"Json parse error! Value: {paramValue} cannot be converted to {typeof(T)}.");
+			return false;
+		}
+		if (typeof(T).IsEnum)parsedValue = (T)Enum.ToObject(typeof(T), value);
+		else if (typeof(T) == typeof(LayerMask))parsedValue = (T)(object)(LayerMask)(int)value;
+		else parsedValue = (T)Convert.ChangeType(value, typeof(T)); //Might break later :)
+		return true;
+	}
 }
