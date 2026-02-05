@@ -18,9 +18,17 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-		EventManager.Raise("ShiftLeader_Enter");
-		Debug.Log($"Frame {Time.frameCount} QueueCount={EventManager.EventQueue.Count}");
-		//EventManager.Raise("Chapter2_Intro");
+		switch (SceneManager.GetActiveScene().buildIndex)
+		{
+			case 1:
+				EventManager.Raise("ShiftLeader_Enter");
+				break;
+			case 2:
+				EventManager.Raise("Chapter2_Intro");
+				break;
+			default:
+				break;
+		}
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
