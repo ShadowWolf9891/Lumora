@@ -171,7 +171,8 @@ public static class EventManager
 	/// </summary>
 	public static void HandleEvents()
 	{
-        if (EventQueue.Count > 0)
+		if (_events == null) LoadEvents();
+		if (EventQueue.Count > 0)
         {
 			GameEventType evt = EventQueue.Dequeue();
 
