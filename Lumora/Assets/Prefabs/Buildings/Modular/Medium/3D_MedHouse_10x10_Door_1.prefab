@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3155465827361436025}
   - component: {fileID: 6977994332187484717}
   - component: {fileID: 8376053454802330588}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: 1Lvl_Front Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7340157394325204567}
   - component: {fileID: 3451042838185866771}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: 1Lvl_Back Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 5665328382296293606}
   - component: {fileID: 241073477081377572}
   - component: {fileID: 2671037509879012688}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: 1Lvl_Side Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,9 +438,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 401122468259050895, guid: b0ca21dd79e5a794bad0ffa35560d06d, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b0ca21dd79e5a794bad0ffa35560d06d, type: 3}
       propertyPath: m_Name
       value: 3D_10x10MedDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b0ca21dd79e5a794bad0ffa35560d06d, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8909014827084220490, guid: b0ca21dd79e5a794bad0ffa35560d06d, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
