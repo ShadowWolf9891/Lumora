@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,13 +10,12 @@ using UnityEngine.AI;
 public class NPC_Behavior : MonoBehaviour
 {
 	[SerializeField] PathStatus curStatus = PathStatus.PAUSE;
-	[SerializeField] bool stayCloseToPlayer = false;
-	[SerializeField] float distanceThreshold = 5.0f;
+	[SerializeField] WalkType curWalkType = WalkType.NORMAL;
+	[SerializeField] float followDistance = 5.0f;
 
 	PathObjectBehavior pathBehavior;
-
-    NavMeshAgent agent;
-	GameObject playerRef;
+	NavMeshAgent agent;
+	GameObject curTarget;
 	Vector3 previousVelocity;
 	string eventID;
 	void Start()
@@ -22,15 +23,21 @@ public class NPC_Behavior : MonoBehaviour
         GameEvents<PathEvent>.Subscribe(ChangePathStatus);
         GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
         agent = GetComponent<NavMeshAgent>();
-		playerRef = GameObject.Find("Player");
+		curTarget = GameObject.Find("Player");
 		pathBehavior = GetComponent<PathObjectBehavior>();
+		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
     }
+
 
 	private void ChangePathStatus(PathEvent e)
 	{
         //Return early if irrelevent
         if (e.NPCName != gameObject.name) return;
-        if (curStatus == e.NewStatus) return;
+		if (curStatus == e.NewStatus)
+		{
+			EventManager.MarkEventCompleted(e.Id); 
+			return;
+		}
 
         switch (e.NewStatus)
         {
@@ -67,34 +74,110 @@ public class NPC_Behavior : MonoBehaviour
 
 	private void Update()
 	{
-        if(curStatus != PathStatus.PAUSE && pathBehavior.HasPath()) MoveNPCAlongPath(); //Switch to behavior tree for more complex stuff.
-	}
+		if (curStatus == PathStatus.PAUSE) return;
 
+		Move();
+	}
+	private void Move()
+	{
+		switch(curWalkType)
+		{
+			case WalkType.NORMAL : 
+				MoveNPCAlongPath();
+				break;
+			case WalkType.LEAD:
+				LeadPlayer();
+				break;
+			case WalkType.FOLLOW:
+				FollowPlayer();
+				break;
+		}
+	}
 	private void MoveNPCAlongPath()
 	{
-		if(pathBehavior.IsAtPoint(transform.position))
-		{
-			agent.SetDestination(pathBehavior.GetNextPoint());
-		}
+		if (agent.isStopped) ToggleNPCMovement();
+		//Go to next point if at destination
+		if (pathBehavior.IsAtPoint(transform.position)) agent.SetDestination(pathBehavior.GetNextPoint());
 
+		//If there is no next point, reset and mark move event as complete.
 		if(pathBehavior.IsDonePath(transform.position) && eventID != null)
 		{
 			agent.ResetPath();
 			EventManager.MarkEventCompleted(eventID);
 			eventID = null;
 		}
-			
-		if(stayCloseToPlayer) StayCloseToTarget();
 	}
-
-	private void StayCloseToTarget()
+	private void LeadPlayer()
 	{
-		agent.isStopped = Mathf.Abs(Vector3.Distance(transform.position, playerRef.transform.position)) > distanceThreshold && !agent.isStopped;
-		if(agent.isStopped ) 
+		if(agent.hasPath)
 		{
-			previousVelocity = agent.velocity;
-			agent.velocity = Vector3.zero;
+			if (CloseToTarget(curTarget.transform.position, followDistance))
+			{
+				if(agent.isStopped) ToggleNPCMovement();
+				MoveNPCAlongPath();
+			}
+			else
+			{
+				if (!agent.isStopped) ToggleNPCMovement();
+			}
 		}
+	}
+	private void FollowPlayer()
+	{
+		if (!CloseToTarget(curTarget.transform.position, followDistance))
+		{
+			if(!agent.hasPath || CloseToTarget(agent.destination, agent.stoppingDistance)) 
+				agent.SetDestination(curTarget.transform.position);
+		}
+		else
+		{
+			if (!agent.isStopped) ToggleNPCMovement();
+			agent.ResetPath();
+		}
+
+		//Warp to the player if they are too far away.
+		if(agent.remainingDistance > 50)
+		{
+			agent.ResetPath();
+			agent.Warp(curTarget.transform.position - (curTarget.transform.forward * 5));
+			if(!agent.isOnNavMesh) 
+			{
+				agent.FindClosestEdge(out NavMeshHit hit);
+				Vector3 closestPoint = hit.position;
+				agent.Warp(closestPoint);
+			}
+			agent.SetDestination(curTarget.transform.position);
+		}
+	}
+	
+	private void ChangeNPCWalk(ChangeNPCWalkTypeEvent e)
+	{
+		if (e.NPCName != gameObject.name || 
+			(e.WalkType == curWalkType && e.FollowDistance == followDistance && e.Target == curTarget.name)) return;
+
+		if (e.Target != curTarget.name)
+		{
+			GameObject newTarget = GameObject.Find(e.Target);
+			if (newTarget == null)
+			{
+				Debug.LogError($"Cannot find target {e.Target} in the hierarchy. " +
+					$"Make sure spelling is correct and the target is visible and enabled.");
+				return;
+			}
+		}
+		curWalkType = e.WalkType;
+		followDistance = e.FollowDistance;
+		EventManager.MarkEventCompleted(e.Id);
+	}
+	/// <summary>
+	/// If the NPC is close to a target position within a given threshold
+	/// </summary>
+	/// <param name="target">Target position</param>
+	/// <param name="threshold">Valid radius from position to return true</param>
+	/// <returns>If the distance from NPC to target is less than the threshold</returns>
+	private bool CloseToTarget(Vector3 target, float threshold)
+	{
+		return Math.Abs(Vector3.Distance(agent.nextPosition, target)) <= threshold;
 	}
 
 	/// <summary>
@@ -113,6 +196,20 @@ public class NPC_Behavior : MonoBehaviour
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;
 			agent.isStopped = true;
+		}
+	}
+	private void ToggleNPCMovement()
+	{
+		agent.isStopped = !agent.isStopped;
+		if (agent.isStopped)
+		{
+			previousVelocity = agent.velocity;
+			agent.velocity = Vector3.zero;
+		}
+		else
+		{
+			agent.velocity = previousVelocity;
+			agent.isStopped = false;
 		}
 	}
 }

@@ -196,7 +196,7 @@ public class ProgressQuestEvent : GameEventType
         QuestID = questID;
     }
 }
-public enum WalkType {NORMAL, PAUSE, LEAD, FOLLOW }
+public enum WalkType {NORMAL, LEAD, FOLLOW }
 public class ChangeNPCWalkTypeEvent : GameEventType
 {
 	public string NPCName { get; private set; }

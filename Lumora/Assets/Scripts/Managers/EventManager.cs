@@ -79,7 +79,7 @@ public static class EventManager
 				IsValidParam(def.parameters.GetValueOrDefault("target"), out string target, true) &&
 				IsValidParam(def.parameters.GetValueOrDefault("followDistance"), out int distance, true) ?
 				new ChangeNPCWalkTypeEvent(def.id, npcName, mode,
-					target != default ? target : mode == WalkType.NORMAL || mode == WalkType.PAUSE ? null : "Player",
+					target != default ? target : mode == WalkType.NORMAL ? null : "Player",
 					distance != default ? distance : 5f) : null,
 			"SpawnObjectEvent" =>
 				IsValidParam(def.parameters.GetValueOrDefault("prefabName"), out string prefabName) &&
