@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Chipboard
+  m_Name: Painted Wood 5
   m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
-  m_Parent: {fileID: 2100000, guid: d9bc607b47b6dc54e87a86e3a08bc505, type: 2}
+  m_Parent: {fileID: 2100000, guid: 38eb91e37eedae144ac1771b598927f8, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
@@ -33,39 +33,48 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: 96d381e3c1101794da0d7713111fb44d, type: 3}
+        m_Texture: {fileID: 2800000, guid: ef2e6e9468237644a9aca048400e3d62, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: f2f197039acfb9248935ae64c7f8601a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 19c9915d79af63b48a2cf0b082c3f7cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 96d381e3c1101794da0d7713111fb44d, type: 3}
+        m_Texture: {fileID: 2800000, guid: ef2e6e9468237644a9aca048400e3d62, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: f3f8e1690195de044a5a5fb843cc1e9b, type: 3}
+        m_Texture: {fileID: 2800000, guid: a2efaa7a54ce9ee4e9c1395e16505e66, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: f3f8e1690195de044a5a5fb843cc1e9b, type: 3}
+        m_Texture: {fileID: 2800000, guid: a2efaa7a54ce9ee4e9c1395e16505e66, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: f2f197039acfb9248935ae64c7f8601a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 19c9915d79af63b48a2cf0b082c3f7cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a2efaa7a54ce9ee4e9c1395e16505e66, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _AORemapMax: 0.6759777
+    - _AORemapMin: 0.17877093
+    - _MetallicRemapMax: 0.4785849
+    - _MetallicRemapMin: 0
+    - _NormalScale: 6.98
+    - _SmoothnessRemapMax: 0.45996282
+    - _SmoothnessRemapMin: 0
+    m_Colors:
+    - _BaseColor: {r: 0.5056604, g: 0.601769, b: 1, a: 1}
+    - _Color: {r: 0.50566036, g: 0.601769, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &9156712909323032081
+--- !u!114 &2010168434977415613
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

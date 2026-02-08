@@ -6,28 +6,33 @@ using UnityEditor;
 
 public class HouseTowerGenerator : MonoBehaviour
 {
-    [Header("Prefabs")]
+    [Header("Floor Prefabs")]
     public GameObject[] housePrefabs;
 
     [Header("Tower Settings")]
-    public int floors = 10;
+    [Min(1)] public int floors = 10;
     public float baseHeight = 2.5f;
 
     [Header("Random Offsets")]
     public float maxHorizontalOffset = 1.2f;
     public float maxRotationY = 6f;
 
-    [Header("Seed (keep same results)")]
+    [Header("Seed")]
     public bool useSeed = true;
     public int seed = 12345;
 
     [Header("Save Prefab")]
     public string saveFolder = "Assets/GeneratedPrefabs";
-    public string prefabName = "HouseTower_01";
+    public string prefabBaseName = "HouseTower";
 
+    // Torre actualmente generada
+    private GameObject currentTower;
+
+#if UNITY_EDITOR
+    // ===================== GENERATE =====================
     public void GenerateTower()
     {
-        ClearChildren();
+        ClearTower();
 
         if (housePrefabs == null || housePrefabs.Length == 0)
         {
@@ -35,7 +40,12 @@ public class HouseTowerGenerator : MonoBehaviour
             return;
         }
 
-        if (useSeed) Random.InitState(seed);
+        if (useSeed)
+            Random.InitState(seed);
+
+        currentTower = new GameObject($"{prefabBaseName}_Preview");
+        currentTower.transform.position = transform.position;
+        currentTower.transform.rotation = transform.rotation;
 
         float currentHeight = 0f;
 
@@ -49,52 +59,62 @@ public class HouseTowerGenerator : MonoBehaviour
                 Random.Range(-maxHorizontalOffset, maxHorizontalOffset)
             );
 
-            Quaternion rot = Quaternion.Euler(0f, Random.Range(-maxRotationY, maxRotationY), 0f);
+            Quaternion rot = Quaternion.Euler(
+                0f,
+                Random.Range(-maxRotationY, maxRotationY),
+                0f
+            );
 
-            var go = Instantiate(prefab, transform.position + offset, rot, transform);
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            go.transform.SetParent(currentTower.transform, false);
+            go.transform.position = currentTower.transform.position + offset;
+            go.transform.rotation = rot;
             go.name = $"{prefab.name}_Floor{i:00}";
 
             currentHeight += baseHeight;
         }
+
+        Selection.activeGameObject = currentTower;
     }
 
-    public void ClearChildren()
+    // ===================== SAVE =====================
+    public void SaveCurrentTowerAsPrefab()
     {
-        
-        for (int i = transform.childCount - 1; i >= 0; i--)
+        if (currentTower == null)
         {
-#if UNITY_EDITOR
-            if (!Application.isPlaying) DestroyImmediate(transform.GetChild(i).gameObject);
-            else Destroy(transform.GetChild(i).gameObject);
-#else
-            Destroy(transform.GetChild(i).gameObject);
-#endif
-        }
-    }
-
-#if UNITY_EDITOR
-    public void SaveAsPrefab()
-    {
-        if (!AssetDatabase.IsValidFolder(saveFolder))
-        {
-            // folder
-            CreateFoldersRecursively(saveFolder);
+            Debug.LogWarning("No tower generated to save.");
+            return;
         }
 
-        string path = $"{saveFolder}/{prefabName}.prefab";
+        EnsureFolderExists(saveFolder);
+
+        string path = $"{saveFolder}/{prefabBaseName}.prefab";
         path = AssetDatabase.GenerateUniqueAssetPath(path);
 
-        //GameObject root prefab
-        PrefabUtility.SaveAsPrefabAssetAndConnect(gameObject, path, InteractionMode.UserAction);
+        // Guarda como asset independiente (NO conecta)
+        PrefabUtility.SaveAsPrefabAsset(currentTower, path);
 
-        Debug.Log($"Saved Prefab: {path}");
+        Debug.Log($"Saved independent prefab: {path}");
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
 
-    private void CreateFoldersRecursively(string fullPath)
+    // ===================== CLEAR =====================
+    public void ClearTower()
     {
-        // Ej: Assets/GeneratedPrefabs/Sub
+        if (currentTower != null)
+        {
+            DestroyImmediate(currentTower);
+            currentTower = null;
+        }
+    }
+
+    // ===================== UTIL =====================
+    private void EnsureFolderExists(string fullPath)
+    {
+        if (AssetDatabase.IsValidFolder(fullPath)) return;
+
         string[] parts = fullPath.Split('/');
         if (parts.Length == 0 || parts[0] != "Assets") return;
 
@@ -118,25 +138,29 @@ public class HouseTowerGeneratorEditor : Editor
     {
         DrawDefaultInspector();
 
-        var gen = (HouseTowerGenerator)target;
+        HouseTowerGenerator gen = (HouseTowerGenerator)target;
 
-        GUILayout.Space(10);
+        GUILayout.Space(12);
 
-        if (GUILayout.Button("Generate Tower"))
+        EditorGUILayout.HelpBox(
+            "Generate creates a scene-only tower preview.\n" +
+            "Save creates a UNIQUE prefab asset (not connected).",
+            MessageType.Info
+        );
+
+        if (GUILayout.Button("Generate Tower (Scene Only)"))
         {
             gen.GenerateTower();
         }
 
-        if (GUILayout.Button("Clear"))
+        if (GUILayout.Button("Save Current Tower As Prefab"))
         {
-            gen.ClearChildren();
+            gen.SaveCurrentTowerAsPrefab();
         }
 
-        GUILayout.Space(10);
-
-        if (GUILayout.Button("Save As Prefab"))
+        if (GUILayout.Button("Clear Scene Tower"))
         {
-            gen.SaveAsPrefab();
+            gen.ClearTower();
         }
     }
 }
