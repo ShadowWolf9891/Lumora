@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
 				EventManager.Raise("ShiftLeader_Enter");
 				break;
 			case 2:
+				EventManager.Raise("KipEnterHouse_C1_S2");
+				break;
+			case 3:
 				EventManager.Raise("Chapter2_Intro");
 				break;
 			default:

@@ -22,7 +22,7 @@ public static class EventManager
 	//Checked only when another event is completed. Used for if an event is fired but the requirements are not yet met.
 	public static Queue<GameEventType> LazyEventQueue { get; private set; } 
 
-	private static AllEvents allEventsDefs, c2EventsDefs, c1EventsDefs;
+	private static AllEvents allEventsDefs, c2EventsDefs, c1EventsDefs, c1s2EventsDefs;
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
 
@@ -31,9 +31,11 @@ public static class EventManager
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
 		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
 		TextAsset c1JsonFile = Resources.Load<TextAsset>("c1_events");
-		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
+        TextAsset c1s2JsonFile = Resources.Load<TextAsset>("c1_s2_events");
+        allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
 		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
 		c1EventsDefs = JsonConvert.DeserializeObject<AllEvents> (c1JsonFile.text);
+		c1s2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c1s2JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
 		EventQueue = new Queue<GameEventType>();
 		LazyEventQueue = new Queue<GameEventType>();
@@ -49,6 +51,11 @@ public static class EventManager
 			Debug.Log($"Created event {eventDef.id}");
 		}
         foreach (GameEventDefinition eventDef in c1EventsDefs.allEvents)
+        {
+            CreateEvent(eventDef);
+            Debug.Log($"Created event {eventDef.id}");
+        }
+        foreach (GameEventDefinition eventDef in c1s2EventsDefs.allEvents)
         {
             CreateEvent(eventDef);
             Debug.Log($"Created event {eventDef.id}");
