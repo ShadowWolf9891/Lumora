@@ -106,10 +106,14 @@ public static class EventManager
 				IsValidParam(def.parameters.GetValueOrDefault("abilityName"), out string abilityName) ?
 				new UnlockAbilityEvent(def.id, abilityName) : null,
 			"BeginCutsceneEvent" =>
-			IsValidParam(def.parameters.GetValueOrDefault("timelineName"), out string timelineName) &&
-			IsValidParam(def.parameters.GetValueOrDefault("startTime"), out float startTime, true) &&
-			IsValidParam(def.parameters.GetValueOrDefault("endTime"), out float endTime, true) ?
-			new BeginCutsceneEvent(def.id, timelineName, startTime != default ? startTime : 0f, endTime != default ? endTime : 0f) : null,
+				IsValidParam(def.parameters.GetValueOrDefault("timelineName"), out string timelineName) &&
+				IsValidParam(def.parameters.GetValueOrDefault("startTime"), out float startTime, true) &&
+				IsValidParam(def.parameters.GetValueOrDefault("endTime"), out float endTime, true) ?
+				new BeginCutsceneEvent(def.id, timelineName, startTime != default ? startTime : 0f, endTime != default ? endTime : 0f) : null,
+			"ToggleVisibilityEvent" => 
+				IsValidParam(def.parameters.GetValueOrDefault("objectName"), out string objectName) &&
+				IsValidParam(def.parameters.GetValueOrDefault("isVisible"), out bool isVisible) ?
+				new ToggleVisibilityEvent(def.id, objectName, isVisible) : null,
 			"" =>null,
 			_ => throw new NotImplementedException()
 		};
