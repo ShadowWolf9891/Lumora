@@ -59,7 +59,6 @@ public class EnemyBehavior : MonoBehaviour
 	AlertStates curState;
 	float waitTimer = 0; //Amount of time to wait at each patrol point.
 	List<Vector3> searchPoints = new(); //List of points generated when lost sight of player
-	int curPatrolPoint = 0;
 	Vector3 previousVelocity; //Before / after freezing
 
 	string bb_CanSeePlayer = "CanSeePlayer";

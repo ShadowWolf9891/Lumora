@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 4
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -1914,7 +1914,7 @@ Transform:
   m_GameObject: {fileID: 144859920}
   serializedVersion: 2
   m_LocalRotation: {x: 0.46869436, y: -0.37112886, z: 0.22618459, w: 0.7690445}
-  m_LocalPosition: {x: 384.09045, y: 37.14025, z: 115.288574}
+  m_LocalPosition: {x: 384.09045, y: 38.540253, z: 115.288574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5741,6 +5741,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 925593053369436317, guid: 03d7eb839597c8f4fb078b7ad3e1c9c6, type: 3}
       propertyPath: curStatus
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 925593053369436317, guid: 03d7eb839597c8f4fb078b7ad3e1c9c6, type: 3}
+      propertyPath: curWalkType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 925593053369436317, guid: 03d7eb839597c8f4fb078b7ad3e1c9c6, type: 3}

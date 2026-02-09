@@ -99,6 +99,11 @@ public class DialogueSystem : MonoBehaviour
 		DialogueText.text = line.text;
         //TODO: Add Image UI and initalize it
 
+        if(line.cameraName != "" || line.cameraName != null) 
+        {
+            CameraManager.SetCurrentCamera(line.cameraName);
+        }
+
         if(!DialoguePanel.activeInHierarchy) DialoguePanel.SetActive(true);
 	}
     /// <summary>
