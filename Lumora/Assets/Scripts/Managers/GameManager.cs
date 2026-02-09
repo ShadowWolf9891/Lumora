@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] SpawnableObjects spawnableObjects;
 	[SerializeField] LayerMask coverLayerMask;
 
+	List<GameObject> _cachedObjects = new();
 	private void Awake()
 	{
 		SpawnerManager.Load(spawnableObjects);
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
+		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
         Cursor.lockState = CursorLockMode.Locked;
 
 		switch (SceneManager.GetActiveScene().buildIndex)
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
 			default:
 				break;
 		}
+
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
@@ -36,5 +39,23 @@ public class GameManager : MonoBehaviour
 	private void Update()
 	{
 		EventManager.HandleEvents(); //Handle events each frame if there are any.
+	}
+
+	/// <summary>
+	/// Toggle the visibility of a specific object by its name when event is triggered.
+	/// </summary>
+	/// <param name="e"></param>
+	private void ToggleVisibility(ToggleVisibilityEvent e)
+	{
+		GameObject curObject = _cachedObjects.Find(x => x.name == e.ObjectName);
+        if (curObject == null)
+        {
+			curObject = GameObject.Find(e.ObjectName);
+			_cachedObjects.Add(curObject);
+        }
+
+        if(curObject != null) curObject.SetActive(e.IsVisible);
+		else Debug.LogError($"Failed to find object {e.ObjectName} when calling {e.Id}.");
+	
 	}
 }

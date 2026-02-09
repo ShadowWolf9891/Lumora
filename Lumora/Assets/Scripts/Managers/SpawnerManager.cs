@@ -14,7 +14,8 @@ public static class SpawnerManager
 
 	public static void Load(SpawnableObjects objectList)
 	{
-		if(objectList == null) { Debug.LogError("List of spawnable objects has not been loaded."); return; }
+		if (_isLoaded) return;
+		if (objectList == null) { Debug.LogError("List of spawnable objects has not been loaded."); return; }
 		allSpawnables = objectList;
 
 		GameEvents<SpawnObjectEvent>.Subscribe(SpawnObject);
@@ -41,7 +42,5 @@ public static class SpawnerManager
 			GameObject temp = GameObject.Instantiate(triggerSpawn, e.Position, Quaternion.identity);
 			temp.GetComponent<SpawnableTriggerBehavior>().Initialize(e.Id, e.EventToRaiseOnTrigger, e.layerMask, e.Radius, e.IsRepeatable);
 		}
-
-
 	}
 }
