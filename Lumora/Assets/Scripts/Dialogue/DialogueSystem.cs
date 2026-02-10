@@ -99,6 +99,11 @@ public class DialogueSystem : MonoBehaviour
 		DialogueText.text = line.text;
         //TODO: Add Image UI and initalize it
 
+        if(line.cameraName != "" || line.cameraName != null) 
+        {
+			CameraManager.SetCurrentCamera(line.cameraName, line.blendSpeed);
+        }
+
         if(!DialoguePanel.activeInHierarchy) DialoguePanel.SetActive(true);
 	}
     /// <summary>
@@ -131,7 +136,8 @@ public class DialogueSystem : MonoBehaviour
         currentLine = 0;
         currentDialogue = null;
         currentDialogueID = "";
-        EventManager.Raise("Resume_Game");
+		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
+		EventManager.Raise("Resume_Game");
 	}
 
     

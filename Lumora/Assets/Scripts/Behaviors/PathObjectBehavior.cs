@@ -50,11 +50,11 @@ public class PathObjectBehavior : MonoBehaviour
     /// </summary>
     /// <param name="currentLocation"> The current location of the object</param>
     /// <returns>If the object is within 0.05 units of the last point on the path.</returns>
-    public bool IsDonePath(Vector3 currentLocation)
+    public bool IsDonePath(Vector3 currentLocation, float threshold = 1f)
     {
         if (currentPoint < paths[currentPath].points.Count - 1 || paths[currentPath].loop) return false;
         
-        return IsAtPoint(currentLocation);
+        return IsAtPoint(currentLocation, threshold);
     }
     /// <summary>
     /// Check if the location is close to a point within a threshold.

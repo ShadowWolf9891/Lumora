@@ -1,0 +1,51 @@
+{
+    "allEvents":
+    [
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "KipEnterHouse_C1_S2",
+            "eventsOnComplete":
+            [
+                "Kip_Lira_C1_S2"
+            ],
+            "parameters":
+            {
+                "timelineName": "KipEnterTL"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Kip_Lira_C1_S2",
+            "eventsOnComplete":
+            [
+                "Kip_Window_C1_S2"
+            ],
+            "parameters":
+            {
+                "chapter": "1",
+                "scene": "21"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Kip_Window_C1_S2",
+            "eventsOnComplete":
+            [
+                "Kip_MonoIntro_C1_S2"
+            ],
+            "parameters":
+            {
+                "timelineName": "KipMonologue1TL"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "Kip_MonoIntro_C1_S2",
+            "parameters":
+            {
+                "chapter": "1",
+                "scene": "22"
+            }
+        }
+    ]
+}

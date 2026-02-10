@@ -186,7 +186,7 @@ public class NPC_Behavior : MonoBehaviour
 	/// <param name="e"></param>
 	private void FreezeNPC(ChangeGameStateEvent e)
 	{
-		if (e.State == GameStates.Running)
+		if (e.State == GameStates.Running && agent.hasPath)
 		{
 			agent.velocity = previousVelocity;
 			agent.isStopped = false;
