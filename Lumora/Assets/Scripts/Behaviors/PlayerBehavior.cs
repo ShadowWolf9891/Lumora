@@ -53,15 +53,18 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] private float stealthSnapDistance = 0.6f;
 	private Collider coverObject;
 
-	public bool IsCrouching { get; private set; }
-	public bool IsSprinting { get; private set; }
+	[Header("WaypointSettings")]
+	[SerializeField] private GameObject waypointImage;
+
+	[HideInInspector]public bool IsCrouching { get; private set; }
+	[HideInInspector] public bool IsSprinting { get; private set; }
 
 	//Private properties
 	private HideController hideController;
 	bool isHiding;
-	public bool isSprinting { get; private set; }
 	Rigidbody rb;
 	CapsuleCollider playerCollider;
+	PathObjectBehavior pathObjectBehavior;
 	private Vector3 lastWallNormal = Vector3.zero;
 	private Camera mainCam;
 	private Vector3 curThrowDirection;
@@ -97,6 +100,7 @@ public class PlayerBehavior : MonoBehaviour
         hideController = GetComponent<HideController>();
         playerCollider = GetComponent<CapsuleCollider>();
 		mainCam = Camera.main;
+		pathObjectBehavior = TryGetComponent(out PathObjectBehavior pathObj) ? pathObj : null;
 	}
 	#endregion
 
@@ -181,6 +185,7 @@ public class PlayerBehavior : MonoBehaviour
 	#region Movement
 	private void Move(Vector3 moveDirection)
 	{
+		HandleWaypoints();
 		if (isHiding) HideMove(moveDirection);
 		else
         {
@@ -202,11 +207,11 @@ public class PlayerBehavior : MonoBehaviour
 			GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth"));
 		}
 
-		if (!isSprinting)
+		if (!IsSprinting)
 		{
-			isSprinting = true;
+			IsSprinting = true;
 		}
-		else isSprinting = false;
+		else IsSprinting = false;
     }
 	public void TriggerSprintNoise()
     {
@@ -262,7 +267,7 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void EnterHide(EnterStealthEvent e)
     {
-        isSprinting = false;
+        IsSprinting = false;
         isHiding = true;
 		coverObject = hideController.GetClosestWall(transform.position);
 		if (coverObject == null) { GameEvents<LeaveStealthEvent>.Raise(new LeaveStealthEvent("leave_Stealth")); }
@@ -383,8 +388,6 @@ public class PlayerBehavior : MonoBehaviour
 				break;
 		}
 	}
-
-
 	#endregion
 
 	#region Helpers
@@ -430,5 +433,27 @@ public class PlayerBehavior : MonoBehaviour
 			//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
 		}
 	}
+
+	private void HandleWaypoints()
+	{
+		if (pathObjectBehavior == null) return;
+		if (waypointImage.transform.position == Vector3.zero) waypointImage.transform.position = pathObjectBehavior.RestartPath();
+
+		if (pathObjectBehavior.IsDonePath(transform.position, 5f))
+		{
+			GameEvents<ToggleVisibilityEvent>.Raise(new ToggleVisibilityEvent("hideWaypoint", waypointImage.name, false));
+		}
+		else if(!waypointImage.activeInHierarchy) 
+		{
+			GameEvents<ToggleVisibilityEvent>.Raise(new ToggleVisibilityEvent("showWaypoint", waypointImage.name, true));
+		}
+
+		if(pathObjectBehavior.IsAtPoint(transform.position, 5f))
+		{
+			waypointImage.transform.position = pathObjectBehavior.GetNextPoint();
+		}
+
+	}
+
 	#endregion
 }
