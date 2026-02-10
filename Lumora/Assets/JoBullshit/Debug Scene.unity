@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2019234497851480644, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2086560645992875536, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -277,7 +281,7 @@ Transform:
   m_GameObject: {fileID: 188579165}
   serializedVersion: 2
   m_LocalRotation: {x: 0.46869498, y: -0.37112775, z: 0.22618411, w: 0.7690448}
-  m_LocalPosition: {x: 2.8704405, y: 9.660251, z: -2.281428}
+  m_LocalPosition: {x: 2.8704405, y: 8.26025, z: -2.281428}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1602,6 +1606,30 @@ PrefabInstance:
     - target: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166657601331200534, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: playerHeight
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166657601331200534, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: groundedLayers.m_Bits
+      value: 2056
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257983983751162677, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: m_Height
+      value: 1.7558692
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257983983751162677, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: m_Center.y
+      value: 0.8719995
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257983983751162677, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: a0df0ee9c398b434f9241470420d69aa, type: 2}
+    - target: {fileID: 8209262538507549975, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: currentHealthValue
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
