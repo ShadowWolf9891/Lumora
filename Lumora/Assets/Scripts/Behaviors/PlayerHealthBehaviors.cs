@@ -13,9 +13,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
 
     private void Start()
     {
-        //TODO: Add health loading in from save file
-        currentHealthValue = 0;
-        RestoreHealth(100);
+        //Todo? Add health value from save on start
 
         GameEvents<PlayerDamagedEvent>.Subscribe(TakeDamage);
     }

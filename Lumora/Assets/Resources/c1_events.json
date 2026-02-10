@@ -151,8 +151,8 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
-                "Pit_Shaw_Trigger",
-                "Pit_Shaw_Trigger_2"
+                "Spawn_Shaw",
+                "Spawn_Foreman"
             ],
             "parameters" :
             {
@@ -161,68 +161,34 @@
             }
         },
         {
-            "type" : "SpawnTriggerEvent",
-            "id" : "Pit_Shaw_Trigger",
+            "type": "ToggleVisibilityEvent",
+            "id": "Spawn_Shaw",
             "eventsOnComplete":
             [
-                "Pit_Shaw_Trigger_3"
+                "Shaw_Enter"
             ],
-            "parameters" : 
-            {
-                "worldLocation" : "413.58, 0.03, 329.04",
-                "radius" : "1",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Spawn_Foreman"
-            }
-        },
-        {
-            "type" : "SpawnTriggerEvent",
-            "id" : "Pit_Shaw_Trigger_2",
-            "parameters" : 
-            {
-                "worldLocation" : "413.58, 0.03, 329.04",
-                "radius" : "1",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Spawn_Shaw"
-            }
-        },
-        {
-            "type" : "SpawnTriggerEvent",
-            "id" : "Pit_Shaw_Trigger_3",
-            "parameters" : 
-            {
-                "worldLocation" : "413.58, 0.03, 329.04",
-                "radius" : "1",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Shaw_Enter"
-            }
-
-        },
-        {
-            "type": "SpawnObjectEvent",
-            "id": "Spawn_Shaw",
             "parameters":
             {
-                "prefabName": "Shaw",
-                "worldLocation": "436.21, 6.88, 362"
+                "objectName": "Shaw",
+                "isVisible": "true"
             }
         },
-        {
-            "type": "SpawnObjectEvent",
+                {
+            "type": "ToggleVisibilityEvent",
             "id": "Spawn_Foreman",
+            "eventsOnComplete":
+            [
+                "Foreman_Enter"
+            ],
             "parameters":
             {
-                "prefabName": "Foreman",
-                "worldLocation": "437.50, 5.71, 359.47"
+                "objectName": "Foreman",
+                "isVisible": "true"
             }
         },
         {
             "type": "PathEvent",
             "id": "Shaw_Enter",
-            "eventsOnFire": 
-            [
-                "Foreman_Enter"
-            ],
             "eventsOnComplete":
             [
                 "Shaw_2"

@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
 				EventManager.Raise("Chapter2_Intro");
 				break;
 			default:
+				//If you load a scene with no dialogue to start it, (like jo's super cool debug scene,)
+				//run resume game here where it wouldnt normally be run by a dialogue box.
+
+				//TODO, loading from a saved game calls resume game
+				EventManager.Raise("Resume_Game");
 				break;
 		}
 
