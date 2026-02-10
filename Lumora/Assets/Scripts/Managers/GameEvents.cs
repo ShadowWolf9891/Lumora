@@ -62,17 +62,25 @@ public abstract class GameEventType
     public string RequireCompletedID;
     public string[] EventsToFire;
     public string[] EventsOnComplete;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool IsRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
+    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool isRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
         IsCompleted = isCompleted;
+        IsRepeatable = isRepeatable;
         EventsToFire = eventsToFire;
         EventsOnComplete = eventsOnComplete;
     }
 }
 
 //Add derived classes of GameEventType here...
+
+public class DummyEvent : GameEventType
+{
+    //Good for triggering this from a trigger volume and then raising all events from EventsToFire[].
+    public DummyEvent(string id) : base(id) { } 
+}
+
 
 #region Player Events
 public enum PlayerInputActionType
@@ -186,6 +194,22 @@ public class ProgressQuestEvent : GameEventType
     public ProgressQuestEvent(string id, string questID) : base(id)
     {
         QuestID = questID;
+    }
+}
+public enum WalkType {NORMAL, LEAD, FOLLOW }
+public class ChangeNPCWalkTypeEvent : GameEventType
+{
+	public string NPCName { get; private set; }
+    public WalkType WalkType { get; private set; }
+    public string Target { get; private set; }
+    public float FollowDistance { get; private set; }
+
+	public ChangeNPCWalkTypeEvent(string id, string npcName, WalkType mode, string target, float followDistance = 5f) : base(id)
+    {
+        NPCName= npcName;
+        WalkType = mode;
+        Target = target;
+        FollowDistance = followDistance;
     }
 }
 #endregion
@@ -319,6 +343,18 @@ public class SpawnVisibleNoiseEvent : GameEventType
         IsPlayerSpecificNoise = isPlayerSpecificNoise;
     }
 }
+
+public class ToggleVisibilityEvent : GameEventType
+{
+    public string ObjectName { get; private set; }
+    public bool IsVisible { get; private set; }
+    public ToggleVisibilityEvent(string id, string objectName, bool isVisible) : base(id)
+    {
+        ObjectName = objectName;
+        IsVisible = isVisible;
+    }
+}
+
 #endregion
 
 #region UI

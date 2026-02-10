@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         menuAction = InputSystem.actions.FindAction("Escape");
         consoleAction = InputSystem.actions.FindAction("Console");
         GameEvents<SpawnPauseMenuEvent>.Subscribe(OnMenuAction);
