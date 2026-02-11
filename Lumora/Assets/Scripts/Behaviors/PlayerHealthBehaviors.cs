@@ -6,8 +6,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
     [SerializeField]
     [Range(0, 10)]
     int maxHealth;
-    [SerializeField]
-    int currentHealthValue;
+    public int CurrentHealthValue { get; set; }
     [SerializeField]
     bool godModeEnabled;
 
@@ -23,21 +22,21 @@ public class PlayerHealthBehaviors : MonoBehaviour
     {
         if (!godModeEnabled)
         {
-            currentHealthValue -= e.DamageTaken;
+            CurrentHealthValue -= e.DamageTaken;
 
-            if (currentHealthValue < 0)
+            if (CurrentHealthValue < 0)
             {
                 DoGameOver();
             }
-            GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
+            GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", CurrentHealthValue));
         }
     }
 
     public void RestoreHealth(int healingValue)     //Triggers upon health restore keybind. should probably be tied to animation event?
     {
-        currentHealthValue += healingValue;
-        if (currentHealthValue > maxHealth) { currentHealthValue = maxHealth; }
-        GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", currentHealthValue));
+        CurrentHealthValue += healingValue;
+        if (CurrentHealthValue > maxHealth) { CurrentHealthValue = maxHealth; }
+        GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", CurrentHealthValue));
     }
 
     private void DoGameOver()       //Triggers Game Over state change. we should have GameManager do some kinda event for game over methinks
