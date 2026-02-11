@@ -664,7 +664,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5350591719694058521}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a0df0ee9c398b434f9241470420d69aa, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -677,9 +677,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.13991877
-  m_Height: 1.7415836
+  m_Height: 1.7558692
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.8719995, z: 0}
 --- !u!114 &6481701089280577369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,7 +705,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthBehaviors
   maxHealth: 10
-  currentHealthValue: 0
   godModeEnabled: 0
 --- !u!114 &7166657601331200534
 MonoBehaviour:
@@ -723,11 +722,11 @@ MonoBehaviour:
   maxSpeed: 3
   sprintMaxSpeed: 5
   stoppingForce: 3
-  playerHeight: 1.2
+  playerHeight: 0.9
   jumpHeight: 5
   groundedLayers:
     serializedVersion: 2
-    m_Bits: 2057
+    m_Bits: 2056
   thrownObjPrefab: {fileID: 2082604938133289944, guid: 210be6ef2525cde4ca11116bca0b7cf4, type: 3}
   throwLocation: {fileID: 0}
   throwForce: 10
@@ -741,6 +740,7 @@ MonoBehaviour:
   standingHeight: 1
   crouchedHeight: 0.3
   stealthSnapDistance: 0.6
+  waypointImage: {fileID: 0}
 --- !u!114 &7869366584272912734
 MonoBehaviour:
   m_ObjectHideFlags: 0
