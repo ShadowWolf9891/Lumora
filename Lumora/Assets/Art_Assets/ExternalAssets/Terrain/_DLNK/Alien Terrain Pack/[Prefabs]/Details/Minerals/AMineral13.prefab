@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3330602}
   - component: {fileID: 2352670}
   - component: {fileID: -6747867960135503100}
+  - component: {fileID: -396878474387951002}
   m_Layer: 11
   m_Name: AMineral13
   m_TagString: Untagged
@@ -112,3 +113,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300014, guid: 2c90e4a0508d439428595a9ee6eb1ffc, type: 3}
+--- !u!205 &-396878474387951002
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116048}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 25
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.25
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 0}
+  m_Enabled: 1
