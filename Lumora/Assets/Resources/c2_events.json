@@ -53,7 +53,7 @@
             "id" : "Mrs_Watts_Front_Arrive_Trigger",
             "parameters" : 
             {
-                "worldLocation" : "-158.48,0.08,-819.22",
+                "worldLocation" : "-161.94, 0.49, -822",
                 "radius" : "1",
                 "layerMask" : "Player",
                 "eventToRaiseOnTrigger" : "C2_Arrive_Watts_Front"
@@ -79,7 +79,7 @@
             "id": "Watts_Back_Trigger",
             "parameters":
             {
-                "worldLocation": "-174.43,0.08,-808.67",
+                "worldLocation": "-167.07, 0.49, -812.24",
                 "radius": "2",
                 "layerMask": "Player",
                 "eventToRaiseOnTrigger": "C2_Arrive_Watts_Back"
@@ -120,7 +120,7 @@
             ],
             "parameters":
             {
-                "timelineName": "BackDoor"
+                "timelineName": "WattsOpenDoorTL"
             }
         },
         {
@@ -146,7 +146,7 @@
             ],
             "parameters":
             {
-                "timelineName": "WattsWalkInsideTimeline"
+                "timelineName": "WattsWalkInsideTL"
             }
         },
         {
@@ -154,7 +154,7 @@
             "id": "Watts_Inside_Trigger",
             "parameters":
             {
-                "worldLocation": "-166.54,0.60,-817.09",
+                "worldLocation": "-165.21, 0.34, -817.62",
                 "radius":"1",
                 "layerMask":"Player",
                 "eventToRaiseOnTrigger": "C2_Watts_Lira_1"
@@ -165,7 +165,7 @@
             "id": "Watts_DClose_Trigger",
             "parameters":
             {
-                "worldLocation": "-171.27,0.63,-812.69",
+                "worldLocation": "-165.21, 0.34, -817.62",
                 "radius": "1",
                 "layerMask": "Player",
                 "eventToRaiseOnTrigger": "Watts_Door_Close"
@@ -189,7 +189,7 @@
             "parameters":
             {
                 "chapter": "2",
-                "scene": "6"
+                "scene": "7"
             }
         },
         {
@@ -201,7 +201,7 @@
             ],
             "parameters":
             {
-                "timelineName": "WattsBRBTimeline"
+                "timelineName": "WattsBRBTL"
             }
         },
         {
@@ -214,7 +214,7 @@
             "parameters":
             {
                 "chapter": "2",
-                "scene": "7"
+                "scene": "8"
             }
         },
         {
@@ -227,12 +227,38 @@
             "parameters":
             {
                 "chapter": "2",
-                "scene": "8"
+                "scene": "9"
             }
         },
         {
             "type":"DialogueEvent",
             "id": "C2_Lira_Watts_4",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Watts_5"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "10"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Watts_5",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Watts_6"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "11"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Watts_6",
             "eventsOnComplete":
             [
                 "C2_Arrive_Darren_Trigger",
@@ -242,7 +268,7 @@
             "parameters":
             {
                 "chapter": "2",
-                "scene": "9"
+                "scene": "12"
             }
         },
         {
@@ -250,7 +276,7 @@
             "id": "Lira_Leave_Watts_Trigger",
             "parameters":
             {
-                "worldLocation": "-172.74,0.59,-810.77",
+                "worldLocation": "-165.21, 0.34, -817.62",
                 "radius": "1",
                 "layerMask": "Player",
                 "eventToRaiseOnTrigger": "Lira_Door_Open"
@@ -261,7 +287,7 @@
             "id": "Lira_Door_Open",
             "parameters":
             {
-                "timelineName": "LiraLeaveOpenTimeline"
+                "timelineName": "LiraLeaveDoorOpenTL"
             }
         },
         {
@@ -269,7 +295,7 @@
             "id": "Lira_Leave_Door_Trigger",
             "parameters":
             {
-                "worldLocation": "-175.11,0.37,-807.66",
+                "worldLocation": "-166.45, 0.29, -811.64",
                 "radius": "1",
                 "layerMask": "Player",
                 "eventToRaiseOnTrigger": "Lira_Door_Close"
@@ -280,7 +306,7 @@
             "id": "Lira_Door_Close",
             "parameters":
             {
-                "timelineName": "LiraLeaveCloseTimeline"
+                "timelineName": "WattsDoorShutTimeline"
             }
         },
         {
