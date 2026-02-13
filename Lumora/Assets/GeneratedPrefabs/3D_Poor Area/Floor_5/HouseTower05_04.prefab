@@ -1456,6 +1456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8029912804661566784}
+  - component: {fileID: 4074844357844979464}
   m_Layer: 0
   m_Name: HouseTower05_04
   m_TagString: Untagged
@@ -1495,6 +1496,74 @@ Transform:
   - {fileID: 3305128076895580342}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &4074844357844979464
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2153553015734005216}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 40
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4814569057222383530}
+    - renderer: {fileID: 1436352103460215267}
+    - renderer: {fileID: 5405565527645354537}
+    - renderer: {fileID: 6170100283661022540}
+    - renderer: {fileID: 5681021461484396205}
+    - renderer: {fileID: 5151361921098662266}
+    - renderer: {fileID: 5882291336269325030}
+    - renderer: {fileID: 8828324968185061124}
+    - renderer: {fileID: 4270604902887009843}
+    - renderer: {fileID: 6765412485090901119}
+    - renderer: {fileID: 7822806723834491731}
+    - renderer: {fileID: 7332270462203051731}
+    - renderer: {fileID: 7143673317544031116}
+    - renderer: {fileID: 8580124956193899418}
+    - renderer: {fileID: 6871957943381409876}
+    - renderer: {fileID: 4646235383437922698}
+    - renderer: {fileID: 3880424408240905330}
+    - renderer: {fileID: 7561293942784426148}
+    - renderer: {fileID: 600294600796053121}
+    - renderer: {fileID: 3278220608201961169}
+    - renderer: {fileID: 9084029851627933257}
+    - renderer: {fileID: 2896706736351320423}
+    - renderer: {fileID: 2199092501951141929}
+    - renderer: {fileID: 2094308556561575664}
+    - renderer: {fileID: 26558675873579091}
+    - renderer: {fileID: 8167590339680585514}
+    - renderer: {fileID: 282997213487129262}
+    - renderer: {fileID: 4847284634479015258}
+    - renderer: {fileID: 4827764407594987898}
+    - renderer: {fileID: 138257530297991419}
+    - renderer: {fileID: 3058640657032892087}
+    - renderer: {fileID: 7678259254324334775}
+    - renderer: {fileID: 4087228112072156510}
+    - renderer: {fileID: 6958044750730270030}
+    - renderer: {fileID: 8389162578507288797}
+    - renderer: {fileID: 2152366778945255998}
+    - renderer: {fileID: 2265301957737737178}
+    - renderer: {fileID: 5450924510657456929}
+    - renderer: {fileID: 6898931197389260943}
+    - renderer: {fileID: 4362164023632526974}
+    - renderer: {fileID: 8205881826894225894}
+    - renderer: {fileID: 8521485595283019673}
+    - renderer: {fileID: 1213070420824947332}
+    - renderer: {fileID: 3018138167821370828}
+    - renderer: {fileID: 8204071803981321842}
+    - renderer: {fileID: 8147009847996841938}
+    - renderer: {fileID: 7731067242431608959}
+    - renderer: {fileID: 2642785645146874873}
+    - renderer: {fileID: 6465517573340539989}
+    - renderer: {fileID: 7027834951957962175}
+  m_Enabled: 1
 --- !u!1 &2208399037091757119
 GameObject:
   m_ObjectHideFlags: 0
@@ -7006,6 +7075,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.65
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (3)
@@ -7080,6 +7157,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (1)
@@ -7154,6 +7235,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof
@@ -7216,6 +7301,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (2)
@@ -7368,6 +7457,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (5)
@@ -7442,6 +7535,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (4)
@@ -7516,6 +7613,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (8)
@@ -7630,6 +7731,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3D_pipe2
       objectReference: {fileID: 0}
+    - target: {fileID: 5275228911859507594, guid: f158fa25cdbca1740abe5b9699f9f031, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7648,6 +7753,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (6)
@@ -7710,6 +7819,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8029912804661566784}
     m_Modifications:
+    - target: {fileID: 8461468368128474527, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
+      propertyPath: m_Size
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8598116593806758652, guid: 25e52889c874be841b88c70e29f6f68e, type: 3}
       propertyPath: m_Name
       value: 3D_PipeRoof (7)
