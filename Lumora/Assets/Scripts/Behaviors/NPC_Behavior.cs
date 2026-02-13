@@ -97,7 +97,7 @@ public class NPC_Behavior : MonoBehaviour
 	{
 		if (agent.isStopped) ToggleNPCMovement();
 		//Go to next point if at destination
-		if (pathBehavior.IsAtPoint(transform.position)) agent.SetDestination(pathBehavior.GetNextPoint());
+		if (pathBehavior.IsAtPoint(transform.position, 2f)) agent.SetDestination(pathBehavior.GetNextPoint());
 
 		//If there is no next point, reset and mark move event as complete.
 		if(pathBehavior.IsDonePath(transform.position) && eventID != null)

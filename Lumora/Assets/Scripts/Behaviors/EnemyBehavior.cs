@@ -157,7 +157,7 @@ public class EnemyBehavior : MonoBehaviour
 		}
 		if (!pathBehavior.HasPath()) return;
 
-		if (pathBehavior.IsAtPoint(transform.position, agent.stoppingDistance))
+		if (pathBehavior.IsAtPoint(transform.position))
 		{
 			waitTimer += Time.deltaTime;
 			if (waitTimer >= timeAtEachPatrolPoint)
