@@ -74,6 +74,7 @@ public class UIManager : MonoBehaviour
                 EventManager.Raise("Resume_Game");
             }
         }
+        EventManager.MarkEventCompleted(a.Id);
     }
 
     //button controllers

@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,37 +6,38 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(PathObjectBehavior))]
-public class NPC_Behavior : MonoBehaviour
+public class NPC_Behavior : MonoBehaviour, ISaveable
 {
 	[SerializeField] PathStatus curStatus = PathStatus.PAUSE;
 	[SerializeField] WalkType curWalkType = WalkType.NORMAL;
 	[SerializeField] float followDistance = 5.0f;
-
+	[SerializeField] GameObject curTarget;
 	PathObjectBehavior pathBehavior;
 	NavMeshAgent agent;
-	GameObject curTarget;
 	Vector3 previousVelocity;
 	string eventID;
-	void Start()
+	void Awake()
     {
-        GameEvents<PathEvent>.Subscribe(ChangePathStatus);
-        GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
         agent = GetComponent<NavMeshAgent>();
-		curTarget = GameObject.Find("Player");
 		pathBehavior = GetComponent<PathObjectBehavior>();
-		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
     }
-
+	void Start()
+	{
+		if(curTarget == null) curTarget = GameObject.Find("Player");
+		GameEvents<PathEvent>.Subscribe(ChangePathStatus);
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
+		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
+	}
 
 	private void ChangePathStatus(PathEvent e)
 	{
         //Return early if irrelevent
         if (e.NPCName != gameObject.name) return;
-		if (curStatus == e.NewStatus)
-		{
-			EventManager.MarkEventCompleted(e.Id); 
-			return;
-		}
+		//if (curStatus == e.NewStatus)
+		//{
+		//	//EventManager.MarkEventCompleted(e.Id); 
+		//	return;
+		//}
 
         switch (e.NewStatus)
         {
@@ -212,4 +212,72 @@ public class NPC_Behavior : MonoBehaviour
 			agent.isStopped = false;
 		}
 	}
+
+	public void Save(GameSaveData data)
+	{
+		if (data == null)
+		{
+			Debug.LogError($"Save called before GameSaveData is initialized for {name}");
+			return;
+		}
+		if (data.worldData == null)
+			data.worldData = new WorldSaveData();
+
+		if (data.worldData.NPCData == null)
+			data.worldData.NPCData = new List<NPCStatusData>();
+
+		var existing = data.worldData.NPCData.Find(x => x.InstanceId == GUID);
+		if (existing != null)
+		{
+			existing.position = new SerializableVector3(agent.transform.position);
+			existing.Status = curStatus;
+			existing.WalkType = curWalkType;
+			existing.PathData.CurrentPath = pathBehavior.GetCurrentPathAndPoint().Item1;
+			existing.PathData.CurrentPoint = pathBehavior.GetCurrentPathAndPoint().Item2;
+		}
+		else
+		{
+			data.worldData.NPCData.Add(new NPCStatusData
+			{
+				InstanceId = GUID,
+				position = new SerializableVector3(agent.transform.position),
+				Status = curStatus,
+				WalkType = curWalkType,
+				PathData = new PathData() 
+				{ 
+					CurrentPath = pathBehavior.GetCurrentPathAndPoint().Item1,
+					CurrentPoint = pathBehavior.GetCurrentPathAndPoint().Item2
+				}
+			});
+		}
+	}
+
+	public void Load(GameSaveData data)
+	{
+		var saved = data.worldData.NPCData.Find(x => x.InstanceId == GUID);
+		if (saved != null)
+		{
+			curStatus = saved.Status;
+			curWalkType = saved.WalkType;
+			Debug.Log($"Current path: {saved.PathData.CurrentPath}, Current point: {saved.PathData.CurrentPoint}");
+			pathBehavior.GoToPath(saved.PathData.CurrentPath, saved.PathData.CurrentPoint);
+			agent.Warp(saved.position.ToVector3());
+		}
+	}
+
+	//Generating Unique id for saving in the editor
+
+	[SerializeField] private string npcId;
+	public string GUID => npcId;
+
+#if UNITY_EDITOR
+private void OnValidate()
+{
+    if (string.IsNullOrEmpty(npcId))
+    {
+        npcId = System.Guid.NewGuid().ToString();
+        UnityEditor.EditorUtility.SetDirty(this);
+    }
+}
+#endif
 }

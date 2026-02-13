@@ -44,8 +44,8 @@ public class GameEventDefinition
 {
     public string type;
     public string id;
-    public bool isCompleted = false;
     public string requireCompletedID;
+    public string isRepeatable;
     public string[] eventsToFire;
     public string[] eventsOnComplete;
 	public Dictionary<string, string> parameters { get; set; } = new Dictionary<string, string>();
@@ -57,16 +57,14 @@ public class GameEventDefinition
 public abstract class GameEventType
 {
 	public string Id { get; private set; }
-    public bool IsCompleted;
     public bool IsRepeatable;
     public string RequireCompletedID;
     public string[] EventsToFire;
     public string[] EventsOnComplete;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool isRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
+    protected GameEventType(string id, string requiredID = "", bool isRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
-        IsCompleted = isCompleted;
         IsRepeatable = isRepeatable;
         EventsToFire = eventsToFire;
         EventsOnComplete = eventsOnComplete;
@@ -153,6 +151,14 @@ public class TeleportPlayerEvent : GameEventType
     }
 }
 
+public class LoadSceneEvent : GameEventType
+{
+    public int SceneIndex;
+    public LoadSceneEvent(string id, int sceneIndex) : base(id)
+    {
+        SceneIndex = sceneIndex;
+    }
+}
 #endregion
 
 #region NPC and Quest Events
