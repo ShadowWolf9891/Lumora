@@ -1883,6 +1883,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4843956270450267847}
+  - component: {fileID: 1483865421299523428}
   m_Layer: 0
   m_Name: HouseTower04_01
   m_TagString: Untagged
@@ -1919,6 +1920,62 @@ Transform:
   - {fileID: 6539929873281092477}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &1483865421299523428
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3553395298453046380}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 35
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4440335847245779445}
+    - renderer: {fileID: 6821640220025366276}
+    - renderer: {fileID: 1424253185574762652}
+    - renderer: {fileID: 1468374355850825443}
+    - renderer: {fileID: 8284197433290138622}
+    - renderer: {fileID: 8332845591709777099}
+    - renderer: {fileID: 5940995778558366162}
+    - renderer: {fileID: 6511513866840398424}
+    - renderer: {fileID: 1870203749868979115}
+    - renderer: {fileID: 8590574153470083113}
+    - renderer: {fileID: 2314171075261369671}
+    - renderer: {fileID: 1826391131994898843}
+    - renderer: {fileID: 6916197422101149640}
+    - renderer: {fileID: 2616512295025796045}
+    - renderer: {fileID: 4237854426661398156}
+    - renderer: {fileID: 1554230609389355986}
+    - renderer: {fileID: 7222428092978328191}
+    - renderer: {fileID: 1190918017289585966}
+    - renderer: {fileID: 5109513444523172767}
+    - renderer: {fileID: 684827698627891604}
+    - renderer: {fileID: 7688936935480747877}
+    - renderer: {fileID: 2872228375642126589}
+    - renderer: {fileID: 2341718385208643202}
+    - renderer: {fileID: 3268214223137113669}
+    - renderer: {fileID: 8377997632388205303}
+    - renderer: {fileID: 938648287314290412}
+    - renderer: {fileID: 2738163667606378686}
+    - renderer: {fileID: 8412240261725482513}
+    - renderer: {fileID: 9076578193234884303}
+    - renderer: {fileID: 9018460369628522855}
+    - renderer: {fileID: 961232470022157690}
+    - renderer: {fileID: 2003869042097765167}
+    - renderer: {fileID: 7239766047921841349}
+    - renderer: {fileID: 4439121826229645741}
+    - renderer: {fileID: 4249499646995865558}
+    - renderer: {fileID: 2579341952210404394}
+    - renderer: {fileID: 4027791664944580900}
+    - renderer: {fileID: 8503637803983474707}
+  m_Enabled: 1
 --- !u!1 &3677049528985759541
 GameObject:
   m_ObjectHideFlags: 0
@@ -5575,6 +5632,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5473428182038004134, guid: bbf909a33248dbe49b01f205360888b5, type: 3}
+      propertyPath: m_Size
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5912,6 +5973,10 @@ PrefabInstance:
     - target: {fileID: 711820403821021782, guid: bbf909a33248dbe49b01f205360888b5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5473428182038004134, guid: bbf909a33248dbe49b01f205360888b5, type: 3}
+      propertyPath: m_Size
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
