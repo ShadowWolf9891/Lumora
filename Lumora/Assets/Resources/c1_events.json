@@ -151,8 +151,7 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
-                "Spawn_Shaw",
-                "Spawn_Foreman"
+                "Shaw_Enter"
             ],
             "parameters" :
             {
@@ -161,33 +160,7 @@
             }
         },
         {
-            "type": "ToggleVisibilityEvent",
-            "id": "Spawn_Shaw",
-            "eventsOnComplete":
-            [
-                "Shaw_Enter"
-            ],
-            "parameters":
-            {
-                "objectName": "Shaw",
-                "isVisible": "true"
-            }
-        },
-                {
-            "type": "ToggleVisibilityEvent",
-            "id": "Spawn_Foreman",
-            "eventsOnComplete":
-            [
-                "Foreman_Enter"
-            ],
-            "parameters":
-            {
-                "objectName": "Foreman",
-                "isVisible": "true"
-            }
-        },
-        {
-            "type": "PathEvent",
+            "type": "BeginCutsceneEvent",
             "id": "Shaw_Enter",
             "eventsOnComplete":
             [
@@ -195,17 +168,7 @@
             ],
             "parameters":
             {
-                "npcName": "Shaw",
-                "newStatus": 0
-            }
-        },
-                {
-            "type": "PathEvent",
-            "id": "Foreman_Enter",
-            "parameters":
-            {
-                "npcName": "Foreman",
-                "newStatus": 0
+                "timelineName": "ShawWalkingTimeline"
             }
         },
         {
@@ -336,11 +299,21 @@
             }
         },
         {
-            "type": "BeginCutsceneEvent",
+            "type": "ChangeNPCWalkTypeEvent",
+            "id": "SL_PathTypeChange",
+            "parameters":
+            {
+                "npcName": "ShiftLeader",
+                "mode": 0
+            }
+        },
+        {
+            "type": "PathEvent",
             "id": "ShiftLeader_Leave",
             "parameters":
             {
-                "timelineName": "SLWalkingOutTimeline"
+                "npcName" : "ShiftLeader",
+                "newStatus" : 0
             }
         },
          {
