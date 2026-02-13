@@ -243,6 +243,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6390007748939292498}
+  - component: {fileID: 5849748457241231455}
   m_Layer: 0
   m_Name: HouseTower 2
   m_TagString: Untagged
@@ -270,6 +271,30 @@ Transform:
   - {fileID: 1983227312605017380}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &5849748457241231455
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102670698841582225}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 35
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.43
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4311526586632368168}
+    - renderer: {fileID: 9038407120047075237}
+    - renderer: {fileID: 5320265205120876445}
+    - renderer: {fileID: 3971258238675825450}
+    - renderer: {fileID: 2305209728912209314}
+    - renderer: {fileID: 8192947373749870426}
+  m_Enabled: 1
 --- !u!1 &1373357406807122644
 GameObject:
   m_ObjectHideFlags: 0
