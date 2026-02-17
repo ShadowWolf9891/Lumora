@@ -25,8 +25,7 @@ public static class EventManager
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
 
-	//Check in progress and completed events when saving / loading
-	private static HashSet<string> _inProgressEvents = new();
+	//Check in completed events when saving / loading
 	private static HashSet<string> _completedEvents = new();
 
 	private static void LoadEvents()
@@ -66,22 +65,16 @@ public static class EventManager
 
         Debug.Log("Loaded events json file.");
 	}
-	public static void LoadSavedEvents(List<string> completedEvents, List<string> inProgressEvents)
+	public static void LoadSavedEvents(List<string> completedEvents)
 	{
 		if (_events == null) LoadEvents();
 	
-		foreach (string eId in completedEvents) { MarkEventCompleted(eId, true); }
-		foreach (string eId in inProgressEvents) { Raise(eId); }
+		foreach (string eId in completedEvents) { _completedEvents.Add(eId); }
 	}
 	public static List<string> GetCompletedEvents()
 	{
 		return _completedEvents.ToList();
 	}
-	public static List<string> GetInProgressEvents()
-	{
-		return _inProgressEvents.ToList();
-	}
-
 	private static void CreateEvent(GameEventDefinition def)
 	{
 		GameEventType e = def.type switch
@@ -166,9 +159,9 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		if (_completedEvents.Contains(evt.Id) || _inProgressEvents.Contains(evt.Id))
+		if (_completedEvents.Contains(evt.Id))
 		{
-			Debug.LogWarning($"Event {eventID} has already been completed or is already in progress. Skipping...");
+			Debug.LogWarning($"Event {eventID} has already been completed. Skipping...");
 			return;
 		}
 		if (evt.RequireCompletedID != null && evt.RequireCompletedID != "")
@@ -191,7 +184,6 @@ public static class EventManager
 		if (evt is not DummyEvent)
 		{
 			EventQueue.Enqueue(evt);
-			_inProgressEvents.Add(eventID);
 		}
 
 		//Trigger events that are raised when this event is raised
@@ -240,7 +232,6 @@ public static class EventManager
 			foreach(var lazyEventMatch in lazyEventMatches)
 			{
 				EventQueue.Enqueue(lazyEventMatch);
-				_inProgressEvents.Add(lazyEventMatch.Id);
 			}
 		}
 	}
@@ -263,7 +254,6 @@ public static class EventManager
 			//Exit if not all events to fire have been marked complete for dummy
 			if(!CheckDummyComplete(evt as DummyEvent)) return; 
 		}
-		_inProgressEvents.Remove(eventID);
 		if(!evt.IsRepeatable) _completedEvents.Add(eventID);
 		Debug.Log($"Completed event {eventID}");
 
@@ -282,7 +272,7 @@ public static class EventManager
 
 			foreach (var e in evt.EventsOnComplete)
 			{ 
-				if(_completedEvents.Contains(e) || _inProgressEvents.Contains(e)) continue;
+				if(_completedEvents.Contains(e)) continue;
 
 				Raise(e);
 			}

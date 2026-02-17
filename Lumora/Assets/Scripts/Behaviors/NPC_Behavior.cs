@@ -55,10 +55,12 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 				break;
             case PathStatus.NEXT_PATH:
 				agent.SetDestination(pathBehavior.GoToNextPath());
+				EventManager.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.PREV_PATH:
 				agent.SetDestination(pathBehavior.GoToPreviousPath());
+				EventManager.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.END_EARLY:
@@ -96,6 +98,8 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	private void MoveNPCAlongPath()
 	{
 		if (agent.isStopped) ToggleNPCMovement();
+
+		if (!pathBehavior.HasPath()) return;
 		//Go to next point if at destination
 		if (pathBehavior.IsAtPoint(transform.position, 2f)) agent.SetDestination(pathBehavior.GetNextPoint());
 
@@ -220,20 +224,18 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 			Debug.LogError($"Save called before GameSaveData is initialized for {name}");
 			return;
 		}
-		if (data.worldData == null)
-			data.worldData = new WorldSaveData();
-
-		if (data.worldData.NPCData == null)
-			data.worldData.NPCData = new List<NPCStatusData>();
+		data.worldData ??= new WorldSaveData();
+		data.worldData.NPCData ??= new List<NPCStatusData>();
 
 		var existing = data.worldData.NPCData.Find(x => x.InstanceId == GUID);
 		if (existing != null)
 		{
 			existing.position = new SerializableVector3(agent.transform.position);
-			existing.Status = curStatus;
+			existing.Status = curStatus == PathStatus.START ? PathStatus.RESUME : curStatus;
 			existing.WalkType = curWalkType;
-			existing.PathData.CurrentPath = pathBehavior.GetCurrentPathAndPoint().Item1;
-			existing.PathData.CurrentPoint = pathBehavior.GetCurrentPathAndPoint().Item2;
+			existing.PathData.CurrentPath = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item1 : -1;
+			existing.PathData.CurrentPoint = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item2 : -1;
+			existing.ActiveEventID = eventID;
 		}
 		else
 		{
@@ -241,14 +243,15 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 			{
 				InstanceId = GUID,
 				position = new SerializableVector3(agent.transform.position),
-				Status = curStatus,
+				Status = curStatus == PathStatus.START ? PathStatus.RESUME : curStatus,
 				WalkType = curWalkType,
 				PathData = new PathData() 
 				{ 
-					CurrentPath = pathBehavior.GetCurrentPathAndPoint().Item1,
-					CurrentPoint = pathBehavior.GetCurrentPathAndPoint().Item2
-				}
-			});
+					CurrentPath = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item1 : -1,
+					CurrentPoint = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item2 : -1
+				},
+				ActiveEventID = eventID
+		});
 		}
 	}
 
@@ -258,10 +261,11 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		if (saved != null)
 		{
 			curStatus = saved.Status;
-			curWalkType = saved.WalkType;
+			curWalkType = saved.WalkType;agent.Warp(saved.position.ToVector3());
+			if (saved.PathData.CurrentPath == -1 || saved.PathData.CurrentPoint == -1) return;
 			Debug.Log($"Current path: {saved.PathData.CurrentPath}, Current point: {saved.PathData.CurrentPoint}");
-			pathBehavior.GoToPath(saved.PathData.CurrentPath, saved.PathData.CurrentPoint);
-			agent.Warp(saved.position.ToVector3());
+			agent.SetDestination(pathBehavior.GoToPath(saved.PathData.CurrentPath, saved.PathData.CurrentPoint));
+			eventID = saved.ActiveEventID;
 		}
 	}
 

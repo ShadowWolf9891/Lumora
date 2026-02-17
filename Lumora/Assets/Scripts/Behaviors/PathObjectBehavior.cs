@@ -14,6 +14,11 @@ public class PathObjectBehavior : MonoBehaviour
         {
             paths.Add(pathObjects[i].GetComponent<WaypointPath>());
         }
+        if (HasPath())
+        {
+            currentPath = 0;
+            currentPoint = 0;
+        }
     }
     public bool HasPath() => paths.Count > 0;
     /// <summary>
@@ -74,6 +79,8 @@ public class PathObjectBehavior : MonoBehaviour
     /// <returns>The world position of the point on a path.</returns>
     public (int,int) GetCurrentPathAndPoint()
     {
+        if (!HasPath()) return (-1, -1);
+
         return (currentPath,currentPoint);
     }
 	/// <summary>

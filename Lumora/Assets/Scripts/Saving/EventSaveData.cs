@@ -6,5 +6,4 @@ using UnityEngine;
 public class EventSaveData
 {
     public List<string> completedEvents;
-    public List<string> inProgressEvents;
 }

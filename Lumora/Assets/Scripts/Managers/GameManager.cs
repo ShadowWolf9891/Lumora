@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
 	public static GameStates CurrentGameState { get; private set; }
 
+	private static GameSaveData _saveData;
+
 	private void Awake()
 	{
 		if (Instance == null)
@@ -30,10 +32,11 @@ public class GameManager : MonoBehaviour
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
+		if (!SaveSystem.HasSaved) SaveAll();
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
 		SceneLoader.LoadManager();
-		
+
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -43,7 +46,6 @@ public class GameManager : MonoBehaviour
 		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
 		Cursor.lockState = CursorLockMode.Locked;
 
-		if (!SaveSystem.HasSaved) SaveAll();
 		LoadAll();
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
@@ -74,36 +76,35 @@ public class GameManager : MonoBehaviour
 
 	public static void SaveAll()
 	{
-		GameSaveData data = new GameSaveData();
-		data.eventData = new EventSaveData();
-		data.playerData = new PlayerSaveData();
-		data.worldData = new WorldSaveData();
+		_saveData ??= new GameSaveData();
+		_saveData.eventData = new EventSaveData();
+		_saveData.playerData = new PlayerSaveData();
+		_saveData.worldData = new WorldSaveData();
 		for(int i = 0; i < GetCache().Count; i++)
 		{
-			GetCache()[i].Save(data);
+			GetCache()[i].Save(_saveData);
 		}
-		data.eventData.completedEvents = EventManager.GetCompletedEvents();
-		data.eventData.inProgressEvents = EventManager.GetInProgressEvents();
-
-		data.worldData.ActiveSceneIndex = SceneManager.GetActiveScene().buildIndex;
-
-		SaveSystem.Save(data);
+		_saveData.eventData.completedEvents = EventManager.GetCompletedEvents();
+		_saveData.worldData.ActiveSceneIndex = SceneManager.GetActiveScene().buildIndex;
+		_saveData.worldData.SpawnedTriggerData = SpawnerManager.GetTriggers();
+		SaveSystem.Save(_saveData);
 	}
 
 	public static void LoadAll()
 	{
-		GameSaveData data = SaveSystem.Load();
-		new LoadSceneEvent("LoadCurrentScene", data.worldData.ActiveSceneIndex);
+		_saveData = SaveSystem.Load();
+		new LoadSceneEvent("LoadCurrentScene", _saveData.worldData.ActiveSceneIndex);
 		EventManager.Raise("LoadCurrentScene");
 
 		for (int i = 0; i < GetCache().Count; i++)
 		{
-			GetCache()[i].Load(data);
+			GetCache()[i].Load(_saveData);
 		}
-		EventManager.LoadSavedEvents(data.eventData.completedEvents, data.eventData.inProgressEvents);
+		EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
+		SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
 		
-		if (data.worldData.ActiveSceneIndex == 0 || data.eventData.inProgressEvents.Count != 0) return;
-		string firstEvent = (data.worldData.ActiveSceneIndex) switch
+		if (_saveData.worldData.ActiveSceneIndex == 0) return;
+		string firstEvent = (_saveData.worldData.ActiveSceneIndex) switch
 		{
 			1 => "ShiftLeader_Enter",
 			2=> "KipEnterHouse_C1_S2",
