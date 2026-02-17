@@ -392,8 +392,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	/// <returns></returns>
 	private bool IsGrounded()
 	{
-		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight, transform.position.z), UnityEngine.Color.darkRed);
-		return Physics.Raycast(transform.position, Vector3.down, playerHeight, groundedLayers);
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight / 2, transform.position.z), UnityEngine.Color.darkRed);
+		return Physics.Raycast(transform.position, Vector3.down, playerHeight / 2, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
 	}
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{
