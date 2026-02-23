@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerHealthBehaviors : MonoBehaviour
@@ -15,10 +16,15 @@ public class PlayerHealthBehaviors : MonoBehaviour
         //Todo? Add health value from save on start
         CurrentHealthValue = maxHealth;
         GameEvents<PlayerDamagedEvent>.Subscribe(TakeDamage);
+        GameEvents<GodModeEvent>.Subscribe(EnableGodMode);
     }
 
- 
-    public void TakeDamage(PlayerDamagedEvent e)    //Triggers upon damage taken event. All damage calculation occurs within here.
+	private void EnableGodMode(GodModeEvent e)
+	{
+        godModeEnabled = e.GodModeEnabled;
+	}
+
+	public void TakeDamage(PlayerDamagedEvent e)    //Triggers upon damage taken event. All damage calculation occurs within here.
     {
         if (!godModeEnabled)
         {

@@ -79,6 +79,10 @@ public class DummyEvent : GameEventType
     public DummyEvent(string id) : base(id) { } 
 }
 
+public class DeleteSaveEvent : GameEventType
+{
+    public DeleteSaveEvent(string id) : base(id) { }
+}
 
 #region Player Events
 public enum PlayerInputActionType
@@ -131,6 +135,14 @@ public class PlayerHealthChanged : GameEventType //currently used to sync UI wit
         CurrentHealthValue = currentHealthValue;
     }
 }
+public class GodModeEvent : GameEventType
+{ 
+    public bool GodModeEnabled;
+    public GodModeEvent(string id, bool isEnabled) : base(id) 
+    {
+        GodModeEnabled = isEnabled;
+    }
+}
 
 public class UnlockAbilityEvent : GameEventType
 { 
@@ -144,21 +156,13 @@ public class UnlockAbilityEvent : GameEventType
 public class TeleportPlayerEvent : GameEventType
 {
     public Vector3 PositionToGoTo, PlayerPositionOnStart;
-    public TeleportPlayerEvent(string id, Vector3 positionToGoTo, Vector3 playerPositionOnStart) : base(id) 
+    public TeleportPlayerEvent(string id, Vector3 positionToGoTo) : base(id) 
     {
         PositionToGoTo = positionToGoTo;
-        PlayerPositionOnStart = playerPositionOnStart;
     }
 }
 
-public class LoadSceneEvent : GameEventType
-{
-    public int SceneIndex;
-    public LoadSceneEvent(string id, int sceneIndex) : base(id)
-    {
-        SceneIndex = sceneIndex;
-    }
-}
+
 #endregion
 
 #region NPC and Quest Events
@@ -285,6 +289,15 @@ public class EnemyDropsAlert : GameEventType
 #endregion
 
 #region Loading Scenes
+public class LoadSceneEvent : GameEventType
+{
+	public int SceneIndex;
+	public LoadSceneEvent(string id, int sceneIndex) : base(id)
+	{
+		SceneIndex = sceneIndex;
+	}
+}
+//Obsolete?
 public class LoadedScene : GameEventType
 {
     //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.

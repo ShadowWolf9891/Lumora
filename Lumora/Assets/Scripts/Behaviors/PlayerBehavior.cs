@@ -468,12 +468,15 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	public void Load(GameSaveData data)
 	{
 		if (data == null) return;
-		transform.SetPositionAndRotation(data.playerData.position.ToVector3(), Quaternion.Euler(data.playerData.rotation.ToVector3()));
+		if(data.playerData.position.ToVector3() != Vector3.zero) transform.SetPositionAndRotation(data.playerData.position.ToVector3(), Quaternion.Euler(data.playerData.rotation.ToVector3()));
 		playerHealthBehaviors.CurrentHealthValue = data.playerData.health;
 		if(data.playerData.pathData.CurrentPath != -1 && data.playerData.pathData.CurrentPoint != -1)
 			waypointImage.transform.position = pathObjectBehavior.GoToPath(data.playerData.pathData.CurrentPath, data.playerData.pathData.CurrentPoint);
 		InventoryManager.InventoryData = data.playerData.inventory;
 		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
 	}
+
+	public void Delete(GameSaveData data){}
+	
 	#endregion
 }

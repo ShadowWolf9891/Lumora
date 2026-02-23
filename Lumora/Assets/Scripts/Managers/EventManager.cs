@@ -4,9 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 using Newtonsoft.Json;
-using Unity.Cinemachine;
 using System.Linq;
-using System.Collections;
 
 [System.Serializable]
 public class AllEvents
@@ -17,7 +15,7 @@ public class AllEvents
 public static class EventManager
 {
 	public static Queue<GameEventType> EventQueue { get; private set; }
-	
+
 	//Checked only when another event is completed. Used for if an event is fired but the requirements are not yet met.
 	public static Queue<GameEventType> LazyEventQueue { get; private set; }
 
@@ -33,15 +31,15 @@ public static class EventManager
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
 		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
 		TextAsset c1JsonFile = Resources.Load<TextAsset>("c1_events");
-        TextAsset c1s2JsonFile = Resources.Load<TextAsset>("c1_s2_events");
-        allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
+		TextAsset c1s2JsonFile = Resources.Load<TextAsset>("c1_s2_events");
+		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
 		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
-		c1EventsDefs = JsonConvert.DeserializeObject<AllEvents> (c1JsonFile.text);
+		c1EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c1JsonFile.text);
 		c1s2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c1s2JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
 		EventQueue = new Queue<GameEventType>();
 		LazyEventQueue = new Queue<GameEventType>();
-		
+
 		foreach (GameEventDefinition eventDef in allEventsDefs.allEvents)
 		{
 			CreateEvent(eventDef);
@@ -52,28 +50,32 @@ public static class EventManager
 			CreateEvent(eventDef);
 			Debug.Log($"Created event {eventDef.id}");
 		}
-        foreach (GameEventDefinition eventDef in c1EventsDefs.allEvents)
-        {
-            CreateEvent(eventDef);
-            Debug.Log($"Created event {eventDef.id}");
-        }
-        foreach (GameEventDefinition eventDef in c1s2EventsDefs.allEvents)
-        {
-            CreateEvent(eventDef);
-            Debug.Log($"Created event {eventDef.id}");
-        }
+		foreach (GameEventDefinition eventDef in c1EventsDefs.allEvents)
+		{
+			CreateEvent(eventDef);
+			Debug.Log($"Created event {eventDef.id}");
+		}
+		foreach (GameEventDefinition eventDef in c1s2EventsDefs.allEvents)
+		{
+			CreateEvent(eventDef);
+			Debug.Log($"Created event {eventDef.id}");
+		}
 
-        Debug.Log("Loaded events json file.");
+		Debug.Log("Loaded events json file.");
 	}
 	public static void LoadSavedEvents(List<string> completedEvents)
 	{
 		if (_events == null) LoadEvents();
-	
+
 		foreach (string eId in completedEvents) { _completedEvents.Add(eId); }
 	}
-	public static List<string> GetCompletedEvents()
+	public static List<string> GetCompletedEvents() => _completedEvents.ToList();
+	public static void Reset()
 	{
-		return _completedEvents.ToList();
+		_completedEvents?.Clear();
+		EventQueue?.Clear();
+		LazyEventQueue?.Clear();
+		_raiseCache?.Clear();
 	}
 	private static void CreateEvent(GameEventDefinition def)
 	{

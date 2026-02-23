@@ -27,14 +27,14 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         {
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
                 $"Teleporting Player to: {bottomLadderPoint} from: {topLadderPoint}", 
-                bottomLadderPoint.position, topLadderPoint.position));
+                bottomLadderPoint.position));
 
         }
         else
         {
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
                 $"Teleporting Player to: {topLadderPoint} from: {bottomLadderPoint}", 
-                topLadderPoint.position, bottomLadderPoint.position));
+                topLadderPoint.position));
         }
 
         //Teleporting player will be an event raised by this behavior that player listens for.

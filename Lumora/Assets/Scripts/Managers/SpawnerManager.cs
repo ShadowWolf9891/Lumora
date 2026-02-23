@@ -60,6 +60,7 @@ public static class SpawnerManager
 	{
 		return triggers;
 	}
+	public static void Reset() => triggers?.Clear();
 	public static void RestoreTriggersOnLoad(WorldSaveData saveData)
 	{
 		if (saveData == null || saveData.SpawnedTriggerData == null || saveData.SpawnedTriggerData.Count <=0) return;

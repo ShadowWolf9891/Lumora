@@ -17,7 +17,10 @@ public static class SaveSystem
         string json = File.ReadAllText(GetPath());
         return JsonConvert.DeserializeObject<GameSaveData>(json);
     }
-
+    public static void DeleteSave()
+    {
+        File.Delete(GetPath());
+    }
     private static string GetPath()
     {
 		return Path.Combine(Application.persistentDataPath, "save_01.json");
@@ -28,6 +31,7 @@ public interface ISaveable
 {
 	void Save(GameSaveData data);
     void Load(GameSaveData data);
+    void Delete(GameSaveData data);
 }
 
 [Serializable]

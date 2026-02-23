@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-	private GameManager Instance;
+	private static GameManager Instance;
 	[SerializeField] GameObject playerRef;
 	[SerializeField] SpawnableObjects spawnableObjects;
 	[SerializeField] LayerMask coverLayerMask;
@@ -24,10 +23,9 @@ public class GameManager : MonoBehaviour
 		{
 			Instance = this;
 			DontDestroyOnLoad(gameObject);
+			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 		else Destroy(gameObject);
-
-		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -36,7 +34,6 @@ public class GameManager : MonoBehaviour
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
 		SceneLoader.LoadManager();
-
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -44,9 +41,10 @@ public class GameManager : MonoBehaviour
     {
 		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
+		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
 		Cursor.lockState = CursorLockMode.Locked;
 
-		LoadAll();
+		LoadAll(false);
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
@@ -90,21 +88,22 @@ public class GameManager : MonoBehaviour
 		SaveSystem.Save(_saveData);
 	}
 
-	public static void LoadAll()
+	public static void LoadAll(bool shouldReset = false)
 	{
 		_saveData = SaveSystem.Load();
-		new LoadSceneEvent("LoadCurrentScene", _saveData.worldData.ActiveSceneIndex);
+		int curScene = shouldReset ? SceneManager.GetActiveScene().buildIndex : _saveData.worldData.ActiveSceneIndex;
+		new LoadSceneEvent("LoadCurrentScene", curScene);
 		EventManager.Raise("LoadCurrentScene");
 
 		for (int i = 0; i < GetCache().Count; i++)
 		{
 			GetCache()[i].Load(_saveData);
 		}
-		EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
-		SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
+		if(!shouldReset)EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
+		if (!shouldReset) SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
 		
-		if (_saveData.worldData.ActiveSceneIndex == 0) return;
-		string firstEvent = (_saveData.worldData.ActiveSceneIndex) switch
+		if (curScene == 0) return;
+		string firstEvent = (curScene) switch
 		{
 			1 => "ShiftLeader_Enter",
 			2=> "KipEnterHouse_C1_S2",
@@ -113,6 +112,21 @@ public class GameManager : MonoBehaviour
 		};
 		if(firstEvent != "" && !EventManager.GetCompletedEvents().Contains(firstEvent)) EventManager.Raise(firstEvent);
 		else EventManager.Raise("Resume_Game");
+	}
+
+	public static void DeleteSave(DeleteSaveEvent e)
+	{
+		for (int i = 0; i < GetCache().Count; i++)
+		{
+			GetCache()[i].Delete(_saveData);
+		}
+		EventManager.Reset(); //Might break for completed events between scenes.
+		SpawnerManager.Reset();
+		CameraManager.Reset();
+		_saveData = null;
+		SaveSystem.DeleteSave();
+		LoadAll(true);
+		Debug.Log("Deleted Save!");
 	}
 	private static List<ISaveable> GetCache()
 	{

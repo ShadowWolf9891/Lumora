@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -257,6 +255,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 
 	public void Load(GameSaveData data)
 	{
+		if (data == null) return;
 		var saved = data.worldData.NPCData.Find(x => x.InstanceId == GUID);
 		if (saved != null)
 		{
@@ -267,6 +266,12 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 			agent.SetDestination(pathBehavior.GoToPath(saved.PathData.CurrentPath, saved.PathData.CurrentPoint));
 			eventID = saved.ActiveEventID;
 		}
+	}
+
+	public void Delete(GameSaveData data)
+	{
+		data.worldData.NPCData = null;
+		agent.ResetPath();
 	}
 
 	//Generating Unique id for saving in the editor
