@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 		switch (SceneManager.GetActiveScene().buildIndex)
 		{
 			case 1:
+				AudioManager.Instance.PlayMusic("Chapter1Background");
 				EventManager.Raise("ShiftLeader_Enter");
 				break;
 			case 2:

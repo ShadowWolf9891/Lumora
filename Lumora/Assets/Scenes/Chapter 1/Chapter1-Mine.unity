@@ -1369,7 +1369,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -5767,7 +5767,7 @@ Transform:
   m_GameObject: {fileID: 144859920}
   serializedVersion: 2
   m_LocalRotation: {x: 0.46869433, y: -0.37112892, z: 0.22618456, w: 0.7690446}
-  m_LocalPosition: {x: 384.09045, y: 37.14025, z: 115.288574}
+  m_LocalPosition: {x: 384.09045, y: 38.540253, z: 115.288574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25049,7 +25049,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d786f8c77278f14fabed48147203f57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  musicSounds: []
+  musicSounds:
+  - name: TitleTrack
+    clip: {fileID: 8300000, guid: f5c7a526b4164994dac37c8bd3446ed6, type: 3}
+  - name: Chapter1Background
+    clip: {fileID: 8300000, guid: d9c095cc1c4097e4a91c064937b65315, type: 3}
   sfxSounds:
   - name: S_Distraction_1
     clip: {fileID: 8300000, guid: f334e61bfd2644040a8bb1805c220083, type: 3}

@@ -5,7 +5,7 @@ public class UIStartMenu : MonoBehaviour
 {
     void Start()
     {
-        
+        AudioManager.Instance.PlayMusic("TitleTrack");
     }
     public void OnStartClick()
     {
