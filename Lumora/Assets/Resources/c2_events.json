@@ -176,7 +176,7 @@
             "id": "Watts_Door_Close",
             "parameters":
             {
-                "timelineName": "WattsDoorShutTimeline"
+                "timelineName": "WattsDoorCloseTL"
             }
         },
         {
@@ -306,12 +306,16 @@
             "id": "Lira_Door_Close",
             "parameters":
             {
-                "timelineName": "WattsDoorShutTimeline"
+                "timelineName": "WattsDoorCloseTL"
             }
         },
         {
             "type": "SpawnTriggerEvent",
             "id": "C2_Arrive_Darren_Trigger",
+            "eventsOnComplete":
+            [
+                "C2_Arrive_Darren_Trigger_2"
+            ],
             "parameters":
             {
                 "worldLocation": "-150.71, 0.35, -836.5",
@@ -342,9 +346,106 @@
         {
             "type":"BeginCutsceneEvent",
             "id": "DarrenFrontClose",
+            "eventsOnComplete":
+            [
+                "C2_Darren_Enter_Trigger",
+                "C2__Darren_CloseDoor_Trigger",
+                "C2_Darren_Enter_Path"
+                
+            ],
             "parameters":
             {
                 "timelineName": "DarrenDoorClose"
+            }
+        },
+        {
+            "type": "PathEvent",
+            "id": "C2_Darren_Enter_Path",
+            "parameters":
+            {
+                "npcName": "Darren",
+                "newStatus": 0
+            }   
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "C2_Darren_Enter_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-152.13, 0.19, -847.88",
+                "radius": "1",
+                "layerMask": "NPCs",
+                "eventToRaiseOnTrigger": "DarrenBackOpen"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "DarrenBackOpen",
+            "parameters":
+            {
+                "timelineName": "DarrenEnterDoorTL"
+            }
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "C2__Darren_CloseDoor_Trigger",
+            "parameters":
+            {
+                "worldLocation": "-152.6, 0.19, -845.86",
+                "radius": "1",
+                "layerMask": "NPCs",
+                "eventToRaiseOnTrigger": "DarrenBackClose"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "DarrenBackClose",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_1"
+            ],
+            "parameters":
+            {
+                "timelineName": "DarrenCloseDoorTL"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_1",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_2"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "15"
+            }
+        },
+         {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_2",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_3"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "16"
+            }
+        },
+         {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_3",
+            "eventsOnComplete":
+            [
+                ""
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "17"
             }
         }
     ]
