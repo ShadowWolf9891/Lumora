@@ -601,8 +601,8 @@ GameObject:
   - component: {fileID: 8209262538507549975}
   - component: {fileID: 7166657601331200534}
   - component: {fileID: 7869366584272912734}
-  - component: {fileID: 957667314810470744}
   - component: {fileID: 8960652971036187636}
+  - component: {fileID: 8854146597825932092}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -757,23 +757,7 @@ MonoBehaviour:
   SprintingVisibility: 1
   CrouchedVisibility: 0.4
   LightEffectOnVision: 0.5
-  sampler: {fileID: 957667314810470744}
---- !u!114 &957667314810470744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5350591719694058521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2456a156f4e9c764f93e72afaf4b2bf3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LightingSampler
-  probeCam: {fileID: 7632463956177656811}
-  textureSize: 16
-  brightness: 0
-  sampleInterval: 0.3
+  sampler: {fileID: 8854146597825932092}
 --- !u!114 &8960652971036187636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -789,6 +773,23 @@ MonoBehaviour:
   coverLayerMask:
     serializedVersion: 2
     m_Bits: 2048
+--- !u!114 &8854146597825932092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350591719694058521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d03edf3fca945043b7288585d9556a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightSampler
+  brightness: 0
+  mainLight: {fileID: 0}
+  shadowMask:
+    serializedVersion: 2
+    m_Bits: 2056
 --- !u!1 &8602731980252993455
 GameObject:
   m_ObjectHideFlags: 0
