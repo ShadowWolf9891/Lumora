@@ -11,13 +11,11 @@ public class PlayerController : MonoBehaviour
 	//Private variables
 	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
 	private Vector2 moveInput;
-	private bool canMove;
 	private bool sprinting;
 	private Camera mainCam;
 
     private void Start()
 	{
-		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChanged);
 		//GameContext.Instance.OnPauseGame += FreezePlayer;
 		//GameContext.Instance.OnUnPauseGame += UnFreezePlayer;
 
@@ -41,7 +39,7 @@ public class PlayerController : MonoBehaviour
 	{
 		//Always possible actions...
 
-		if (!canMove)
+		if (GameManager.CurrentGameState == GameStates.Dialogue)
 		{
 			if (interactAction.WasPressedThisFrame())
 			{
@@ -49,7 +47,7 @@ public class PlayerController : MonoBehaviour
 				//GameContext.Instance.RaiseNextDialogueLine();
 			}
 		}
-		else
+		else if(GameManager.CurrentGameState == GameStates.Running)
 		{
 			//Actions that cannot be done while paused...
 			if (moveAction.IsInProgress())
@@ -106,16 +104,5 @@ public class PlayerController : MonoBehaviour
 
 		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
 
-	}
-	private void OnGameStateChanged(ChangeGameStateEvent e) 
-	{
-		if (e.State == GameStates.Running)
-		{
-			canMove = true;
-		}
-		else // used to be else if, currently either the game's running or its paused, so here we are
-		{
-			canMove = false;
-		}
 	}
 }

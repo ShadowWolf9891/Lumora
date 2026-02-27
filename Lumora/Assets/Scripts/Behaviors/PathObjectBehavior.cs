@@ -14,6 +14,11 @@ public class PathObjectBehavior : MonoBehaviour
         {
             paths.Add(pathObjects[i].GetComponent<WaypointPath>());
         }
+        if (HasPath())
+        {
+            currentPath = 0;
+            currentPoint = 0;
+        }
     }
     public bool HasPath() => paths.Count > 0;
     /// <summary>
@@ -52,7 +57,8 @@ public class PathObjectBehavior : MonoBehaviour
     /// <returns>If the object is within 0.05 units of the last point on the path.</returns>
     public bool IsDonePath(Vector3 currentLocation, float threshold = 1f)
     {
-        if (currentPoint < paths[currentPath].points.Count - 1 || paths[currentPath].loop) return false;
+		if (paths.Count == 0) LoadPath();
+		if (currentPoint < paths[currentPath].points.Count - 1 || paths[currentPath].loop) return false;
         
         return IsAtPoint(currentLocation, threshold);
     }
@@ -64,16 +70,27 @@ public class PathObjectBehavior : MonoBehaviour
     /// <returns>True if object is at the point.</returns>
     public bool IsAtPoint(Vector3 currentLocation, float threshold = 1f) 
     {
-        return Mathf.Abs((currentLocation - paths[currentPath].GetPointWorld(currentPoint)).magnitude) < threshold;
+		if (paths.Count == 0) LoadPath();
+		return Mathf.Abs((currentLocation - paths[currentPath].GetPointWorld(currentPoint)).magnitude) < threshold;
 	}
+    /// <summary>
+    /// Gets the current path and point the attached object should be at, or moving towards.
+    /// </summary>
+    /// <returns>The world position of the point on a path.</returns>
+    public (int,int) GetCurrentPathAndPoint()
+    {
+        if (!HasPath()) return (-1, -1);
 
+        return (currentPath,currentPoint);
+    }
 	/// <summary>
 	/// Go to the next path in the list. Will throw an error if invalid.
 	/// </summary>
 	/// <returns>First point along the path</returns>
 	public Vector3 GoToNextPath()
     {
-        currentPath++;
+		if (paths.Count == 0) LoadPath();
+        if (paths.Count > currentPath + 1) currentPath++;
         return GoToPath(currentPath);
     }
 	/// <summary>
@@ -82,7 +99,8 @@ public class PathObjectBehavior : MonoBehaviour
 	/// <returns>First point along the path</returns>
 	public Vector3 GoToPreviousPath()
 	{
-        currentPath--;
+		if (paths.Count == 0) LoadPath();
+		if (currentPath > 0) currentPath--;
 		return GoToPath(currentPath);
 	}
 	/// <summary>
@@ -93,7 +111,8 @@ public class PathObjectBehavior : MonoBehaviour
 	/// <returns>World location of the point in the path.</returns>
 	public Vector3 GoToPath(int pathIndex, int pointIndex = 0)
     {
-        currentPath = pathIndex;
+		if (paths.Count == 0) LoadPath();
+		currentPath = pathIndex;
         currentPoint = pointIndex;
         ErrorCheck();
         return paths[currentPath].GetPointWorld(currentPoint);

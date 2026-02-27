@@ -1,43 +1,41 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(PathObjectBehavior))]
-public class NPC_Behavior : MonoBehaviour
+public class NPC_Behavior : MonoBehaviour, ISaveable
 {
 	[SerializeField] PathStatus curStatus = PathStatus.PAUSE;
 	[SerializeField] WalkType curWalkType = WalkType.NORMAL;
 	[SerializeField] float followDistance = 5.0f;
-
+	[SerializeField] GameObject curTarget;
 	PathObjectBehavior pathBehavior;
 	NavMeshAgent agent;
-	GameObject curTarget;
 	Vector3 previousVelocity;
 	string eventID;
-	void Start()
+	void Awake()
     {
-        GameEvents<PathEvent>.Subscribe(ChangePathStatus);
-        GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
         agent = GetComponent<NavMeshAgent>();
-		curTarget = GameObject.Find("Player");
 		pathBehavior = GetComponent<PathObjectBehavior>();
-		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
     }
-
+	void Start()
+	{
+		if(curTarget == null) curTarget = GameObject.Find("Player");
+		GameEvents<PathEvent>.Subscribe(ChangePathStatus);
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
+		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
+	}
 
 	private void ChangePathStatus(PathEvent e)
 	{
         //Return early if irrelevent
         if (e.NPCName != gameObject.name) return;
-		if (curStatus == e.NewStatus)
-		{
-			EventManager.MarkEventCompleted(e.Id); 
-			return;
-		}
+		//if (curStatus == e.NewStatus)
+		//{
+		//	//EventManager.MarkEventCompleted(e.Id); 
+		//	return;
+		//}
 
         switch (e.NewStatus)
         {
@@ -55,10 +53,12 @@ public class NPC_Behavior : MonoBehaviour
 				break;
             case PathStatus.NEXT_PATH:
 				agent.SetDestination(pathBehavior.GoToNextPath());
+				EventManager.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.PREV_PATH:
 				agent.SetDestination(pathBehavior.GoToPreviousPath());
+				EventManager.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.END_EARLY:
@@ -96,6 +96,8 @@ public class NPC_Behavior : MonoBehaviour
 	private void MoveNPCAlongPath()
 	{
 		if (agent.isStopped) ToggleNPCMovement();
+
+		if (!pathBehavior.HasPath()) return;
 		//Go to next point if at destination
 		if (pathBehavior.IsAtPoint(transform.position, 2f)) agent.SetDestination(pathBehavior.GetNextPoint());
 
@@ -212,4 +214,72 @@ public class NPC_Behavior : MonoBehaviour
 			agent.isStopped = false;
 		}
 	}
+
+	public void Save(GameSaveData data)
+	{
+		if (data == null)
+		{
+			Debug.LogError($"Save called before GameSaveData is initialized for {name}");
+			return;
+		}
+		data.worldData ??= new WorldSaveData();
+		data.worldData.NPCData ??= new List<NPCStatusData>();
+
+		var existing = data.worldData.NPCData.Find(x => x.InstanceId == GUID);
+		if (existing != null)
+		{
+			existing.position = new SerializableVector3(agent.transform.position);
+			existing.Status = curStatus == PathStatus.START ? PathStatus.RESUME : curStatus;
+			existing.WalkType = curWalkType;
+			existing.PathData.CurrentPath = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item1 : -1;
+			existing.PathData.CurrentPoint = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item2 : -1;
+			existing.ActiveEventID = eventID;
+		}
+		else
+		{
+			data.worldData.NPCData.Add(new NPCStatusData
+			{
+				InstanceId = GUID,
+				position = new SerializableVector3(agent.transform.position),
+				Status = curStatus == PathStatus.START ? PathStatus.RESUME : curStatus,
+				WalkType = curWalkType,
+				PathData = new PathData() 
+				{ 
+					CurrentPath = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item1 : -1,
+					CurrentPoint = pathBehavior.HasPath() ? pathBehavior.GetCurrentPathAndPoint().Item2 : -1
+				},
+				ActiveEventID = eventID
+		});
+		}
+	}
+
+	public void Load(GameSaveData data)
+	{
+		if (data == null) return;
+		var saved = data.worldData.NPCData.Find(x => x.InstanceId == GUID);
+		if (saved != null)
+		{
+			curStatus = saved.Status;
+			curWalkType = saved.WalkType;agent.Warp(saved.position.ToVector3());
+			if (saved.PathData.CurrentPath == -1 || saved.PathData.CurrentPoint == -1) return;
+			Debug.Log($"Current path: {saved.PathData.CurrentPath}, Current point: {saved.PathData.CurrentPoint}");
+			agent.SetDestination(pathBehavior.GoToPath(saved.PathData.CurrentPath, saved.PathData.CurrentPoint));
+			eventID = saved.ActiveEventID;
+		}
+	}
+	//Generating Unique id for saving in the editor
+
+	[SerializeField] private string npcId;
+	public string GUID => npcId;
+
+#if UNITY_EDITOR
+private void OnValidate()
+{
+    if (string.IsNullOrEmpty(npcId))
+    {
+        npcId = System.Guid.NewGuid().ToString();
+        UnityEditor.EditorUtility.SetDirty(this);
+    }
+}
+#endif
 }

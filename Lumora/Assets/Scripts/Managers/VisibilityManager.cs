@@ -29,7 +29,7 @@ public class VisibilityManager : MonoBehaviour
     private float LightEffectOnVision = 0.5f; //0.5 emphasizes shadow, 2 emphasizes light
 
     [SerializeField]
-    private LightingSampler sampler;
+    private PlayerLightSampler sampler;
 
 	public float Visibility { get; private set; }
     private PlayerBehavior playerBehavior;

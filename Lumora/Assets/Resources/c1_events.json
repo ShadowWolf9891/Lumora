@@ -330,10 +330,36 @@
         {
             "type": "DialogueEvent",
             "id": "Pit_6",
-            "parameters" :
-            {
-                "chapter":"1",
-                "scene":"20"
+            "eventsOnComplete": [
+                "Lira_CollectHeatUnit_Trigger"
+            ],
+            "parameters": {
+                "chapter": "1",
+                "scene": "20"
+            }
+        },
+        {
+            "type": "SpawnTriggerEvent",
+            "id": "Lira_CollectHeatUnit_Trigger",
+            "parameters": {
+                "worldLocation": "406.05, 0.52, 336.11",
+                "radius": "2",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "Lira_Collect"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Lira_Collect",
+            "parameters": {
+                "timelineName": "LiraCollectHeatUnitTL"
+            }
+        },
+        {
+            "type": "LoadSceneEvent",
+            "id": "Chapter1Scene1End",
+            "parameters": {
+                "sceneIndex": 2
             }
         }
     ]

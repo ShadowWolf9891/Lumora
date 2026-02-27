@@ -98,4 +98,12 @@ public static class CameraManager
 		if(_brain == null) return false;
 		return _brain.IsBlending;
 	}
+
+	public static void Reset()
+	{
+		 _cameraList = null;
+		_brain = null;
+		CurrentCamera = null;
+		PreviousCamera = null;
+	}
 }

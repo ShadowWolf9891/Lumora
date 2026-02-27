@@ -348,10 +348,7 @@
             "id": "DarrenFrontClose",
             "eventsOnComplete":
             [
-                "C2_Darren_Enter_Trigger",
-                "C2__Darren_CloseDoor_Trigger",
-                "C2_Darren_Enter_Path"
-                
+                "C2_Arrive_Darren_Trigger_3"
             ],
             "parameters":
             {
@@ -359,54 +356,26 @@
             }
         },
         {
-            "type": "PathEvent",
-            "id": "C2_Darren_Enter_Path",
-            "parameters":
-            {
-                "npcName": "Darren",
-                "newStatus": 0
-            }   
-        },
-        {
             "type": "SpawnTriggerEvent",
-            "id": "C2_Darren_Enter_Trigger",
+            "id": "C2_Arrive_Darren_Trigger_3",
             "parameters":
             {
-                "worldLocation": "-152.13, 0.19, -847.88",
+                "worldLocation": "-152.66, 0.35, -843.21",
                 "radius": "1",
-                "layerMask": "NPCs",
+                "layerMask": "Player",
                 "eventToRaiseOnTrigger": "DarrenBackOpen"
             }
         },
         {
             "type":"BeginCutsceneEvent",
             "id": "DarrenBackOpen",
-            "parameters":
-            {
-                "timelineName": "DarrenEnterDoorTL"
-            }
-        },
-        {
-            "type": "SpawnTriggerEvent",
-            "id": "C2__Darren_CloseDoor_Trigger",
-            "parameters":
-            {
-                "worldLocation": "-152.6, 0.19, -845.86",
-                "radius": "1",
-                "layerMask": "NPCs",
-                "eventToRaiseOnTrigger": "DarrenBackClose"
-            }
-        },
-        {
-            "type":"BeginCutsceneEvent",
-            "id": "DarrenBackClose",
             "eventsOnComplete":
             [
                 "C2_Lira_Darren_1"
             ],
             "parameters":
             {
-                "timelineName": "DarrenCloseDoorTL"
+                "timelineName": "DarrenEnterDoorTL"
             }
         },
         {
@@ -435,9 +404,44 @@
                 "scene": "16"
             }
         },
-         {
+        {
             "type":"DialogueEvent",
             "id": "C2_Lira_Darren_3",
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "17"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_4",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_5"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "18"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_5",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_6"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "19"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_6",
             "eventsOnComplete":
             [
                 ""
@@ -445,8 +449,9 @@
             "parameters":
             {
                 "chapter": "2",
-                "scene": "17"
+                "scene": "20"
             }
         }
+
     ]
 }
