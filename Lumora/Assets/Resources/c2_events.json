@@ -348,10 +348,7 @@
             "id": "DarrenFrontClose",
             "eventsOnComplete":
             [
-                "C2_Darren_Enter_Trigger",
-                "C2__Darren_CloseDoor_Trigger",
-                "C2_Darren_Enter_Path"
-                
+                "C2_Arrive_Darren_Trigger_3"
             ],
             "parameters":
             {
@@ -359,22 +356,13 @@
             }
         },
         {
-            "type": "PathEvent",
-            "id": "C2_Darren_Enter_Path",
-            "parameters":
-            {
-                "npcName": "Darren",
-                "newStatus": 0
-            }   
-        },
-        {
             "type": "SpawnTriggerEvent",
-            "id": "C2_Darren_Enter_Trigger",
+            "id": "C2_Arrive_Darren_Trigger_3",
             "parameters":
             {
-                "worldLocation": "-152.13, 0.19, -847.88",
+                "worldLocation": "-152.66, 0.35, -843.21",
                 "radius": "1",
-                "layerMask": "NPCs",
+                "layerMask": "Player",
                 "eventToRaiseOnTrigger": "DarrenBackOpen"
             }
         },
@@ -419,28 +407,11 @@
         {
             "type":"DialogueEvent",
             "id": "C2_Lira_Darren_3",
-            "eventsOnComplete":
-            [
-                "C2_Darren_Pic_Path"
-            ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "17"
             }
-        },
-        {
-            "type": "PathEvent",
-            "id": "C2_Darren_Pic_Path",
-            "eventsOnComplete":
-            [
-                "C2_Lira_Darren_4"
-            ],
-            "parameters":
-            {
-                "npcName": "Darren",
-                "newStatus": 3
-            }   
         },
         {
             "type":"DialogueEvent",
