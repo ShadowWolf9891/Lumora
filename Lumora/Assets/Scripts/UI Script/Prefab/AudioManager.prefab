@@ -267,7 +267,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3856256900694276290}
-  - component: {fileID: 7638397951505351790}
+  - component: {fileID: 5064517211203911639}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -292,7 +292,7 @@ Transform:
   - {fileID: 8414127681707216736}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7638397951505351790
+--- !u!114 &5064517211203911639
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -304,5 +304,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d786f8c77278f14fabed48147203f57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  musicSounds:
+  - name: TitleTrack
+    clip: {fileID: 8300000, guid: f5c7a526b4164994dac37c8bd3446ed6, type: 3}
+  - name: Chapter1Background
+    clip: {fileID: 8300000, guid: d9c095cc1c4097e4a91c064937b65315, type: 3}
+  sfxSounds:
+  - name: S_Distraction_1
+    clip: {fileID: 8300000, guid: f334e61bfd2644040a8bb1805c220083, type: 3}
+  - name: S_Distraction_2
+    clip: {fileID: 8300000, guid: f75f2c43f7951c44290042b95c9fd51d, type: 3}
+  - name: S_Distraction_3
+    clip: {fileID: 8300000, guid: a7cdb73f64bd50745804cf68e9ba3aef, type: 3}
+  - name: S_Footsteps_1
+    clip: {fileID: 8300000, guid: d1b644bf2e2fbe34d98868900744d1f3, type: 3}
+  - name: S_Footsteps_2
+    clip: {fileID: 8300000, guid: c722b7cb6e4bdbe4189193e8bdf551dd, type: 3}
+  - name: S_Bodydrop_1
+    clip: {fileID: 8300000, guid: 25adee87bdb7a6d44833f5b742c63a52, type: 3}
+  - name: S_Punch_1
+    clip: {fileID: 8300000, guid: 7269765f80f258b40b00050374e8d851, type: 3}
+  - name: S_HitGuard_1
+    clip: {fileID: 8300000, guid: 7c7db708defd60d4f9fc0f238e0e1047, type: 3}
   musicSource: {fileID: 6149886422415832996}
   sfxSource: {fileID: 6799710818491007888}
