@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 	public static GameStates CurrentGameState { get; private set; }
 
 	private static GameSaveData _saveData;
+	private static bool canSave = false;
 
 	private void Awake()
 	{
@@ -30,10 +31,11 @@ public class GameManager : MonoBehaviour
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		if (!SaveSystem.HasSaved) SaveAll();
+		if (!SaveSystem.HasSaved && canSave) SaveAll();
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
 		SceneLoader.LoadManager();
+		LoadAll(scene.buildIndex);
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -42,12 +44,15 @@ public class GameManager : MonoBehaviour
 		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
 		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
+		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
 		Cursor.lockState = CursorLockMode.Locked;
 
-		LoadAll(false);
+		new LoadSceneEvent("LoadCurrentScene", 1);
+		EventManager.Raise("LoadCurrentScene");
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
+
 
 	private void Update()
 	{
@@ -71,13 +76,17 @@ public class GameManager : MonoBehaviour
 		else Debug.LogError($"Failed to find object {e.ObjectName} when calling {e.Id}.");
 	
 	}
-
+	private void EnableSaving(EnableSaveEvent e)
+	{
+		canSave = true;
+	}
 	public static void SaveAll()
 	{
+		if (!canSave) return;
 		_saveData ??= new GameSaveData();
-		_saveData.eventData = new EventSaveData();
-		_saveData.playerData = new PlayerSaveData();
-		_saveData.worldData = new WorldSaveData();
+		_saveData.eventData ??= new EventSaveData();
+		_saveData.playerData ??= new PlayerSaveData();
+		_saveData.worldData ??= new WorldSaveData();
 		for(int i = 0; i < GetCache().Count; i++)
 		{
 			GetCache()[i].Save(_saveData);
@@ -88,20 +97,20 @@ public class GameManager : MonoBehaviour
 		SaveSystem.Save(_saveData);
 	}
 
-	public static void LoadAll(bool shouldReset = false)
+	public static void LoadAll(int curScene)
 	{
-		_saveData = SaveSystem.Load();
-		int curScene = shouldReset ? SceneManager.GetActiveScene().buildIndex : _saveData.worldData.ActiveSceneIndex;
-		new LoadSceneEvent("LoadCurrentScene", curScene);
-		EventManager.Raise("LoadCurrentScene");
-
-		for (int i = 0; i < GetCache().Count; i++)
+		if (canSave)
 		{
-			GetCache()[i].Load(_saveData);
+			_saveData = SaveSystem.Load(curScene);
+
+			for (int i = 0; i < GetCache().Count; i++)
+			{
+				GetCache()[i].Load(_saveData);
+			}
+
+			EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
+			SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
 		}
-		if(!shouldReset)EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
-		if (!shouldReset) SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
-		
 		if (curScene == 0) return;
 		string firstEvent = (curScene) switch
 		{
@@ -110,23 +119,21 @@ public class GameManager : MonoBehaviour
 			3=>"Chapter2_Intro",
 			_ => ""
 		};
-		if(firstEvent != "" && !EventManager.GetCompletedEvents().Contains(firstEvent)) EventManager.Raise(firstEvent);
+		if (firstEvent != "" && !EventManager.GetCompletedEvents().Contains(firstEvent))
+		{
+			EventManager.Raise(firstEvent);
+			Debug.Log($"Raised first event {firstEvent}");
+		}
 		else EventManager.Raise("Resume_Game");
 	}
 
 	public static void DeleteSave(DeleteSaveEvent e)
 	{
-		for (int i = 0; i < GetCache().Count; i++)
-		{
-			GetCache()[i].Delete(_saveData);
-		}
 		EventManager.Reset(); //Might break for completed events between scenes.
 		SpawnerManager.Reset();
 		CameraManager.Reset();
 		_saveData = null;
-		SaveSystem.DeleteSave();
-		LoadAll(true);
-		Debug.Log("Deleted Save!");
+		SaveSystem.DeleteData();
 	}
 	private static List<ISaveable> GetCache()
 	{

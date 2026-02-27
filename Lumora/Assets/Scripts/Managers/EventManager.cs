@@ -262,7 +262,7 @@ public static class EventManager
 		if(!skipOnComplete) RaiseEventsOnComplete(eventID);
 
 		CheckLazyEvents(eventID);
-		GameManager.SaveAll();
+		if (!evt.IsRepeatable) GameManager.SaveAll();
 	}
 
 	private static void RaiseEventsOnComplete(string eventID)

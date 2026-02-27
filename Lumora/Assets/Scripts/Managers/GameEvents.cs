@@ -83,6 +83,11 @@ public class DeleteSaveEvent : GameEventType
 {
     public DeleteSaveEvent(string id) : base(id) { }
 }
+public class EnableSaveEvent : GameEventType
+{ 
+    public EnableSaveEvent(string id) : base(id) { }
+}
+
 
 #region Player Events
 public enum PlayerInputActionType

@@ -267,13 +267,6 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 			eventID = saved.ActiveEventID;
 		}
 	}
-
-	public void Delete(GameSaveData data)
-	{
-		data.worldData.NPCData = null;
-		agent.ResetPath();
-	}
-
 	//Generating Unique id for saving in the editor
 
 	[SerializeField] private string npcId;

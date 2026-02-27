@@ -11,7 +11,8 @@ public static class ConsoleWindow
 		new string[]{ "loadchapter","lc","load"},
 		new string[]{ "playerspeed","ps", "speed" }, //Not Implemented
 		new string[]{ "godmode", "gm", "god" },
-		new string[]{ "deletesave", "delsave" }
+		new string[]{ "deletesave", "delsave" },
+		new string[]{"enablesaving", "enablesave"}
 	};
 	//Array of valid user inputs and the type of variable that needs to follow it.
 	private static readonly Dictionary<string[], Type[]> _validInputs = new()
@@ -43,8 +44,9 @@ public static class ConsoleWindow
 			"playerspeed" => default, //Do this later
 			"godmode" => new GodModeEvent(validUserInput.Item1, (bool)validUserInput.Item2[0]),
 			"deletesave" => new DeleteSaveEvent(validUserInput.Item1),
+			"enablesaving" => new EnableSaveEvent(validUserInput.Item1),
 			_ => default
-		};
+		} ;
 
 		RaiseConsoleCommand(e);
 		return $"Successfully executed '{userInput}'.";

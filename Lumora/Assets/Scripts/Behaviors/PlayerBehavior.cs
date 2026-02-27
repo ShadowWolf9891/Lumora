@@ -75,6 +75,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     }
 	private void Start()
 	{
+
 		CameraManager.SetCurrentCamera("3rd Person Camera");
 	}
 
@@ -475,8 +476,6 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		InventoryManager.InventoryData = data.playerData.inventory;
 		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
 	}
-
-	public void Delete(GameSaveData data){}
 	
 	#endregion
 }

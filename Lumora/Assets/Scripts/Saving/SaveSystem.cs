@@ -11,13 +11,14 @@ public static class SaveSystem
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(GetPath(), json);
     }
-    public static GameSaveData Load()
+    public static GameSaveData Load(int sceneId)
     {
-        if(!File.Exists(GetPath())) return null;
-        string json = File.ReadAllText(GetPath());
+         string json = File.Exists(GetPath()) ? File.ReadAllText(GetPath()) :
+                JsonConvert.SerializeObject(Resources.Load($"scene_{sceneId}_save.json"),Formatting.Indented);
+        File.WriteAllText(GetPath(), json);
         return JsonConvert.DeserializeObject<GameSaveData>(json);
     }
-    public static void DeleteSave()
+    public static void DeleteData()
     {
         File.Delete(GetPath());
     }
@@ -25,13 +26,13 @@ public static class SaveSystem
     {
 		return Path.Combine(Application.persistentDataPath, "save_01.json");
 	}
+  
 }
 
 public interface ISaveable
 {
 	void Save(GameSaveData data);
     void Load(GameSaveData data);
-    void Delete(GameSaveData data);
 }
 
 [Serializable]
