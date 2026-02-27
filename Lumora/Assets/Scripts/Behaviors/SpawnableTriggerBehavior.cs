@@ -32,7 +32,7 @@ public class SpawnableTriggerBehavior : MonoBehaviour
 			EventManager.Raise(EventToTrigger);
             if(!IsRepeatable)
             {
-                EventManager.MarkEventCompleted(Id);
+                SpawnerManager.MarkTriggered(Id);
                 Destroy(gameObject);
             }
         }

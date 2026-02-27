@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,12 +47,18 @@ public static class TimelineManager
 	}
 	private static void OnDirectorStopped(PlayableDirector director)
 	{
-		foreach(var ev in _eventTracker) 
+		var completedKeys = new List<string>();
+
+		foreach (var ev in _eventTracker)
 		{
-			if(ev.Value == director) 
-			{
-				EventManager.MarkEventCompleted(ev.Key);
-			}
+			if (ev.Value == director)
+				completedKeys.Add(ev.Key);
+		}
+
+		foreach (var key in completedKeys)
+		{
+			EventManager.MarkEventCompleted(key);
+			_eventTracker.Remove(key);
 		}
 	}
 

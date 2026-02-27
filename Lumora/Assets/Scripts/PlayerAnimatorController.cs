@@ -17,6 +17,7 @@ public class PlayerAnimatorController : MonoBehaviour
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Subscribe(UnlockThrow);
+        GameEvents<DialogueEvent>.Subscribe(GoToIdle);
 
         animator = GetComponent<Animator>(); 
         behavior = gameObject.GetComponentInParent<PlayerBehavior>();
@@ -78,7 +79,8 @@ public class PlayerAnimatorController : MonoBehaviour
     private void Move(Vector3 moveDir)
     {
         animator.SetFloat("moveSpeed", moveDir.magnitude);
-    }
+		if(moveDir.magnitude > 0.05 && animator.GetBool("isIdle")) animator.SetBool("isIdle", false);
+	}
     private void DoThrow()
     {
         animator.SetTrigger("doThrow");
@@ -96,4 +98,11 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         behavior.TriggerSprintNoise();
     }
+
+	private void GoToIdle(DialogueEvent e)
+	{
+        animator.SetBool("isIdle", true);
+		animator.SetFloat("moveSpeed", 0);
+	}
+
 }

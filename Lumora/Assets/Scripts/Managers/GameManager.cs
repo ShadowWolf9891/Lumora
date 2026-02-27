@@ -1,49 +1,58 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+	private static GameManager Instance;
 	[SerializeField] GameObject playerRef;
 	[SerializeField] SpawnableObjects spawnableObjects;
 	[SerializeField] LayerMask coverLayerMask;
 
 	List<GameObject> _cachedObjects = new();
+
+	public static GameStates CurrentGameState { get; private set; }
+
+	private static GameSaveData _saveData;
+	private static bool canSave = false;
+
 	private void Awake()
 	{
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+			SceneManager.sceneLoaded += OnSceneLoaded;
+		}
+		else Destroy(gameObject);
+	}
+
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		if (!SaveSystem.HasSaved && canSave) SaveAll();
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
+		SceneLoader.LoadManager();
+		LoadAll(scene.buildIndex);
 	}
+
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
 		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
-        Cursor.lockState = CursorLockMode.Locked;
+		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
+		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
+		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
+		Cursor.lockState = CursorLockMode.Locked;
 
-		switch (SceneManager.GetActiveScene().buildIndex)
-		{
-			case 1:
-				AudioManager.Instance.PlayMusic("Chapter1Background");
-				EventManager.Raise("ShiftLeader_Enter");
-				break;
-			case 2:
-				EventManager.Raise("KipEnterHouse_C1_S2");
-				break;
-			case 3:
-				EventManager.Raise("Chapter2_Intro");
-				break;
-			default:
-				//If you load a scene with no dialogue to start it, (like jo's super cool debug scene,)
-				//run resume game here where it wouldnt normally be run by a dialogue box.
-
-				//TODO, loading from a saved game calls resume game
-				EventManager.Raise("Resume_Game");
-				break;
-		}
-
+		new LoadSceneEvent("LoadCurrentScene", 1);
+		EventManager.Raise("LoadCurrentScene");
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
+
 
 	private void Update()
 	{
@@ -66,5 +75,74 @@ public class GameManager : MonoBehaviour
         if(curObject != null) curObject.SetActive(e.IsVisible);
 		else Debug.LogError($"Failed to find object {e.ObjectName} when calling {e.Id}.");
 	
+	}
+	private void EnableSaving(EnableSaveEvent e)
+	{
+		canSave = true;
+	}
+	public static void SaveAll()
+	{
+		if (!canSave) return;
+		_saveData ??= new GameSaveData();
+		_saveData.eventData ??= new EventSaveData();
+		_saveData.playerData ??= new PlayerSaveData();
+		_saveData.worldData ??= new WorldSaveData();
+		for(int i = 0; i < GetCache().Count; i++)
+		{
+			GetCache()[i].Save(_saveData);
+		}
+		_saveData.eventData.completedEvents = EventManager.GetCompletedEvents();
+		_saveData.worldData.ActiveSceneIndex = SceneManager.GetActiveScene().buildIndex;
+		_saveData.worldData.SpawnedTriggerData = SpawnerManager.GetTriggers();
+		SaveSystem.Save(_saveData);
+	}
+
+	public static void LoadAll(int curScene)
+	{
+		if (canSave)
+		{
+			_saveData = SaveSystem.Load(curScene);
+
+			for (int i = 0; i < GetCache().Count; i++)
+			{
+				GetCache()[i].Load(_saveData);
+			}
+
+			EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
+			SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
+		}
+		if (curScene == 0) return;
+		string firstEvent = (curScene) switch
+		{
+			1 => "ShiftLeader_Enter",
+			2=> "KipEnterHouse_C1_S2",
+			3=>"Chapter2_Intro",
+			_ => ""
+		};
+		if (firstEvent != "" && !EventManager.GetCompletedEvents().Contains(firstEvent))
+		{
+			EventManager.Raise(firstEvent);
+			Debug.Log($"Raised first event {firstEvent}");
+		}
+		else EventManager.Raise("Resume_Game");
+	}
+
+	public static void DeleteSave(DeleteSaveEvent e)
+	{
+		EventManager.Reset(); //Might break for completed events between scenes.
+		SpawnerManager.Reset();
+		CameraManager.Reset();
+		_saveData = null;
+		SaveSystem.DeleteData();
+	}
+	private static List<ISaveable> GetCache()
+	{
+		return GameObject.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<ISaveable>().ToList();
+	}
+
+	private static void OnGameStateChange(ChangeGameStateEvent e)
+	{
+		CurrentGameState = e.State;
+		EventManager.MarkEventCompleted(e.Id);
 	}
 }

@@ -44,8 +44,8 @@ public class GameEventDefinition
 {
     public string type;
     public string id;
-    public bool isCompleted = false;
     public string requireCompletedID;
+    public string isRepeatable;
     public string[] eventsToFire;
     public string[] eventsOnComplete;
 	public Dictionary<string, string> parameters { get; set; } = new Dictionary<string, string>();
@@ -57,16 +57,14 @@ public class GameEventDefinition
 public abstract class GameEventType
 {
 	public string Id { get; private set; }
-    public bool IsCompleted;
     public bool IsRepeatable;
     public string RequireCompletedID;
     public string[] EventsToFire;
     public string[] EventsOnComplete;
-    protected GameEventType(string id, string requiredID = "", bool isCompleted = false, bool isRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
+    protected GameEventType(string id, string requiredID = "", bool isRepeatable = false, string[] eventsToFire = null, string[] eventsOnComplete = null)
     {
         Id = id;
         RequireCompletedID = requiredID;
-        IsCompleted = isCompleted;
         IsRepeatable = isRepeatable;
         EventsToFire = eventsToFire;
         EventsOnComplete = eventsOnComplete;
@@ -79,6 +77,15 @@ public class DummyEvent : GameEventType
 {
     //Good for triggering this from a trigger volume and then raising all events from EventsToFire[].
     public DummyEvent(string id) : base(id) { } 
+}
+
+public class DeleteSaveEvent : GameEventType
+{
+    public DeleteSaveEvent(string id) : base(id) { }
+}
+public class EnableSaveEvent : GameEventType
+{ 
+    public EnableSaveEvent(string id) : base(id) { }
 }
 
 
@@ -133,6 +140,14 @@ public class PlayerHealthChanged : GameEventType //currently used to sync UI wit
         CurrentHealthValue = currentHealthValue;
     }
 }
+public class GodModeEvent : GameEventType
+{ 
+    public bool GodModeEnabled;
+    public GodModeEvent(string id, bool isEnabled) : base(id) 
+    {
+        GodModeEnabled = isEnabled;
+    }
+}
 
 public class UnlockAbilityEvent : GameEventType
 { 
@@ -146,12 +161,12 @@ public class UnlockAbilityEvent : GameEventType
 public class TeleportPlayerEvent : GameEventType
 {
     public Vector3 PositionToGoTo, PlayerPositionOnStart;
-    public TeleportPlayerEvent(string id, Vector3 positionToGoTo, Vector3 playerPositionOnStart) : base(id) 
+    public TeleportPlayerEvent(string id, Vector3 positionToGoTo) : base(id) 
     {
         PositionToGoTo = positionToGoTo;
-        PlayerPositionOnStart = playerPositionOnStart;
     }
 }
+
 
 #endregion
 
@@ -279,6 +294,15 @@ public class EnemyDropsAlert : GameEventType
 #endregion
 
 #region Loading Scenes
+public class LoadSceneEvent : GameEventType
+{
+	public int SceneIndex;
+	public LoadSceneEvent(string id, int sceneIndex) : base(id)
+	{
+		SceneIndex = sceneIndex;
+	}
+}
+//Obsolete?
 public class LoadedScene : GameEventType
 {
     //note: SceneField is a custom class. Check SerializableScenesHelper class for a reference to what data it contains.
