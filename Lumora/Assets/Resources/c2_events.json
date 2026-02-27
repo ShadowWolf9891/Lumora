@@ -381,32 +381,13 @@
         {
             "type":"BeginCutsceneEvent",
             "id": "DarrenBackOpen",
-            "parameters":
-            {
-                "timelineName": "DarrenEnterDoorTL"
-            }
-        },
-        {
-            "type": "SpawnTriggerEvent",
-            "id": "C2__Darren_CloseDoor_Trigger",
-            "parameters":
-            {
-                "worldLocation": "-152.6, 0.19, -845.86",
-                "radius": "1",
-                "layerMask": "NPCs",
-                "eventToRaiseOnTrigger": "DarrenBackClose"
-            }
-        },
-        {
-            "type":"BeginCutsceneEvent",
-            "id": "DarrenBackClose",
             "eventsOnComplete":
             [
                 "C2_Lira_Darren_1"
             ],
             "parameters":
             {
-                "timelineName": "DarrenCloseDoorTL"
+                "timelineName": "DarrenEnterDoorTL"
             }
         },
         {
@@ -435,9 +416,61 @@
                 "scene": "16"
             }
         },
-         {
+        {
             "type":"DialogueEvent",
             "id": "C2_Lira_Darren_3",
+            "eventsOnComplete":
+            [
+                "C2_Darren_Pic_Path"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "17"
+            }
+        },
+        {
+            "type": "PathEvent",
+            "id": "C2_Darren_Pic_Path",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_4"
+            ],
+            "parameters":
+            {
+                "npcName": "Darren",
+                "newStatus": 3
+            }   
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_4",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_5"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "18"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_5",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_6"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "19"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_6",
             "eventsOnComplete":
             [
                 ""
@@ -445,8 +478,9 @@
             "parameters":
             {
                 "chapter": "2",
-                "scene": "17"
+                "scene": "20"
             }
         }
+
     ]
 }
