@@ -40,8 +40,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
     [SerializeField] private float sprintNoiseMade = 5f;
-    [SerializeField] private float standingHeight = 1f;
-    [SerializeField] private float crouchedHeight = 0.5f;
+    [SerializeField] private float standingHeight = 1.8f;
+    [SerializeField] private float crouchedHeight = 1.4f;
 	[SerializeField] private float stealthSnapDistance = 0.6f;
 	private Collider coverObject;
 
@@ -145,6 +145,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		IsCrouching = !IsCrouching;
 		playerCollider.height = IsCrouching ? crouchedHeight : standingHeight;
+		playerCollider.center = IsCrouching ? new Vector3(0, crouchedHeight / 2, 0) : new Vector3(0,standingHeight / 2,0);
 	}
 	private void Jump()
 	{
