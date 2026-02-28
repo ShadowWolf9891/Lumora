@@ -101,8 +101,8 @@ public class PlayerAnimatorController : MonoBehaviour
 
 	private void GoToIdle(DialogueEvent e)
 	{
-        animator.SetBool("isIdle", true);
-		animator.SetFloat("moveSpeed", 0);
+        //animator.SetBool("isIdle", true);
+		//animator.SetFloat("moveSpeed", 0);
 	}
 
 }

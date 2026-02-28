@@ -35,7 +35,9 @@ public class GameManager : MonoBehaviour
 		SpawnerManager.Load(spawnableObjects);
 		TimelineManager.Load();
 		SceneLoader.LoadManager();
+		CameraManager.Reset();
 		LoadAll(scene.buildIndex);
+		CameraManager.LoadCameras();
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created

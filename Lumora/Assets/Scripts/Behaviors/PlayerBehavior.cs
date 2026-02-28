@@ -98,10 +98,19 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		pathObjectBehavior = TryGetComponent(out PathObjectBehavior pathObj) ? pathObj : null;
 		playerHealthBehaviors = TryGetComponent(out PlayerHealthBehaviors pHealth) ? pHealth : null;
 	}
-	#endregion
 
-	#region Handle Input
-	private void Update()
+    void OnDestroy()
+    {
+        GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+        GameEvents<PlayerSpottedEvent>.Unsubscribe(GetSpotted);
+        GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+		GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockAbility);
+    }
+    #endregion
+
+    #region Handle Input
+    private void Update()
 	{
 		HandleSpeedControl();
 	}

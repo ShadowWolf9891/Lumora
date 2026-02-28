@@ -188,6 +188,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	/// <param name="e"></param>
 	private void FreezeNPC(ChangeGameStateEvent e)
 	{
+		if(agent == null) return;
 		if (e.State == GameStates.Running && agent.hasPath)
 		{
 			agent.velocity = previousVelocity;

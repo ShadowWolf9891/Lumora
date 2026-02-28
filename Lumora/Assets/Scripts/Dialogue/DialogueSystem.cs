@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class DialogueSystem : MonoBehaviour
 {
 
+private static DialogueSystem Instance;
     [Header("UI Hookup"),SerializeField]
     GameObject DialoguePanel;
     [SerializeField]
@@ -23,6 +24,15 @@ public class DialogueSystem : MonoBehaviour
     DialogueLine[] currentDialogue; //The current chapter / scene dialogue
 	int currentLine = 0; //The current line in the dialogue
     string currentDialogueID;
+    private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else Destroy(gameObject);
+	}
 	private void Start()
 	{
         GameEvents<DialogueEvent>.Subscribe(BeginDialogue);

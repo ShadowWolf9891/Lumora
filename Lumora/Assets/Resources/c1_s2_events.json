@@ -41,10 +41,21 @@
         {
             "type": "DialogueEvent",
             "id": "Kip_MonoIntro_C1_S2",
+            "eventsOnComplete":
+            [
+                "Chapter1Scene2End"
+            ],
             "parameters":
             {
                 "chapter": "1",
                 "scene": "22"
+            }
+        },
+        {
+            "type": "LoadSceneEvent",
+            "id": "Chapter1Scene2End",
+            "parameters": {
+                "sceneIndex": 3
             }
         }
     ]

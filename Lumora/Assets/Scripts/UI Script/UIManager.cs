@@ -7,15 +7,19 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance = null;
+    private static UIManager instance;
     [SerializeField] private GameObject playerCanvasUI, pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
     private InputAction menuAction, consoleAction;
     [SerializeField]GameObject currentCanvas;
 
 	private void Awake()
 	{
-		if (instance == null) { instance = this; DontDestroyOnLoad(gameObject); }
-		else { Destroy(this); }
+		if (instance == null) 
+        { 
+            instance = this; 
+            DontDestroyOnLoad(gameObject);
+        }
+		else Destroy(this);
 	}
 	void Start()
     {

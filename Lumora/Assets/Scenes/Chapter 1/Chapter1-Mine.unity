@@ -5896,7 +5896,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144859920}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.4686943, y: -0.37112832, z: 0.22618406, w: 0.769045}
+  m_LocalRotation: {x: 0.46869433, y: -0.3711283, z: 0.22618406, w: 0.769045}
   m_LocalPosition: {x: 384.09045, y: 37.14025, z: 115.288574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6151,15 +6151,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7906665954440178366, guid: cd5732dedbc32144398b1e80b2358900, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 408.90042
+      value: 384.09045
       objectReference: {fileID: 0}
     - target: {fileID: 7906665954440178366, guid: cd5732dedbc32144398b1e80b2358900, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.2132506
+      value: 37.14025
       objectReference: {fileID: 0}
     - target: {fileID: 7906665954440178366, guid: cd5732dedbc32144398b1e80b2358900, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 333.80853
+      value: 115.288574
       objectReference: {fileID: 0}
     - target: {fileID: 7906665954440178366, guid: cd5732dedbc32144398b1e80b2358900, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6861,7 +6861,7 @@ Transform:
   m_GameObject: {fileID: 160082694}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.5381507, z: -0, w: -0.84284866}
-  m_LocalPosition: {x: 418.66965, y: -0.44000006, z: 319.83163}
+  m_LocalPosition: {x: 418.66965, y: -2.76, z: 319.83163}
   m_LocalScale: {x: 1.1828103, y: 1.18281, z: 1.1828103}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8335,7 +8335,7 @@ MonoBehaviour:
   spawnableObjects: {fileID: 11400000, guid: e37867a7072b3fb4f9fa31c24daf23ec, type: 2}
   coverLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
 --- !u!1001 &215101954
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44230,31 +44230,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.059072
+      value: 0.24093032
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.110251
+      value: 7.110252
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.510385
+      value: 3.6587367
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8447646
+      value: -0.028069604
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.5148416
+      value: -0.017106978
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.12465662
+      value: 0.8534508
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.075971946
+      value: -0.5201358
       objectReference: {fileID: 0}
     - target: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_Name
@@ -49682,7 +49682,7 @@ Transform:
   m_GameObject: {fileID: 2002295150}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.5381507, z: -0, w: -0.84284866}
-  m_LocalPosition: {x: 417.14, y: -0.44000006, z: 318.47}
+  m_LocalPosition: {x: 417.14, y: -2.76, z: 318.47}
   m_LocalScale: {x: 1.1828103, y: 1.18281, z: 1.1828103}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53533,7 +53533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
-    Enabled: 1
+    Enabled: 0
     m_Value: 10
   OutputChannel: 1
   StandbyUpdate: 2

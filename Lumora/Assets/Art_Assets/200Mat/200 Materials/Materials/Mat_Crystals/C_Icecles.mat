@@ -26,22 +26,18 @@ Material:
   m_Name: C_Icecles
   m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
   m_Parent: {fileID: 2100000, guid: c21a2b7896fa143469e0f9e7e2973881, type: 2}
-  m_ModifiedSerializedProperties: 16
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
-  - _ENABLE_FOG_ON_TRANSPARENT
   - _MASKMAP
-  - _MATERIAL_FEATURE_CLEAR_COAT
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
-  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  stringTagMap: {}
   disabledShaderPasses:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
@@ -51,61 +47,14 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: 5a0eef721209bb048a0b472c76ba89e7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 67a4d0557cad5d84087be3d0531ee2b0, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 5a0eef721209bb048a0b472c76ba89e7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: fbe3fdabb3c3e784fb3ab28ec36d6f85, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: fbe3fdabb3c3e784fb3ab28ec36d6f85, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 67a4d0557cad5d84087be3d0531ee2b0, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: fbe3fdabb3c3e784fb3ab28ec36d6f85, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _AORemapMax: 0.30345708
-    - _AORemapMin: 0.09885895
-    - _AlbedoAffectEmissive: 0
-    - _AlphaDstBlend: 10
-    - _CoatMask: 0.968
-    - _DstBlend: 10
-    - _DstBlend2: 10
-    - _EmissiveExposureWeight: 0.711
-    - _EmissiveIntensity: 1
-    - _MetallicRemapMax: 0.3841229
-    - _MetallicRemapMin: 0.2252438
-    - _NormalScale: 6.21
-    - _SmoothnessRemapMax: 1
-    - _SmoothnessRemapMin: 0.8531836
-    - _StencilRefDepth: 0
-    - _StencilRefGBuffer: 2
-    - _StencilRefMV: 32
-    - _SurfaceType: 1
-    - _ZTestDepthEqualForOpaque: 4
-    - _ZWrite: 0
-    m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.42745098}
-    - _Color: {r: 1, g: 1, b: 1, a: 0.42745098}
-    - _EmissiveColor: {r: 0.25147787, g: 0.6730619, b: 0.8291091, a: 1}
-    - _EmissiveColorLDR: {r: 0.53855467, g: 0.83955836, b: 0.9207547, a: 0.54509807}
+    - _MetallicRemapMax: 0.27487344
+    - _MetallicRemapMin: 0
+    - _SmoothnessRemapMax: 0.38954458
+    - _SmoothnessRemapMin: 0
+    - _UseEmissiveIntensity: 0
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
