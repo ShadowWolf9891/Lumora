@@ -24,8 +24,16 @@ public class PlayerAnimatorController : MonoBehaviour
         rb = behavior.gameObject.GetComponent<Rigidbody>();
         canThrow = false;
     }
+    private void OnDestroy()
+    {
+        GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+        GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+        GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockThrow);
+        GameEvents<DialogueEvent>.Unsubscribe(GoToIdle);
+    }
 
-	private void HandleInput(PlayerInputEvent e)
+    private void HandleInput(PlayerInputEvent e)
 	{
 		switch(e.ActionType) 
         {
