@@ -116,20 +116,11 @@
             "id": "Watts_Door_Open",
             "eventsOnComplete":
             [
-                "C2_Watts_Answer",
-                "Watts_Door_Open_2"
+                "C2_Watts_Answer"
             ],
             "parameters":
             {
                 "timelineName": "WattsOpenDoorTL"
-            }
-        },
-        {
-            "type": "BeginCutsceneEvent",
-            "id": "Watts_Door_Open_2",
-            "parameters":
-            {
-                "timelineName": "WattsDoorOpenNEWTL"
             }
         },
         {
@@ -380,20 +371,12 @@
             "id": "DarrenBackOpen",
             "eventsOnComplete":
             [
-                "C2_Lira_Darren_1",
-                "DarrenBackClose"
+                "C2_Lira_Darren_1"
+                
             ],
             "parameters":
             {
                 "timelineName": "DarrenEnterDoorTL"
-            }
-        },
-        {
-            "type":"BeginCutsceneEvent",
-            "id": "DarrenBackClose",
-            "parameters":
-            {
-                "timelineName": "DarrenCloseDoorTL"
             }
         },
         {
@@ -425,10 +408,26 @@
         {
             "type":"DialogueEvent",
             "id": "C2_Lira_Darren_3",
+            "eventsOnComplete":
+            [
+                "C2_Darren_GrabPic_1"
+            ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "17"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "C2_Darren_GrabPic_1",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_4"
+            ],
+            "parameters": 
+            {
+                "timelineName": "DarrenGrabPicTL"
             }
         },
         {
@@ -462,12 +461,89 @@
             "id": "C2_Lira_Darren_6",
             "eventsOnComplete":
             [
-                ""
+                "C2_Lira_Darren_7"
             ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "20"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_7",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_8"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "21"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_8",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Blueprint"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "22"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "C2_Lira_Blueprint",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_9"
+            ],
+            "parameters":
+            {
+                "timelineName": "LiraBlueprintTL"
+            }
+        },
+         {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_9",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_10"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "23"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_10",
+            "eventsOnComplete":
+            [
+                "C2_Lira_Darren_11"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "24"
+            }
+        },
+        {
+            "type":"DialogueEvent",
+            "id": "C2_Lira_Darren_11",
+            "eventsOnComplete":
+            [
+                ""
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "25"
             }
         }
 
