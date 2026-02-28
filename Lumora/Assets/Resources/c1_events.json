@@ -351,6 +351,10 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "Lira_Collect",
+            "eventsOnComplete":
+            [
+                "Chapter1Scene1End"
+            ],
             "parameters": {
                 "timelineName": "LiraCollectHeatUnitTL"
             }

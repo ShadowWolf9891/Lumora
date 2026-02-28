@@ -116,11 +116,20 @@
             "id": "Watts_Door_Open",
             "eventsOnComplete":
             [
-                "C2_Watts_Answer"
+                "C2_Watts_Answer",
+                "Watts_Door_Open_2"
             ],
             "parameters":
             {
                 "timelineName": "WattsOpenDoorTL"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Watts_Door_Open_2",
+            "parameters":
+            {
+                "timelineName": "WattsDoorOpenNEWTL"
             }
         },
         {
@@ -371,11 +380,20 @@
             "id": "DarrenBackOpen",
             "eventsOnComplete":
             [
-                "C2_Lira_Darren_1"
+                "C2_Lira_Darren_1",
+                "DarrenBackClose"
             ],
             "parameters":
             {
                 "timelineName": "DarrenEnterDoorTL"
+            }
+        },
+        {
+            "type":"BeginCutsceneEvent",
+            "id": "DarrenBackClose",
+            "parameters":
+            {
+                "timelineName": "DarrenCloseDoorTL"
             }
         },
         {
