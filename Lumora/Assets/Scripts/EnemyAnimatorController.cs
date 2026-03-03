@@ -7,7 +7,7 @@ public class EnemyAnimatorController : MonoBehaviour
 {
     EnemyBehavior enemyBehavior;
 
-    public Animator animator { get; private set; }
+    Animator animator;
     NavMeshAgent agent;
     void Awake()
     {

@@ -273,19 +273,17 @@ public class EnemyBehavior : MonoBehaviour
 
 	private void FreezeEnemy(ChangeGameStateEvent e) 
 	{
-		if(e.State == GameStates.Running || e.State == GameStates.Teleporting)
+		if(e.State == GameStates.Running)
 		{
 			agent.velocity = previousVelocity;
 			agent.isStopped = false;
-			animController.animator.speed = 1;
 		}
-		else 
+		else if (e.State == GameStates.Paused || e.State == GameStates.Dialogue || e.State == GameStates.Game_Over) //Not sure what to do with cutscenes yet
 		{
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;
 			agent.isStopped = true;
-            animController.animator.speed = 0;
-        }
+		}
 
 	}
 

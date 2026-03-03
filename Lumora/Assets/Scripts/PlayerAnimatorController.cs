@@ -11,7 +11,6 @@ public class PlayerAnimatorController : MonoBehaviour
     Rigidbody rb;
     bool canThrow = false;
 
-    float savedMoveSpeed;
     private void Start()
     {
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
@@ -32,9 +31,7 @@ public class PlayerAnimatorController : MonoBehaviour
         GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockThrow);
         GameEvents<DialogueEvent>.Unsubscribe(GoToIdle);
-        GameEvents<ChangeGameStateEvent>.Subscribe(GameStateChanged);
     }
-
 
     private void HandleInput(PlayerInputEvent e)
 	{
@@ -113,23 +110,7 @@ public class PlayerAnimatorController : MonoBehaviour
 	private void GoToIdle(DialogueEvent e)
 	{
         //animator.SetBool("isIdle", true);
-        //animator.SetFloat("moveSpeed", 0);
-    }
-    private void GameStateChanged(ChangeGameStateEvent e)
-    {
-        if (e.State == GameStates.Running)
-        {
-            animator.speed = 1;
-            if (savedMoveSpeed != 0)
-            {
-                animator.SetFloat("moveSpeed", savedMoveSpeed);
-            }
-            savedMoveSpeed = 0;
-        }
-        else
-        {
-            animator.speed = 0;
-            savedMoveSpeed = animator.GetFloat("moveSpeed");
-        }
-    }
+		//animator.SetFloat("moveSpeed", 0);
+	}
+
 }
