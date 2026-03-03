@@ -6,51 +6,59 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-	private static GameManager Instance;
-	[SerializeField] GameObject playerRef;
-	[SerializeField] SpawnableObjects spawnableObjects;
+	public static GameManager Instance;
 	[SerializeField] LayerMask coverLayerMask;
 
 	List<GameObject> _cachedObjects = new();
 
-	public static GameStates CurrentGameState { get; private set; }
+	public GameStates CurrentGameState { get; private set; }
 
-	private static GameSaveData _saveData;
-	private static bool canSave = false;
+	private GameSaveData _saveData;
 
 	private void Awake()
 	{
 		if (Instance == null)
 		{
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
-			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 		else Destroy(gameObject);
 	}
 
+	private void OnEnable()
+	{
+		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
+		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
+		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
+		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
+		GameEvents<LoadSceneEvent>.Subscribe(LoadScene);
+	}
+	private void OnDisable()
+	{
+		GameEvents<ToggleVisibilityEvent>.Unsubscribe(ToggleVisibility);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(OnGameStateChange);
+		GameEvents<DeleteSaveEvent>.Unsubscribe(DeleteSave);
+		GameEvents<EnableSaveEvent>.Unsubscribe(EnableSaving);
+		GameEvents<LoadSceneEvent>.Unsubscribe(LoadScene);
+	}
+	private async void LoadScene(LoadSceneEvent e)
+	{
+		await SceneManager.LoadSceneAsync(e.SceneIndex);
+	}
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		if (!SaveSystem.HasSaved && canSave) SaveAll();
-		SpawnerManager.Load(spawnableObjects);
-		TimelineManager.Load();
-		SceneLoader.LoadManager();
-		CameraManager.Reset();
+		if (!SaveSystem.HasSaved && GameConfig.Mode == GameMode.Production) SaveAll();
+		TimelineManager.Instance.Load();
+		CameraManager.Instance.Reset();
 		LoadAll(scene.buildIndex);
-		CameraManager.LoadCameras();
+		CameraManager.Instance.LoadCameras();
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
-		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
-		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
-		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
-		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
 		Cursor.lockState = CursorLockMode.Locked;
 
-		new LoadSceneEvent("LoadCurrentScene", 1);
-		EventManager.Raise("LoadCurrentScene");
+		EventManager.Instance.Raise(new LoadSceneEvent("LoadCurrentScene", 1));
 		//EventManager.Raise("UnlockThrow");
 		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
 	}
@@ -58,7 +66,7 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
-		EventManager.HandleEvents(); //Handle events each frame if there are any.
+		EventManager.Instance.HandleEvents(); //Handle events each frame if there are any.
 	}
 
 	/// <summary>
@@ -80,11 +88,11 @@ public class GameManager : MonoBehaviour
 	}
 	private void EnableSaving(EnableSaveEvent e)
 	{
-		canSave = true;
+		GameConfig.Mode = GameMode.Production;
 	}
-	public static void SaveAll()
+	public void SaveAll()
 	{
-		if (!canSave) return;
+		if (GameConfig.Mode == GameMode.Playtest) return;
 		_saveData ??= new GameSaveData();
 		_saveData.eventData ??= new EventSaveData();
 		_saveData.playerData ??= new PlayerSaveData();
@@ -93,15 +101,15 @@ public class GameManager : MonoBehaviour
 		{
 			GetCache()[i].Save(_saveData);
 		}
-		_saveData.eventData.completedEvents = EventManager.GetCompletedEvents();
+		_saveData.eventData.completedEvents = EventManager.Instance.GetCompletedEvents();
 		_saveData.worldData.ActiveSceneIndex = SceneManager.GetActiveScene().buildIndex;
-		_saveData.worldData.SpawnedTriggerData = SpawnerManager.GetTriggers();
+		_saveData.worldData.SpawnedTriggerData = SpawnerManager.Instance.GetTriggers();
 		SaveSystem.Save(_saveData);
 	}
 
-	public static void LoadAll(int curScene)
+	public void LoadAll(int curScene)
 	{
-		if (canSave)
+		if (GameConfig.Mode == GameMode.Production)
 		{
 			_saveData = SaveSystem.Load(curScene);
 
@@ -110,8 +118,8 @@ public class GameManager : MonoBehaviour
 				GetCache()[i].Load(_saveData);
 			}
 
-			EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
-			SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
+			EventManager.Instance.LoadSavedEvents(_saveData.eventData.completedEvents);
+			SpawnerManager.Instance.RestoreTriggersOnLoad(_saveData.worldData);
 		}
 		if (curScene == 0) return;
 		string firstEvent = (curScene) switch
@@ -121,30 +129,30 @@ public class GameManager : MonoBehaviour
 			3=>"Chapter2_Intro",
 			_ => ""
 		};
-		if (firstEvent != "" && !EventManager.GetCompletedEvents().Contains(firstEvent))
+		if (firstEvent != "" && !EventManager.Instance.GetCompletedEvents().Contains(firstEvent))
 		{
-			EventManager.Raise(firstEvent);
+			EventManager.Instance.Raise(firstEvent);
 			Debug.Log($"Raised first event {firstEvent}");
 		}
-		else EventManager.Raise("Resume_Game");
+		else EventManager.Instance.Raise("Resume_Game");
 	}
 
-	public static void DeleteSave(DeleteSaveEvent e)
+	public void DeleteSave(DeleteSaveEvent e)
 	{
-		EventManager.Reset(); //Might break for completed events between scenes.
-		SpawnerManager.Reset();
-		CameraManager.Reset();
+		EventManager.Instance.Reset(); //Might break for completed events between scenes.
+		SpawnerManager.Instance.Reset();
+		CameraManager.Instance.Reset();
 		_saveData = null;
 		SaveSystem.DeleteData();
 	}
-	private static List<ISaveable> GetCache()
+	private List<ISaveable> GetCache()
 	{
 		return GameObject.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<ISaveable>().ToList();
 	}
 
-	private static void OnGameStateChange(ChangeGameStateEvent e)
+	private void OnGameStateChange(ChangeGameStateEvent e)
 	{
 		CurrentGameState = e.State;
-		EventManager.MarkEventCompleted(e.Id);
+		EventManager.Instance.MarkEventCompleted(e.Id);
 	}
 }

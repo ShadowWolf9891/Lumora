@@ -382,12 +382,17 @@ public class ToggleVisibilityEvent : GameEventType
 #endregion
 
 #region UI
-public class SpawnPauseMenuEvent : GameEventType
+public class UpdateUIEvent : GameEventType
 {
-    public bool MenuPopup { get; private set; }
-    public SpawnPauseMenuEvent(string id, bool menuPopup) : base(id)
+    public string UI_Name { get; private set; }
+    public bool IsActive { get; private set; }
+    public bool LayerOnTop { get; private set; }
+
+    public UpdateUIEvent(string id, string elementName, bool isActive = true, bool layerOnTop = false) : base(id)
     {
-        MenuPopup = menuPopup;
+        UI_Name = elementName;
+        IsActive = isActive;
+        LayerOnTop = layerOnTop;
     }
 }
 

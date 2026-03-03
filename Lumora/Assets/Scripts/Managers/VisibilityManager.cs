@@ -37,9 +37,7 @@ public class VisibilityManager : MonoBehaviour
 	{
         SetVisibilityLevel(VisibilityLevels.Default);
 		playerBehavior = GetComponent<PlayerBehavior>();
-		GameEvents<EnterStealthEvent>.Subscribe(EnterStealth);
-		GameEvents<LeaveStealthEvent>.Subscribe(ExitStealth);
-		GameEvents<PlayerInputEvent>.Subscribe(HandleInputs);
+		
 
         //We're serializing this because we're got getting the component somehow
         //if(!TryGetComponent<LightingSampler>(out sampler))
@@ -48,8 +46,19 @@ public class VisibilityManager : MonoBehaviour
         //}
         //sampler = GetComponent<LightingSampler>();
 	}
-
-    private void SetVisibilityLevel(VisibilityLevels level)
+	private void OnEnable()
+	{
+		GameEvents<EnterStealthEvent>.Subscribe(EnterStealth);
+		GameEvents<LeaveStealthEvent>.Subscribe(ExitStealth);
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInputs);
+	}
+	private void OnDisable()
+	{
+		GameEvents<EnterStealthEvent>.Unsubscribe(EnterStealth);
+		GameEvents<LeaveStealthEvent>.Unsubscribe(ExitStealth);
+		GameEvents<PlayerInputEvent>.Unsubscribe(HandleInputs);
+	}
+	private void SetVisibilityLevel(VisibilityLevels level)
     {
         float lightLevel = Mathf.Pow(sampler.brightness, 1f/LightEffectOnVision);
         switch (level)

@@ -29,7 +29,7 @@ public class UIGameOverPanel : MonoBehaviour
     {
         if(e.State == GameStates.Game_Over)
         {
-            EventManager.Raise("Resume_Game");
+            EventManager.Instance.Raise("Resume_Game");
             gameOverPanel.SetActive(true);
         }
     }

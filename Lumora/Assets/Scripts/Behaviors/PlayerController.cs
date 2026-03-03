@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,7 +35,7 @@ public class PlayerController : MonoBehaviour
 	{
 		//Always possible actions...
 
-		if (GameManager.CurrentGameState == GameStates.Dialogue)
+		if (GameManager.Instance.CurrentGameState == GameStates.Dialogue)
 		{
 			if (interactAction.WasPressedThisFrame())
 			{
@@ -47,7 +43,7 @@ public class PlayerController : MonoBehaviour
 				//GameContext.Instance.RaiseNextDialogueLine();
 			}
 		}
-		else if(GameManager.CurrentGameState == GameStates.Running)
+		else if(GameManager.Instance.CurrentGameState == GameStates.Running)
 		{
 			//Actions that cannot be done while paused...
 			if (moveAction.IsInProgress())

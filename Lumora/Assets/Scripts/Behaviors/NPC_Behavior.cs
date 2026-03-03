@@ -45,27 +45,27 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
                 break;
             case PathStatus.PAUSE:
                 agent.isStopped = true;
-				EventManager.MarkEventCompleted(e.Id);
+				EventManager.Instance.MarkEventCompleted(e.Id);
 				break;
             case PathStatus.RESUME:
                 agent.isStopped = false;
-				EventManager.MarkEventCompleted(e.Id);
+				EventManager.Instance.MarkEventCompleted(e.Id);
 				break;
             case PathStatus.NEXT_PATH:
 				agent.SetDestination(pathBehavior.GoToNextPath());
-				EventManager.MarkEventCompleted(eventID);
+				EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.PREV_PATH:
 				agent.SetDestination(pathBehavior.GoToPreviousPath());
-				EventManager.MarkEventCompleted(eventID);
+				EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.END_EARLY:
                 agent.isStopped = true;
                 agent.ResetPath();
-				EventManager.MarkEventCompleted(eventID);
-				EventManager.MarkEventCompleted(e.Id);
+				EventManager.Instance.MarkEventCompleted(eventID);
+				EventManager.Instance.MarkEventCompleted(e.Id);
 				break;
 		}
 
@@ -105,7 +105,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		if(pathBehavior.IsDonePath(transform.position) && eventID != null)
 		{
 			agent.ResetPath();
-			EventManager.MarkEventCompleted(eventID);
+			EventManager.Instance.MarkEventCompleted(eventID);
 			eventID = null;
 		}
 	}
@@ -169,7 +169,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		}
 		curWalkType = e.WalkType;
 		followDistance = e.FollowDistance;
-		EventManager.MarkEventCompleted(e.Id);
+		EventManager.Instance.MarkEventCompleted(e.Id);
 	}
 	/// <summary>
 	/// If the NPC is close to a target position within a given threshold
