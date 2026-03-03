@@ -50,7 +50,7 @@ public class InteractWithObject : MonoBehaviour
         }
 
         float closestDistance = float.MaxValue;
-        GameObject closestInteracrable = null;
+        GameObject closestInteracrableObj = null;
         for (int i = 0; i < count; i++)
         {
             Collider c = sphereResults[i];
@@ -59,12 +59,12 @@ public class InteractWithObject : MonoBehaviour
             if (tempDistance < closestDistance)
             {
                 closestDistance = tempDistance;
-                closestInteracrable = c.gameObject;
+                closestInteracrableObj = c.gameObject;
             }
         }
 
         //assign closest interactable and disable prompt from other former closest
-        IInteractable tempInteractable = closestInteracrable.GetComponentInParent<IInteractable>();
+        IInteractable tempInteractable = closestInteracrableObj.GetComponentInParent<IInteractable>(); 
         if (tempInteractable != currentInteractable && tempInteractable != null && currentInteractable != null)
         {
             //Debug.Log("Scan says closest interactable has changed");
@@ -74,7 +74,7 @@ public class InteractWithObject : MonoBehaviour
 
         //NOTE: this returns a string, so we can set some UI to the interaction prompt here
         currentInteractable.GetInteractionPrompt();
-        //Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
+        Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
         return true;
     }
 
@@ -87,6 +87,10 @@ public class InteractWithObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            return;
+        }
         if (!objectInRange)
         {
             objectInRange = true;
@@ -100,10 +104,5 @@ public class InteractWithObject : MonoBehaviour
         {
             Debug.LogWarning("OnTriggerEnter running on InteractWithObject.cs, but encountered error on Closest Interactable scan. Consider re-setting interact range variable");
         }
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, interactRange);
     }
 }
