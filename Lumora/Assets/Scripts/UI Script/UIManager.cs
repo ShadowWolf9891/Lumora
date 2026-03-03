@@ -1,24 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
-using Unity.VisualScripting;
-using UnityEditor;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-
+    private static UIManager instance;
     [SerializeField] private GameObject playerCanvasUI, pauseMenuUI, optionsMenuUI, controlMenuUI, dialogueMenuUI, consoleMenuUI;
     private InputAction menuAction, consoleAction;
     [SerializeField]GameObject currentCanvas;
 
-    void Start()
+	private void Awake()
+	{
+		if (instance == null) 
+        { 
+            instance = this; 
+            DontDestroyOnLoad(gameObject);
+        }
+		else Destroy(this);
+	}
+	void Start()
     {
-        DontDestroyOnLoad(gameObject);
         menuAction = InputSystem.actions.FindAction("Escape");
         consoleAction = InputSystem.actions.FindAction("Console");
         GameEvents<SpawnPauseMenuEvent>.Subscribe(OnMenuAction);
@@ -74,6 +78,7 @@ public class UIManager : MonoBehaviour
                 EventManager.Raise("Resume_Game");
             }
         }
+        EventManager.MarkEventCompleted(a.Id);
     }
 
     //button controllers
@@ -95,4 +100,15 @@ public class UIManager : MonoBehaviour
     {
         Application.Quit();
     }
+    public void OnConsoleValueSubmit()
+    {
+        string command = consoleMenuUI.GetComponentInChildren<TMP_InputField>().text;
+		var textField = consoleMenuUI.GetComponentInChildren<ScrollRect>().content.GetComponentInChildren<TextMeshProUGUI>();
+       
+        string errorOrComplete = ConsoleWindow.DoConsoleCommand(command);
+        textField.text = $"{textField.text}\n{errorOrComplete}";
+        consoleMenuUI.SetActive(false);
+		Cursor.lockState = CursorLockMode.Locked;
+
+	}
 }

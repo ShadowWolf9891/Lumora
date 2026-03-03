@@ -1,15 +1,7 @@
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(HideController))]
-public class PlayerBehavior : MonoBehaviour
+public class PlayerBehavior : MonoBehaviour, ISaveable
 {
     #region Properties
     [Header("Player Settings")]
@@ -48,20 +40,22 @@ public class PlayerBehavior : MonoBehaviour
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
     [SerializeField] private float sprintNoiseMade = 5f;
-    [SerializeField] private float standingHeight = 1f;
-    [SerializeField] private float crouchedHeight = 0.5f;
+    [SerializeField] private float standingHeight = 1.8f;
+    [SerializeField] private float crouchedHeight = 1.4f;
 	[SerializeField] private float stealthSnapDistance = 0.6f;
 	private Collider coverObject;
 
 	[Header("WaypointSettings")]
 	[SerializeField] private GameObject waypointImage;
 
+	//State settings
 	[HideInInspector]public bool IsCrouching { get; private set; }
 	[HideInInspector] public bool IsSprinting { get; private set; }
 
 	//Private properties
 	private HideController hideController;
-	bool isHiding;
+	private PlayerHealthBehaviors playerHealthBehaviors;
+	bool isHiding = false;
 	Rigidbody rb;
 	CapsuleCollider playerCollider;
 	PathObjectBehavior pathObjectBehavior;
@@ -83,6 +77,7 @@ public class PlayerBehavior : MonoBehaviour
     }
 	private void Start()
 	{
+
 		CameraManager.SetCurrentCamera("3rd Person Camera");
 	}
 
@@ -103,11 +98,21 @@ public class PlayerBehavior : MonoBehaviour
         playerCollider = GetComponent<CapsuleCollider>();
 		mainCam = Camera.main;
 		pathObjectBehavior = TryGetComponent(out PathObjectBehavior pathObj) ? pathObj : null;
+		playerHealthBehaviors = TryGetComponent(out PlayerHealthBehaviors pHealth) ? pHealth : null;
 	}
-	#endregion
 
-	#region Handle Input
-	private void Update()
+    void OnDestroy()
+    {
+        GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+        GameEvents<PlayerSpottedEvent>.Unsubscribe(GetSpotted);
+        GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+		GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockAbility);
+    }
+    #endregion
+
+    #region Handle Input
+    private void Update()
 	{
 		HandleSpeedControl();
 	}
@@ -151,6 +156,7 @@ public class PlayerBehavior : MonoBehaviour
 	{
 		IsCrouching = !IsCrouching;
 		playerCollider.height = IsCrouching ? crouchedHeight : standingHeight;
+		playerCollider.center = IsCrouching ? new Vector3(0, crouchedHeight / 2, 0) : new Vector3(0,standingHeight / 2,0);
 	}
 	private void Jump()
 	{
@@ -480,6 +486,32 @@ public class PlayerBehavior : MonoBehaviour
 		}
 
 	}
+	#endregion
 
+	#region Save/Load
+	public void Save(GameSaveData data)
+	{
+		data.playerData = new PlayerSaveData()
+		{
+			position = new SerializableVector3(transform.position),
+			rotation = new SerializableVector3(transform.rotation.eulerAngles),
+			health = playerHealthBehaviors.CurrentHealthValue,
+			pathData = new PathData() { 
+				CurrentPath = pathObjectBehavior.GetCurrentPathAndPoint().Item1,
+				CurrentPoint = pathObjectBehavior.GetCurrentPathAndPoint().Item2 },
+			inventory = InventoryManager.InventoryData
+		};
+	}
+	public void Load(GameSaveData data)
+	{
+		if (data == null) return;
+		if(data.playerData.position.ToVector3() != Vector3.zero) transform.SetPositionAndRotation(data.playerData.position.ToVector3(), Quaternion.Euler(data.playerData.rotation.ToVector3()));
+		playerHealthBehaviors.CurrentHealthValue = data.playerData.health;
+		if(data.playerData.pathData.CurrentPath != -1 && data.playerData.pathData.CurrentPoint != -1)
+			waypointImage.transform.position = pathObjectBehavior.GoToPath(data.playerData.pathData.CurrentPath, data.playerData.pathData.CurrentPoint);
+		InventoryManager.InventoryData = data.playerData.inventory;
+		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
+	}
+	
 	#endregion
 }

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class DialogueSystem : MonoBehaviour
 {
 
+private static DialogueSystem Instance;
     [Header("UI Hookup"),SerializeField]
     GameObject DialoguePanel;
     [SerializeField]
@@ -23,7 +24,16 @@ public class DialogueSystem : MonoBehaviour
     DialogueLine[] currentDialogue; //The current chapter / scene dialogue
 	int currentLine = 0; //The current line in the dialogue
     string currentDialogueID;
-	private void Awake()
+    private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else Destroy(gameObject);
+	}
+	private void Start()
 	{
         GameEvents<DialogueEvent>.Subscribe(BeginDialogue);
         //GameContext.Instance.OnPlayDialogue += BeginDialogue;
@@ -35,16 +45,15 @@ public class DialogueSystem : MonoBehaviour
             }
         }
         );
+        DialoguePanel.SetActive(false);
         //GameContext.Instance.OnDialogueNextLine += NextLine;
 	}
 
-	void Load()
+	private void Load()
     {
 		TextAsset jsonFile = Resources.Load<TextAsset>("dialogue");
 		data = JsonConvert.DeserializeObject<DialogueData>(jsonFile.text);
 		Debug.Log($"Loaded dialogue json file.");
-
-       
 	}
 
     /// <summary>
@@ -53,7 +62,7 @@ public class DialogueSystem : MonoBehaviour
     /// <param name="ChapterID">Which chapter of the story the dialogue takes place at</param>
     /// <param name="SceneID">Which scene within the chapter to play</param>
     /// <returns>An array of the dialogue lines that contains a speaker and what was said</returns>
-    public DialogueLine[] GetDialogueLines(int ChapterID, int SceneID)
+    private DialogueLine[] GetDialogueLines(int ChapterID, int SceneID)
     {
         if(data == null)
         {
@@ -81,7 +90,7 @@ public class DialogueSystem : MonoBehaviour
     /// </summary>
     /// <param name="ChapterID">The chapter to play the dialogue from</param>
     /// <param name="SceneID">The scene within the chapter to play the dialogue from</param>
-    public void BeginDialogue(DialogueEvent e)
+    private void BeginDialogue(DialogueEvent e)
     {
         currentLine = 0;
         currentDialogue = GetDialogueLines(e.Chapter, e.Scene);
@@ -93,7 +102,7 @@ public class DialogueSystem : MonoBehaviour
     /// Display the dialogue line on the screen and show the dialogue panel if it is hidden.
     /// </summary>
     /// <param name="line">The data that stores the speaker and what they are saying</param>
-    public void DisplayDialogue(DialogueLine line)
+    private void DisplayDialogue(DialogueLine line)
     { 
         SpeakerName.text = line.speaker;
 		DialogueText.text = line.text;
@@ -109,9 +118,9 @@ public class DialogueSystem : MonoBehaviour
     /// <summary>
     /// Progress to the next line of dialogue. End the dialogue if there is no line to progress to.
     /// </summary>
-    public void NextLine()
+    private void NextLine()
     {
-        if (DialoguePanel.activeInHierarchy)
+        if (DialoguePanel.activeInHierarchy && GameManager.CurrentGameState == GameStates.Dialogue)
         {
             if (currentLine < currentDialogue.Length - 1)
             {
@@ -127,7 +136,7 @@ public class DialogueSystem : MonoBehaviour
     /// <summary>
     /// End the dialogue by reseting values and hiding the dialogue panel.
     /// </summary>
-    public void EndDialogue() 
+    private void EndDialogue() 
     {
         EventManager.MarkEventCompleted(currentDialogueID);
         DialoguePanel.SetActive(false);

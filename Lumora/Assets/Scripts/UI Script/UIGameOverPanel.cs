@@ -9,15 +9,18 @@ public class UIGameOverPanel : MonoBehaviour
     private InputAction restart;
     [SerializeField]
     GameObject gameOverPanel;
+    GameObject UICanvas;
     void Start()
     {
         GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);  
         restart = InputSystem.actions.FindAction("South"); 
+        UICanvas = GameObject.Find("---UI---");
     }
     void Update()
     {
         if (restart.WasPressedThisFrame() && gameOverPanel.activeSelf)
         {
+            UICanvas.SetActive(false);
             SceneManager.LoadScene(0);
         }
     }

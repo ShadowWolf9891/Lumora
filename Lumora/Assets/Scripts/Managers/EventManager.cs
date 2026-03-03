@@ -4,10 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 using Newtonsoft.Json;
-using Unity.Cinemachine;
 using System.Linq;
-using System.Collections;
-using Unity.VisualScripting;
 
 [System.Serializable]
 public class AllEvents
@@ -18,28 +15,31 @@ public class AllEvents
 public static class EventManager
 {
 	public static Queue<GameEventType> EventQueue { get; private set; }
-	
+
 	//Checked only when another event is completed. Used for if an event is fired but the requirements are not yet met.
-	public static Queue<GameEventType> LazyEventQueue { get; private set; } 
+	public static Queue<GameEventType> LazyEventQueue { get; private set; }
 
 	private static AllEvents allEventsDefs, c2EventsDefs, c1EventsDefs, c1s2EventsDefs;
 	private static Dictionary<string, GameEventType> _events;
 	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
+
+	//Check in completed events when saving / loading
+	private static HashSet<string> _completedEvents = new();
 
 	private static void LoadEvents()
 	{
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
 		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
 		TextAsset c1JsonFile = Resources.Load<TextAsset>("c1_events");
-        TextAsset c1s2JsonFile = Resources.Load<TextAsset>("c1_s2_events");
-        allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
+		TextAsset c1s2JsonFile = Resources.Load<TextAsset>("c1_s2_events");
+		allEventsDefs = JsonConvert.DeserializeObject<AllEvents>(jsonFile.text);
 		c2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c2JsonFile.text);
-		c1EventsDefs = JsonConvert.DeserializeObject<AllEvents> (c1JsonFile.text);
+		c1EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c1JsonFile.text);
 		c1s2EventsDefs = JsonConvert.DeserializeObject<AllEvents>(c1s2JsonFile.text);
 		_events = new Dictionary<string, GameEventType>();
 		EventQueue = new Queue<GameEventType>();
 		LazyEventQueue = new Queue<GameEventType>();
-		
+
 		foreach (GameEventDefinition eventDef in allEventsDefs.allEvents)
 		{
 			CreateEvent(eventDef);
@@ -50,19 +50,33 @@ public static class EventManager
 			CreateEvent(eventDef);
 			Debug.Log($"Created event {eventDef.id}");
 		}
-        foreach (GameEventDefinition eventDef in c1EventsDefs.allEvents)
-        {
-            CreateEvent(eventDef);
-            Debug.Log($"Created event {eventDef.id}");
-        }
-        foreach (GameEventDefinition eventDef in c1s2EventsDefs.allEvents)
-        {
-            CreateEvent(eventDef);
-            Debug.Log($"Created event {eventDef.id}");
-        }
-        Debug.Log("Loaded events json file.");
-	}
+		foreach (GameEventDefinition eventDef in c1EventsDefs.allEvents)
+		{
+			CreateEvent(eventDef);
+			Debug.Log($"Created event {eventDef.id}");
+		}
+		foreach (GameEventDefinition eventDef in c1s2EventsDefs.allEvents)
+		{
+			CreateEvent(eventDef);
+			Debug.Log($"Created event {eventDef.id}");
+		}
 
+		Debug.Log("Loaded events json file.");
+	}
+	public static void LoadSavedEvents(List<string> completedEvents)
+	{
+		if (_events == null) LoadEvents();
+
+		foreach (string eId in completedEvents) { _completedEvents.Add(eId); }
+	}
+	public static List<string> GetCompletedEvents() => _completedEvents.ToList();
+	public static void Reset()
+	{
+		_completedEvents?.Clear();
+		EventQueue?.Clear();
+		LazyEventQueue?.Clear();
+		_raiseCache?.Clear();
+	}
 	private static void CreateEvent(GameEventDefinition def)
 	{
 		GameEventType e = def.type switch
@@ -105,6 +119,9 @@ public static class EventManager
 			"UnlockAbilityEvent" =>
 				IsValidParam(def.parameters.GetValueOrDefault("abilityName"), out string abilityName) ?
 				new UnlockAbilityEvent(def.id, abilityName) : null,
+			"LoadSceneEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("sceneIndex"), out int sceneID) ?
+				new LoadSceneEvent(def.id, sceneID) : null,
 			"BeginCutsceneEvent" =>
 				IsValidParam(def.parameters.GetValueOrDefault("timelineName"), out string timelineName) &&
 				IsValidParam(def.parameters.GetValueOrDefault("startTime"), out float startTime, true) &&
@@ -124,7 +141,7 @@ public static class EventManager
 			{
 				e.RequireCompletedID = def.requireCompletedID;
 			}
-			e.IsCompleted = def.isCompleted;
+			e.IsRepeatable = def.isRepeatable == "true";
 			e.EventsToFire = def.eventsToFire;
 			e.EventsOnComplete = def.eventsOnComplete;
 			_events.Add(def.id, e);
@@ -144,16 +161,16 @@ public static class EventManager
 			Debug.LogWarning($"Invalid event with id: {eventID}. Skipping...");
 			return;
 		}
-		if(evt.IsCompleted)
+		if (_completedEvents.Contains(evt.Id))
 		{
 			Debug.LogWarning($"Event {eventID} has already been completed. Skipping...");
 			return;
 		}
-		if(evt.RequireCompletedID != null && evt.RequireCompletedID != "")
+		if (evt.RequireCompletedID != null && evt.RequireCompletedID != "")
 		{
 			if (_events.TryGetValue(evt.RequireCompletedID, out var completedEvent))
 			{
-				if(!completedEvent.IsCompleted)
+				if (!_completedEvents.Contains(completedEvent.Id))
 				{
 					LazyEventQueue.Enqueue(evt);
 					return;
@@ -166,12 +183,15 @@ public static class EventManager
 		}
 
 		//Queue this event if it is not a dummy event
-		if(evt is not DummyEvent) EventQueue.Enqueue(evt);
-		
-		//Trigger events that are raised when this event is raised
-		if (evt.EventsToFire != null && evt.EventsToFire.Length > 0) 
+		if (evt is not DummyEvent)
 		{
-			foreach(var e in evt.EventsToFire) 
+			EventQueue.Enqueue(evt);
+		}
+
+		//Trigger events that are raised when this event is raised
+		if (evt.EventsToFire != null && evt.EventsToFire.Length > 0)
+		{
+			foreach (var e in evt.EventsToFire)
 			{
 				Raise(e);
 			}
@@ -186,7 +206,6 @@ public static class EventManager
 		if (EventQueue.Count > 0)
         {
 			GameEventType evt = EventQueue.Dequeue();
-
 			Type type = evt.GetType();
 			//Use reflection to get the correct type if the value has not been cached already.
 			if (!_raiseCache.TryGetValue(type, out var raiseMethod))
@@ -198,7 +217,7 @@ public static class EventManager
 			}
 
 			raiseMethod?.Invoke(null, new object[] { evt });
-			Debug.Log($"Raising event via {raiseMethod?.DeclaringType}");
+			Debug.Log($"Handling event {evt.Id} of type {raiseMethod?.DeclaringType}");
 		}
     }
 
@@ -223,7 +242,7 @@ public static class EventManager
 	/// Call this to mark an event as completed.
 	/// </summary>
 	/// <param name="eventID"></param>
-	public static void MarkEventCompleted(string eventID)
+	public static void MarkEventCompleted(string eventID, bool skipOnComplete = false)
 	{
 		if (_events == null) LoadEvents();
 
@@ -237,20 +256,29 @@ public static class EventManager
 			//Exit if not all events to fire have been marked complete for dummy
 			if(!CheckDummyComplete(evt as DummyEvent)) return; 
 		}
-		evt.IsCompleted = true;
+		if(!evt.IsRepeatable) _completedEvents.Add(eventID);
 		Debug.Log($"Completed event {eventID}");
 
-		if (evt.EventsOnComplete != null && evt.EventsOnComplete.Length > 0)
-		{
-			foreach (var e in evt.EventsOnComplete)
-			{
-				Raise(e);
-
-				Debug.Log($"Raised event {e}");
-			}
-		}
+		if(!skipOnComplete) RaiseEventsOnComplete(eventID);
 
 		CheckLazyEvents(eventID);
+		if (!evt.IsRepeatable) GameManager.SaveAll();
+	}
+
+	private static void RaiseEventsOnComplete(string eventID)
+	{
+		if(_completedEvents.Contains(eventID))
+		{
+			if (!_events.TryGetValue(eventID, out var evt)) return;
+			if (evt.EventsOnComplete == null || evt.EventsOnComplete.Count() <= 0) return;
+
+			foreach (var e in evt.EventsOnComplete)
+			{ 
+				if(_completedEvents.Contains(e)) continue;
+
+				Raise(e);
+			}
+		}
 	}
 
 	private static bool CheckDummyComplete(DummyEvent e)
@@ -262,7 +290,7 @@ public static class EventManager
 				Debug.LogWarning($"Invalid event with id: {checkEvent}. Skipping...");
 				return false;
 			}
-			if(!evt.IsCompleted)return false;
+			if(!_completedEvents.Contains(evt.Id))return false;
 		}
 		return true;
 	}

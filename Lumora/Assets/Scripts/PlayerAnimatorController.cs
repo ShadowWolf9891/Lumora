@@ -13,30 +13,24 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void Start()
     {
-        GameEvents<ChangeGameStateEvent>.Subscribe(GameStateChange);
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Subscribe(UnlockThrow);
+        GameEvents<DialogueEvent>.Subscribe(GoToIdle);
 
         animator = GetComponent<Animator>(); 
         behavior = gameObject.GetComponentInParent<PlayerBehavior>();
         rb = behavior.gameObject.GetComponent<Rigidbody>();
         canThrow = false;
     }
-
-    private void GameStateChange(ChangeGameStateEvent e)
+    private void OnDestroy()
     {
-        if (e.State == GameStates.Running)
-        {
-            //unpause
-            animator.speed = 1;
-        }
-        else
-        {
-            //this pauses things
-            animator.speed = 0;
-        }
+        GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+        GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+        GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+        GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockThrow);
+        GameEvents<DialogueEvent>.Unsubscribe(GoToIdle);
     }
 
     private void HandleInput(PlayerInputEvent e)
@@ -93,7 +87,8 @@ public class PlayerAnimatorController : MonoBehaviour
     private void Move(Vector3 moveDir)
     {
         animator.SetFloat("moveSpeed", moveDir.magnitude);
-    }
+		if(moveDir.magnitude > 0.05 && animator.GetBool("isIdle")) animator.SetBool("isIdle", false);
+	}
     private void DoThrow()
     {
         animator.SetTrigger("doThrow");
@@ -111,4 +106,11 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         behavior.TriggerSprintNoise();
     }
+
+	private void GoToIdle(DialogueEvent e)
+	{
+        //animator.SetBool("isIdle", true);
+		//animator.SetFloat("moveSpeed", 0);
+	}
+
 }

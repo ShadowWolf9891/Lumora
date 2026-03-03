@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerHealthBehaviors : MonoBehaviour
@@ -5,7 +6,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
     [Header("Health Values")]
     [SerializeField]
     [Range(0, 10)]
-    int maxHealth;
+    int maxHealth = 3;
     public int CurrentHealthValue { get; set; }
     [SerializeField]
     bool godModeEnabled;
@@ -13,12 +14,17 @@ public class PlayerHealthBehaviors : MonoBehaviour
     private void Start()
     {
         //Todo? Add health value from save on start
-
+        CurrentHealthValue = maxHealth;
         GameEvents<PlayerDamagedEvent>.Subscribe(TakeDamage);
+        GameEvents<GodModeEvent>.Subscribe(EnableGodMode);
     }
 
- 
-    public void TakeDamage(PlayerDamagedEvent e)    //Triggers upon damage taken event. All damage calculation occurs within here.
+	private void EnableGodMode(GodModeEvent e)
+	{
+        godModeEnabled = e.GodModeEnabled;
+	}
+
+	public void TakeDamage(PlayerDamagedEvent e)    //Triggers upon damage taken event. All damage calculation occurs within here.
     {
         if (!godModeEnabled)
         {
