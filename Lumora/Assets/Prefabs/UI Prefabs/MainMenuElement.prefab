@@ -806,6 +806,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 237208744230490220}
+  - component: {fileID: 768783322669472564}
   m_Layer: 5
   m_Name: MainMenuElement
   m_TagString: Untagged
@@ -843,6 +844,14 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &768783322669472564
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5122784445585105040}
+  m_CullTransparentMesh: 1
 --- !u!1 &5640044671424781786
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,19 +972,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4987486724241741007}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIStartMenu, Assembly-CSharp
-        m_MethodName: OnStartClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &5954006810682594493
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,24 +72,30 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        SubscribeToEvents();
         GetComponentReferences();
     }
-	private void Start()
+	private void OnEnable()
 	{
-
-		CameraManager.Instance.SetCurrentCamera("3rd Person Camera");
-	}
-
-	private void SubscribeToEvents()
-    {
-        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
-        GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
-        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(GameEventChanged);
-    }
+	}
+	private void OnDisable()
+	{
+		GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Unsubscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+		GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockAbility);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(GameEventChanged);
+	}
+	private void Start()
+	{
+		CameraManager.Instance.SetCurrentCamera("3rd Person Camera");
+	}
 
     private void GetComponentReferences()
     {

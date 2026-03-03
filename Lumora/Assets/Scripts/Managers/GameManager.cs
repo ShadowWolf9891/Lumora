@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
 		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
 		GameEvents<LoadSceneEvent>.Subscribe(LoadScene);
+		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 	private void OnDisable()
 	{
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
 		GameEvents<DeleteSaveEvent>.Unsubscribe(DeleteSave);
 		GameEvents<EnableSaveEvent>.Unsubscribe(EnableSaving);
 		GameEvents<LoadSceneEvent>.Unsubscribe(LoadScene);
+		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 	private async void LoadScene(LoadSceneEvent e)
 	{
@@ -47,22 +49,8 @@ public class GameManager : MonoBehaviour
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (!SaveSystem.HasSaved && GameConfig.Mode == GameMode.Production) SaveAll();
-		TimelineManager.Instance.Load();
-		CameraManager.Instance.Reset();
 		LoadAll(scene.buildIndex);
-		CameraManager.Instance.LoadCameras();
 	}
-
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
-    {
-		Cursor.lockState = CursorLockMode.Locked;
-
-		EventManager.Instance.Raise(new LoadSceneEvent("LoadCurrentScene", 1));
-		//EventManager.Raise("UnlockThrow");
-		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
-	}
-
 
 	private void Update()
 	{
@@ -109,6 +97,9 @@ public class GameManager : MonoBehaviour
 
 	public void LoadAll(int curScene)
 	{
+		TimelineManager.Instance.Load();
+		CameraManager.Instance.Reset();
+
 		if (GameConfig.Mode == GameMode.Production)
 		{
 			_saveData = SaveSystem.Load(curScene);
@@ -121,12 +112,15 @@ public class GameManager : MonoBehaviour
 			EventManager.Instance.LoadSavedEvents(_saveData.eventData.completedEvents);
 			SpawnerManager.Instance.RestoreTriggersOnLoad(_saveData.worldData);
 		}
-		if (curScene == 0) return;
-		string firstEvent = (curScene) switch
+
+		CameraManager.Instance.LoadCameras();
+		if (SceneManager.GetSceneByBuildIndex(curScene).name == "MainMenu") return;
+
+		string firstEvent = (SceneManager.GetSceneByBuildIndex(curScene).name) switch
 		{
-			1 => "ShiftLeader_Enter",
-			2=> "KipEnterHouse_C1_S2",
-			3=>"Chapter2_Intro",
+			"Chapter1-Mine" => "ShiftLeader_Enter",
+			"Chapter1-House" => "KipEnterHouse_C1_S2",
+			"Chapter2_Stealth"=>"Chapter2_Intro",
 			_ => ""
 		};
 		if (firstEvent != "" && !EventManager.Instance.GetCompletedEvents().Contains(firstEvent))

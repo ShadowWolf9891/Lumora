@@ -85,13 +85,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4608294118016694805}
   - component: {fileID: 6919798202896113784}
+  - component: {fileID: -7580670486988683182}
   m_Layer: 5
   m_Name: InventoryElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4608294118016694805
 RectTransform:
   m_ObjectHideFlags: 0
@@ -125,3 +126,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIInventoryController
   bG: {fileID: 4761383134387287563}
+--- !u!222 &-7580670486988683182
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8338726132743662929}
+  m_CullTransparentMesh: 1

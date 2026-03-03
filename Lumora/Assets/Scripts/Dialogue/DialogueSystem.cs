@@ -93,11 +93,11 @@ public class DialogueSystem : MonoBehaviour
     /// <param name="SceneID">The scene within the chapter to play the dialogue from</param>
     private void BeginDialogue(DialogueEvent e)
     {
+        EventManager.Instance.Raise("Pause_For_Dialogue");
         currentLine = 0;
         currentDialogue = GetDialogueLines(e.Chapter, e.Scene);
 		UIManager.Instance.DisplayDialogue(currentDialogue[currentLine]);
         currentDialogueID = e.Id;
-        EventManager.Instance.Raise("Pause_For_Dialogue");
 	}
     
     /// <summary>

@@ -29,9 +29,10 @@ public class CameraManager : MonoBehaviour
 	public void LoadCameras()
 	{
 		_cameraList = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsSortMode.InstanceID).ToList();
-		if(CurrentCamera ==null)
+		if(CurrentCamera ==null && _cameraList.Count > 0)
 		{
-			SetCurrentCamera("3rd Person Camera");
+			if (_cameraList.Exists(cam => cam.name == "3rd Person Camera")) SetCurrentCamera("3rd Person Camera");
+			else SetCurrentCamera(0);
 		}
 	}
 
@@ -51,10 +52,9 @@ public class CameraManager : MonoBehaviour
 
 		if (CurrentCamera == _cameraList[cameraIndex]) return;
 
-		PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
+		if(_brain.ActiveVirtualCamera != null) PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
 		CurrentCamera = _cameraList[cameraIndex];
 
-		
 		if(PreviousCamera) PreviousCamera.gameObject.SetActive(false);
 		CurrentCamera.gameObject.SetActive(true);
 
@@ -111,7 +111,6 @@ public class CameraManager : MonoBehaviour
 	public void Reset()
 	{
 		_cameraList = null;
-		_brain = null;
 		CurrentCamera = null;
 		PreviousCamera = null;
 	}
