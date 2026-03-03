@@ -21,10 +21,12 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
 
     public bool OnInteractStart()
     {
+        Debug.Log("Running Interaction start with ladder");
         GameObject playerRef = GameObject.FindWithTag("Player");
         //Is top point or bottom point closer? teleport player to opposite point
         if (IsPlayerCloserToTopPoint(playerRef))
         {
+            Debug.Log("LadderBehaviors: player is closer to TOP ladder point, starting TP event");
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
                 $"Teleporting Player to: {bottomLadderPoint} from: {topLadderPoint}", 
                 bottomLadderPoint.position, topLadderPoint.position));
@@ -32,6 +34,7 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         }
         else
         {
+            Debug.Log("LadderBehaviors: player is closer to BOTTOM ladder point, starting TP event");
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
                 $"Teleporting Player to: {topLadderPoint} from: {bottomLadderPoint}", 
                 topLadderPoint.position, bottomLadderPoint.position));

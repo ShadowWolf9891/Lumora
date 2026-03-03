@@ -13,6 +13,7 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void Start()
     {
+        GameEvents<ChangeGameStateEvent>.Subscribe(GameStateChange);
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
@@ -24,7 +25,21 @@ public class PlayerAnimatorController : MonoBehaviour
         canThrow = false;
     }
 
-	private void HandleInput(PlayerInputEvent e)
+    private void GameStateChange(ChangeGameStateEvent e)
+    {
+        if (e.State == GameStates.Running)
+        {
+            //unpause
+            animator.speed = 1;
+        }
+        else
+        {
+            //this pauses things
+            animator.speed = 0;
+        }
+    }
+
+    private void HandleInput(PlayerInputEvent e)
 	{
 		switch(e.ActionType) 
         {

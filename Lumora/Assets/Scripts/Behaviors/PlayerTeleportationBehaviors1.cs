@@ -21,6 +21,10 @@ public class PlayerTeleportationBehaviors1 : MonoBehaviour
     {
         playerRigidBody = GetComponent<Rigidbody>();
         //playerBehaviorRef = GetComponent<PlayerBehavior>();
+        if (particleObject.activeSelf)
+        {
+            particleObject.SetActive(false);
+        }
     }
     private void Start()
     {
@@ -29,7 +33,7 @@ public class PlayerTeleportationBehaviors1 : MonoBehaviour
 
     private void DoTeleport(TeleportPlayerEvent e)
     {
-        GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Teleporting!, changing game state to Cutscene", GameStates.Cutscene));
+        GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Teleporting!, changing game state to Cutscene", GameStates.Teleporting));
 
         EnableTeleportSettings(true);
 

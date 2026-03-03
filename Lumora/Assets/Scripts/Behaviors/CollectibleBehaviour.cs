@@ -30,7 +30,10 @@ public class CollectibleBehaviour : MonoBehaviour, IInteractable
     public void DisableInteractionPrompt()
     {
         isInteractionPromptVisible = false;
-        interactionPromptImageObject.SetActive(false);
+        if (interactionPromptImageObject != null)
+        {
+            interactionPromptImageObject.SetActive(false);
+        }
     }
 
     public bool IsHoldInteraction()

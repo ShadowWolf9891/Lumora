@@ -70,11 +70,13 @@ public class PlayerBehavior : MonoBehaviour
 	private Vector3 curThrowDirection;
 	private float throwYaw;
 	private float throwPitch;
-	#endregion
+    Vector3 savedVelocity;
+    Vector3 savedAngularVelocity;
+    #endregion
 
-	#region Initializing
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Awake()
+    #region Initializing
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
     {
         SubscribeToEvents();
         GetComponentReferences();
@@ -91,7 +93,7 @@ public class PlayerBehavior : MonoBehaviour
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
-
+		GameEvents<ChangeGameStateEvent>.Subscribe(GameEventChanged);
     }
 
     private void GetComponentReferences()
@@ -388,14 +390,38 @@ public class PlayerBehavior : MonoBehaviour
 				break;
 		}
 	}
-	#endregion
 
-	#region Helpers
-	/// <summary>
-	/// Checks if the player is on the ground or not.
-	/// </summary>
-	/// <returns></returns>
-	private bool IsGrounded()
+    private void GameEventChanged(ChangeGameStateEvent e)
+    {
+		if (e.State == GameStates.Running)
+        {
+            //enables momentum again
+            rb.isKinematic = false;
+            rb.AddForce(savedVelocity, ForceMode.VelocityChange);
+            rb.AddTorque(savedAngularVelocity, ForceMode.VelocityChange);
+        }
+		else if (e.State == GameStates.Teleporting)
+		{
+			rb.isKinematic = false;
+		}
+		else
+		{
+			//saves momentum
+			savedVelocity = rb.linearVelocity;
+			savedAngularVelocity = rb.angularVelocity;
+			rb.isKinematic = true;
+		}
+
+    }
+
+    #endregion
+
+    #region Helpers
+    /// <summary>
+    /// Checks if the player is on the ground or not.
+    /// </summary>
+    /// <returns></returns>
+    private bool IsGrounded()
 	{
 		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight / 2, transform.position.z), UnityEngine.Color.darkRed);
 		return Physics.Raycast(transform.position, Vector3.down, playerHeight / 2, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
