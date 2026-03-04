@@ -83,10 +83,11 @@ public class SpawnerManager : MonoBehaviour
 			}
 		}
 	}
-	public void MarkTriggered(string triggerID)
+	public void MarkTriggered(string triggerID, GameObject triggerGO)
 	{
 		var trigger = triggers.Find(x => x.EventId == triggerID);
 		trigger.Triggered = true;
 		triggers.Remove(trigger);
+		Destroy(triggerGO);
 	}
 }

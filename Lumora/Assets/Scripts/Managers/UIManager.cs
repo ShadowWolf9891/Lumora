@@ -52,7 +52,6 @@ public class UIManager : MonoBehaviour
         InputSystem.onActionChange += HandleButtonPress;
         SceneManager.sceneLoaded += OnNewSceneLoad;
     }
-
     private void OnDisable()
     {
         GameEvents<UpdateUIEvent>.Unsubscribe(HandleUIVisibility);
@@ -100,7 +99,6 @@ public class UIManager : MonoBehaviour
 
         }
     }
-
     private void HandleUIVisibility(UpdateUIEvent e) => HandleUIVisibility(e.UI_Name, e.IsActive, e.LayerOnTop);
     private void HandleUIVisibility(string uiName, bool isVisible, bool layerOnTop)
     {
@@ -215,7 +213,7 @@ public class UIManager : MonoBehaviour
             }
         }
 	}
-    //button controllers
+    //Button behaviors on click
     public void OnStartClick() => EventManager.Instance.Raise(new LoadSceneEvent("StartNewGame", SceneManager.GetActiveScene().buildIndex + 1));
     public void OnResumeClick() => EventManager.Instance.Raise("Resume_Game");
 	public void OnExitClick() => Application.Quit();

@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 	public GameStates CurrentGameState { get; private set; }
 
 	private GameSaveData _saveData;
+	private bool _loaded = false;
 
 	private void Awake()
 	{
@@ -23,7 +24,11 @@ public class GameManager : MonoBehaviour
 		}
 		else Destroy(gameObject);
 	}
-
+	private void Start()
+	{
+		// Handle case where scene was loaded directly in editor
+		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+	}
 	private void OnEnable()
 	{
 		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
@@ -32,7 +37,9 @@ public class GameManager : MonoBehaviour
 		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
 		GameEvents<LoadSceneEvent>.Subscribe(LoadScene);
 		SceneManager.sceneLoaded += OnSceneLoaded;
+		SceneManager.sceneUnloaded += OnSceneUnloaded;
 	}
+
 	private void OnDisable()
 	{
 		GameEvents<ToggleVisibilityEvent>.Unsubscribe(ToggleVisibility);
@@ -41,6 +48,7 @@ public class GameManager : MonoBehaviour
 		GameEvents<EnableSaveEvent>.Unsubscribe(EnableSaving);
 		GameEvents<LoadSceneEvent>.Unsubscribe(LoadScene);
 		SceneManager.sceneLoaded -= OnSceneLoaded;
+		SceneManager.sceneUnloaded -= OnSceneUnloaded;
 	}
 	private async void LoadScene(LoadSceneEvent e)
 	{
@@ -50,11 +58,16 @@ public class GameManager : MonoBehaviour
 	{
 		if (!SaveSystem.HasSaved && GameConfig.Mode == GameMode.Production) SaveAll();
 		LoadAll(scene.buildIndex);
+		_loaded = true;
+	}
+	private void OnSceneUnloaded(Scene scene)
+	{
+		_loaded = false;
 	}
 
 	private void Update()
 	{
-		EventManager.Instance.HandleEvents(); //Handle events each frame if there are any.
+		if(_loaded) EventManager.Instance.HandleEvents(); //Handle events each frame if there are any.
 	}
 
 	/// <summary>
@@ -97,8 +110,8 @@ public class GameManager : MonoBehaviour
 
 	public void LoadAll(int curScene)
 	{
-		TimelineManager.Instance.Load();
 		CameraManager.Instance.Reset();
+		TimelineManager.Instance.Load();
 
 		if (GameConfig.Mode == GameMode.Production)
 		{

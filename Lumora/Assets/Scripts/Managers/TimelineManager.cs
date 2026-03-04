@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 public class TimelineManager : MonoBehaviour
 {
 	public static TimelineManager Instance;
 	public List<PlayableDirector> _directors { get; private set; }
-
 	public Dictionary<string, PlayableDirector> _eventTracker = new();
+	private CinemachineBrain _brain;
 	private void Awake()
 	{
 		if (Instance == null)
@@ -30,6 +32,7 @@ public class TimelineManager : MonoBehaviour
 	{
 		//Might only load for first scene
 		_directors = GameObject.FindObjectsByType<PlayableDirector>(FindObjectsSortMode.InstanceID).ToList();
+		_brain = GameObject.FindFirstObjectByType<CinemachineBrain>();
 		foreach (var d in _directors)
 			d.stopped += OnDirectorStopped;
 	}
@@ -54,6 +57,16 @@ public class TimelineManager : MonoBehaviour
 		}
 		if (director.state != PlayState.Playing) 
 		{
+			var timeline = director.playableAsset as TimelineAsset;
+			foreach(var track in timeline.GetOutputTracks()) 
+			{
+				if(track is CinemachineTrack)
+				{
+					director.SetGenericBinding(track, _brain);
+					break;
+				}
+			}
+			
 			director.time = e.StartTime;
 			director.Play();
 		}

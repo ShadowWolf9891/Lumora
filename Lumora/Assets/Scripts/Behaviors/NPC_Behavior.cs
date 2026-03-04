@@ -19,12 +19,21 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
         agent = GetComponent<NavMeshAgent>();
 		pathBehavior = GetComponent<PathObjectBehavior>();
     }
+	private void OnEnable()
+	{
+		GameEvents<PathEvent>.Subscribe(ChangePathStatus);
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
+		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);	
+	}
+	private void OnDisable()
+	{
+		GameEvents<PathEvent>.Unsubscribe(ChangePathStatus);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(FreezeNPC);
+		GameEvents<ChangeNPCWalkTypeEvent>.Unsubscribe(ChangeNPCWalk);
+	}
 	void Start()
 	{
 		if(curTarget == null) curTarget = GameObject.Find("Player");
-		GameEvents<PathEvent>.Subscribe(ChangePathStatus);
-		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
-		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
 	}
 
 	private void ChangePathStatus(PathEvent e)
@@ -53,7 +62,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 				break;
             case PathStatus.NEXT_PATH:
 				agent.SetDestination(pathBehavior.GoToNextPath());
-				EventManager.Instance.MarkEventCompleted(eventID);
+				if (eventID != null && !EventManager.Instance.GetCompletedEvents().Contains(eventID)) EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.PREV_PATH:

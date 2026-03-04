@@ -32,8 +32,7 @@ public class SpawnableTriggerBehavior : MonoBehaviour
 			EventManager.Instance.Raise(EventToTrigger);
             if(!IsRepeatable)
             {
-                SpawnerManager.Instance.MarkTriggered(Id);
-                Destroy(gameObject);
+                SpawnerManager.Instance.MarkTriggered(Id, gameObject);
             }
         }
 	}
