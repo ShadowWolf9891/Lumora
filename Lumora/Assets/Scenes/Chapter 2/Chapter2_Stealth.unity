@@ -11294,8 +11294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54e0fac24dcda34aa16926df13aaa86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  playerRef: {fileID: 1634987620}
-  spawnableObjects: {fileID: 11400000, guid: e37867a7072b3fb4f9fa31c24daf23ec, type: 2}
   coverLayerMask:
     serializedVersion: 2
     m_Bits: 2048
@@ -24134,9 +24132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a520789441b9ef54c8d9ca82751ee56b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
-  DialoguePanel: {fileID: 1348141068}
-  SpeakerName: {fileID: 1348141067}
-  DialogueText: {fileID: 1348141066}
 --- !u!4 &1140937314
 Transform:
   m_ObjectHideFlags: 0
@@ -29148,95 +29143,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1001 &1348141065
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2507.5981
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1350.4819
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781085670194498354, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2019234497851480644, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5755050513749311266, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-      propertyPath: m_Name
-      value: ---UI---
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8777720406356611133, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
---- !u!114 &1348141066 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7645449744131164738, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-  m_PrefabInstance: {fileID: 1348141065}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1348141067 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9022439766108739343, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-  m_PrefabInstance: {fileID: 1348141065}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!1 &1348141068 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2019234497851480644, guid: 3f2d8e521f4f53d4d995349f734fbc68, type: 3}
-  m_PrefabInstance: {fileID: 1348141065}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1349513908
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44812,7 +44718,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1556416109}
-  - {fileID: 1348141065}
   - {fileID: 1255224781}
   - {fileID: 746052910}
   - {fileID: 1258602458}
