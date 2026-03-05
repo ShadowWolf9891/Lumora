@@ -13,8 +13,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     private float sprintMaxSpeed = 6;
     [SerializeField, Tooltip("How quickly the player stops moving in m/s")]
 	float stoppingForce = 3;
-	[SerializeField, Tooltip("Height of the player for jumping in m")]
-	float playerHeight = 1.2f;
+	//[SerializeField, Tooltip("Height of the player for jumping in m")]
+	//float playerHeight = 1.2f;
 	[SerializeField, Tooltip("How high the player can jump in m")]
 	float jumpHeight = 5;
 	[SerializeField, Tooltip("LayerMask for IsGrounded")]
@@ -435,8 +435,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     /// <returns></returns>
     private bool IsGrounded()
 	{
-		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight / 2, transform.position.z), UnityEngine.Color.darkRed);
-		return Physics.Raycast(transform.position, Vector3.down, playerHeight / 2, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - 0.1f , transform.position.z), UnityEngine.Color.yellowNice);
+		return Physics.Raycast(new Vector3 (transform.position.x, transform.position.y +0.1f, transform.position.z), Vector3.down, 0.2f, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
 	}
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{
@@ -492,10 +492,15 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		}
 
 	}
-	#endregion
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z));
+    }
+    #endregion
 
-	#region Save/Load
-	public void Save(GameSaveData data)
+    #region Save/Load
+    public void Save(GameSaveData data)
 	{
 		data.playerData = new PlayerSaveData()
 		{
