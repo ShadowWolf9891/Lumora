@@ -12,21 +12,33 @@ public class AllEvents
 	public List<GameEventDefinition> allEvents;
 }
 
-public static class EventManager
+public class EventManager : MonoBehaviour
 {
-	public static Queue<GameEventType> EventQueue { get; private set; }
+	public static EventManager Instance;
+	public Queue<GameEventType> EventQueue { get; private set; }
 
 	//Checked only when another event is completed. Used for if an event is fired but the requirements are not yet met.
-	public static Queue<GameEventType> LazyEventQueue { get; private set; }
+	public Queue<GameEventType> LazyEventQueue { get; private set; }
 
-	private static AllEvents allEventsDefs, c2EventsDefs, c1EventsDefs, c1s2EventsDefs;
-	private static Dictionary<string, GameEventType> _events;
-	private static readonly Dictionary<Type, MethodInfo> _raiseCache = new();
+	private AllEvents allEventsDefs, c2EventsDefs, c1EventsDefs, c1s2EventsDefs;
+	private Dictionary<string, GameEventType> _events;
+	private readonly Dictionary<Type, MethodInfo> _raiseCache = new();
 
 	//Check in completed events when saving / loading
-	private static HashSet<string> _completedEvents = new();
+	private readonly HashSet<string> _completedEvents = new();
 
-	private static void LoadEvents()
+	private void Awake()
+	{
+		if (Instance != null)
+		{
+			Destroy(gameObject);
+			return;
+		}
+
+		Instance = this;
+		LoadEvents();
+	}
+	private void LoadEvents()
 	{
 		TextAsset jsonFile = Resources.Load<TextAsset>("events");
 		TextAsset c2JsonFile = Resources.Load<TextAsset>("c2_events");
@@ -63,21 +75,21 @@ public static class EventManager
 
 		Debug.Log("Loaded events json file.");
 	}
-	public static void LoadSavedEvents(List<string> completedEvents)
+	public void LoadSavedEvents(List<string> completedEvents)
 	{
 		if (_events == null) LoadEvents();
 
 		foreach (string eId in completedEvents) { _completedEvents.Add(eId); }
 	}
-	public static List<string> GetCompletedEvents() => _completedEvents.ToList();
-	public static void Reset()
+	public List<string> GetCompletedEvents() => _completedEvents.ToList();
+	public void Reset()
 	{
 		_completedEvents?.Clear();
 		EventQueue?.Clear();
 		LazyEventQueue?.Clear();
 		_raiseCache?.Clear();
 	}
-	private static void CreateEvent(GameEventDefinition def)
+	private void CreateEvent(GameEventDefinition def)
 	{
 		GameEventType e = def.type switch
 		{
@@ -113,9 +125,11 @@ public static class EventManager
 				IsValidParam(def.parameters.GetValueOrDefault("layerMask"), out LayerMask mask, true) &&
 				IsValidParam(def.parameters.GetValueOrDefault("eventToRaiseOnTrigger"), out string eventName) ?
 				new SpawnTriggerEvent(def.id, worldLocation, eventName, mask != default ? mask : ~0, radius != default ? radius : 1f) : null,
-			"UIEvent" =>
-				IsValidParam(def.parameters.GetValueOrDefault("menuPopup"), out bool menuPopup) ?
-				new SpawnPauseMenuEvent(def.id, menuPopup != default && menuPopup) : null,
+			"UpdateUIEvent" =>
+				IsValidParam(def.parameters.GetValueOrDefault("elementName"), out string elementName) &&
+				IsValidParam(def.parameters.GetValueOrDefault("isActive"), out bool isActive) &&
+				IsValidParam(def.parameters.GetValueOrDefault("layerOnTop"), out bool layerOnTop) ?
+				new UpdateUIEvent(def.id, elementName, isActive == default || isActive, layerOnTop != default && layerOnTop) : null,
 			"UnlockAbilityEvent" =>
 				IsValidParam(def.parameters.GetValueOrDefault("abilityName"), out string abilityName) ?
 				new UnlockAbilityEvent(def.id, abilityName) : null,
@@ -127,12 +141,12 @@ public static class EventManager
 				IsValidParam(def.parameters.GetValueOrDefault("startTime"), out float startTime, true) &&
 				IsValidParam(def.parameters.GetValueOrDefault("endTime"), out float endTime, true) ?
 				new BeginCutsceneEvent(def.id, timelineName, startTime != default ? startTime : 0f, endTime != default ? endTime : 0f) : null,
-			"ToggleVisibilityEvent" => 
+			"ToggleVisibilityEvent" =>
 				IsValidParam(def.parameters.GetValueOrDefault("objectName"), out string objectName) &&
 				IsValidParam(def.parameters.GetValueOrDefault("isVisible"), out bool isVisible) ?
 				new ToggleVisibilityEvent(def.id, objectName, isVisible) : null,
-			"" =>null,
-			_ => throw new NotImplementedException()
+			"" => null,
+			_ => null
 		};
 
 		if (e != null)
@@ -152,7 +166,7 @@ public static class EventManager
 	/// Raise an event from the events json file using it's string id. 
 	/// </summary>
 	/// <param name="eventID">The id of the event as it appears in the json file.</param>
-	public static void Raise(string eventID)
+	public void Raise(string eventID)
 	{
 		if (_events == null) LoadEvents();
 
@@ -197,10 +211,19 @@ public static class EventManager
 			}
 		}
 	}
+
+	/// <summary>
+	/// Queue a new event of type without checking anything. Use for game state changes and such, but use carefully.
+	/// It will not be marked as complete, nor fire events on complete.
+	/// </summary>
+	/// <typeparam name="T">The type of event to raise. Must be a GameEventType.</typeparam>
+	/// <param name="evt">The new event instance.</param>
+	public void Raise<T>(T evt) where T : GameEventType => EventQueue.Enqueue(evt);
+
 	/// <summary>
 	/// Handle the events in the queue. Called from GameManager.
 	/// </summary>
-	public static void HandleEvents()
+	public void HandleEvents()
 	{
 		if (_events == null) LoadEvents();
 		if (EventQueue.Count > 0)
@@ -225,7 +248,7 @@ public static class EventManager
 	/// Check if the lazy events have their requirements met after another event was completed and add them to the queue if they do.
 	/// </summary>
 	/// <param name="completedID">The ID of the event that was completed to trigger this method.</param>
-	private static void CheckLazyEvents(string completedID)
+	private void CheckLazyEvents(string completedID)
 	{
 		if (LazyEventQueue.Count > 0)
 		{
@@ -242,7 +265,7 @@ public static class EventManager
 	/// Call this to mark an event as completed.
 	/// </summary>
 	/// <param name="eventID"></param>
-	public static void MarkEventCompleted(string eventID, bool skipOnComplete = false)
+	public void MarkEventCompleted(string eventID, bool skipOnComplete = false)
 	{
 		if (_events == null) LoadEvents();
 
@@ -262,10 +285,10 @@ public static class EventManager
 		if(!skipOnComplete) RaiseEventsOnComplete(eventID);
 
 		CheckLazyEvents(eventID);
-		if (!evt.IsRepeatable) GameManager.SaveAll();
+		if (!evt.IsRepeatable) GameManager.Instance.SaveAll();
 	}
 
-	private static void RaiseEventsOnComplete(string eventID)
+	private void RaiseEventsOnComplete(string eventID)
 	{
 		if(_completedEvents.Contains(eventID))
 		{
@@ -281,7 +304,7 @@ public static class EventManager
 		}
 	}
 
-	private static bool CheckDummyComplete(DummyEvent e)
+	private bool CheckDummyComplete(DummyEvent e)
 	{
 		foreach (var checkEvent in e.EventsToFire)
 		{

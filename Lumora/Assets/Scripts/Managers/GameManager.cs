@@ -6,59 +6,68 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-	private static GameManager Instance;
-	[SerializeField] GameObject playerRef;
-	[SerializeField] SpawnableObjects spawnableObjects;
+	public static GameManager Instance;
 	[SerializeField] LayerMask coverLayerMask;
 
 	List<GameObject> _cachedObjects = new();
 
-	public static GameStates CurrentGameState { get; private set; }
+	public GameStates CurrentGameState { get; private set; }
 
-	private static GameSaveData _saveData;
-	private static bool canSave = false;
+	private GameSaveData _saveData;
+	private bool _loaded = false;
 
 	private void Awake()
 	{
 		if (Instance == null)
 		{
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
-			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 		else Destroy(gameObject);
 	}
-
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	private void Start()
 	{
-		if (!SaveSystem.HasSaved && canSave) SaveAll();
-		SpawnerManager.Load(spawnableObjects);
-		TimelineManager.Load();
-		SceneLoader.LoadManager();
-		CameraManager.Reset();
-		LoadAll(scene.buildIndex);
-		CameraManager.LoadCameras();
+		// Handle case where scene was loaded directly in editor
+		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 	}
-
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
-    {
+	private void OnEnable()
+	{
 		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(OnGameStateChange);
 		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
 		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
-		Cursor.lockState = CursorLockMode.Locked;
-
-		new LoadSceneEvent("LoadCurrentScene", 1);
-		EventManager.Raise("LoadCurrentScene");
-		//EventManager.Raise("UnlockThrow");
-		//EventDispatcher.DispatchForCurrentQuest("SubQuest1");
+		GameEvents<LoadSceneEvent>.Subscribe(LoadScene);
+		SceneManager.sceneLoaded += OnSceneLoaded;
+		SceneManager.sceneUnloaded += OnSceneUnloaded;
 	}
 
+	private void OnDisable()
+	{
+		GameEvents<ToggleVisibilityEvent>.Unsubscribe(ToggleVisibility);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(OnGameStateChange);
+		GameEvents<DeleteSaveEvent>.Unsubscribe(DeleteSave);
+		GameEvents<EnableSaveEvent>.Unsubscribe(EnableSaving);
+		GameEvents<LoadSceneEvent>.Unsubscribe(LoadScene);
+		SceneManager.sceneLoaded -= OnSceneLoaded;
+		SceneManager.sceneUnloaded -= OnSceneUnloaded;
+	}
+	private async void LoadScene(LoadSceneEvent e)
+	{
+		await SceneManager.LoadSceneAsync(e.SceneIndex);
+	}
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		if (!SaveSystem.HasSaved && GameConfig.Mode == GameMode.Production) SaveAll();
+		LoadAll(scene.buildIndex);
+		_loaded = true;
+	}
+	private void OnSceneUnloaded(Scene scene)
+	{
+		_loaded = false;
+	}
 
 	private void Update()
 	{
-		EventManager.HandleEvents(); //Handle events each frame if there are any.
+		if(_loaded) EventManager.Instance.HandleEvents(); //Handle events each frame if there are any.
 	}
 
 	/// <summary>
@@ -80,11 +89,11 @@ public class GameManager : MonoBehaviour
 	}
 	private void EnableSaving(EnableSaveEvent e)
 	{
-		canSave = true;
+		GameConfig.Mode = GameMode.Production;
 	}
-	public static void SaveAll()
+	public void SaveAll()
 	{
-		if (!canSave) return;
+		if (GameConfig.Mode == GameMode.Playtest) return;
 		_saveData ??= new GameSaveData();
 		_saveData.eventData ??= new EventSaveData();
 		_saveData.playerData ??= new PlayerSaveData();
@@ -93,15 +102,18 @@ public class GameManager : MonoBehaviour
 		{
 			GetCache()[i].Save(_saveData);
 		}
-		_saveData.eventData.completedEvents = EventManager.GetCompletedEvents();
+		_saveData.eventData.completedEvents = EventManager.Instance.GetCompletedEvents();
 		_saveData.worldData.ActiveSceneIndex = SceneManager.GetActiveScene().buildIndex;
-		_saveData.worldData.SpawnedTriggerData = SpawnerManager.GetTriggers();
+		_saveData.worldData.SpawnedTriggerData = SpawnerManager.Instance.GetTriggers();
 		SaveSystem.Save(_saveData);
 	}
 
-	public static void LoadAll(int curScene)
+	public void LoadAll(int curScene)
 	{
-		if (canSave)
+		CameraManager.Instance.Reset();
+		TimelineManager.Instance.Load();
+
+		if (GameConfig.Mode == GameMode.Production)
 		{
 			_saveData = SaveSystem.Load(curScene);
 
@@ -110,41 +122,44 @@ public class GameManager : MonoBehaviour
 				GetCache()[i].Load(_saveData);
 			}
 
-			EventManager.LoadSavedEvents(_saveData.eventData.completedEvents);
-			SpawnerManager.RestoreTriggersOnLoad(_saveData.worldData);
+			EventManager.Instance.LoadSavedEvents(_saveData.eventData.completedEvents);
+			SpawnerManager.Instance.RestoreTriggersOnLoad(_saveData.worldData);
 		}
-		if (curScene == 0) return;
-		string firstEvent = (curScene) switch
+
+		CameraManager.Instance.LoadCameras();
+		if (SceneManager.GetSceneByBuildIndex(curScene).name == "MainMenu") return;
+
+		string firstEvent = (SceneManager.GetSceneByBuildIndex(curScene).name) switch
 		{
-			1 => "ShiftLeader_Enter",
-			2=> "KipEnterHouse_C1_S2",
-			3=>"Chapter2_Intro",
+			"Chapter1-Mine" => "ShiftLeader_Enter",
+			"Chapter1-House" => "KipEnterHouse_C1_S2",
+			"Chapter2_Stealth"=>"Chapter2_Intro",
 			_ => ""
 		};
-		if (firstEvent != "" && !EventManager.GetCompletedEvents().Contains(firstEvent))
+		if (firstEvent != "" && !EventManager.Instance.GetCompletedEvents().Contains(firstEvent))
 		{
-			EventManager.Raise(firstEvent);
+			EventManager.Instance.Raise(firstEvent);
 			Debug.Log($"Raised first event {firstEvent}");
 		}
-		else EventManager.Raise("Resume_Game");
+		else EventManager.Instance.Raise("Resume_Game");
 	}
 
-	public static void DeleteSave(DeleteSaveEvent e)
+	public void DeleteSave(DeleteSaveEvent e)
 	{
-		EventManager.Reset(); //Might break for completed events between scenes.
-		SpawnerManager.Reset();
-		CameraManager.Reset();
+		EventManager.Instance.Reset(); //Might break for completed events between scenes.
+		SpawnerManager.Instance.Reset();
+		CameraManager.Instance.Reset();
 		_saveData = null;
 		SaveSystem.DeleteData();
 	}
-	private static List<ISaveable> GetCache()
+	private List<ISaveable> GetCache()
 	{
 		return GameObject.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<ISaveable>().ToList();
 	}
 
-	private static void OnGameStateChange(ChangeGameStateEvent e)
+	private void OnGameStateChange(ChangeGameStateEvent e)
 	{
 		CurrentGameState = e.State;
-		EventManager.MarkEventCompleted(e.Id);
+		EventManager.Instance.MarkEventCompleted(e.Id);
 	}
 }

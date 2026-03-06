@@ -72,24 +72,30 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        SubscribeToEvents();
         GetComponentReferences();
     }
-	private void Start()
+	private void OnEnable()
 	{
-
-		CameraManager.SetCurrentCamera("3rd Person Camera");
-	}
-
-	private void SubscribeToEvents()
-    {
-        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
-        GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
-        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(GameEventChanged);
-    }
+	}
+	private void OnDisable()
+	{
+		GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Unsubscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+		GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockAbility);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(GameEventChanged);
+	}
+	private void Start()
+	{
+		CameraManager.Instance.SetCurrentCamera("3rd Person Camera");
+	}
 
     private void GetComponentReferences()
     {
@@ -295,7 +301,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		//Debug.Log("Preparing throw.");
 		isThrowing = true;
 		
-		CameraManager.SetCurrentCamera("ThrowCamera", 0.2f);
+		CameraManager.Instance.SetCurrentCamera("ThrowCamera", 0.2f);
 		throwYaw = mainCam.transform.forward.x;
 		throwPitch = -10f; // slight upward bias
 
@@ -367,13 +373,13 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		isThrowing = false;
 		lineRenderer.enabled = false;
 		Destroy(activeHitSphere);
-		if (!CameraManager.IsBlending())
+		if (!CameraManager.Instance.IsBlending())
 		{
 			GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
 			Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
 			projectileRb.AddForce(startVelocity, ForceMode.Impulse);
 		}
-		CameraManager.ReturnToPreviousCamera(0.5f);
+		CameraManager.Instance.ReturnToPreviousCamera(0.5f);
 	}
 	#endregion
 
@@ -504,7 +510,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			pathData = new PathData() { 
 				CurrentPath = pathObjectBehavior.GetCurrentPathAndPoint().Item1,
 				CurrentPoint = pathObjectBehavior.GetCurrentPathAndPoint().Item2 },
-			inventory = InventoryManager.InventoryData
+			inventory = InventoryManager.Instance.InventoryData
 		};
 	}
 	public void Load(GameSaveData data)
@@ -514,8 +520,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		playerHealthBehaviors.CurrentHealthValue = data.playerData.health;
 		if(data.playerData.pathData.CurrentPath != -1 && data.playerData.pathData.CurrentPoint != -1)
 			waypointImage.transform.position = pathObjectBehavior.GoToPath(data.playerData.pathData.CurrentPath, data.playerData.pathData.CurrentPoint);
-		InventoryManager.InventoryData = data.playerData.inventory;
-		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
+		InventoryManager.Instance.InventoryData = data.playerData.inventory;
+		CameraManager.Instance.SetCurrentCamera("3rd Person Camera", 0f);
 	}
 	
 	#endregion

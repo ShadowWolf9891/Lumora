@@ -1,22 +1,13 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueSystem : MonoBehaviour
 {
 
-private static DialogueSystem Instance;
-    [Header("UI Hookup"),SerializeField]
-    GameObject DialoguePanel;
-    [SerializeField]
-    TextMeshProUGUI SpeakerName;
-    [SerializeField]
-    TextMeshProUGUI DialogueText;
-
+    private static DialogueSystem Instance;
+   
     [SerializeField]
     Dictionary<string, Image[]> CharacterPortraits;
 
@@ -29,13 +20,13 @@ private static DialogueSystem Instance;
 		if (Instance == null)
 		{
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
 		}
 		else Destroy(gameObject);
 	}
-	private void Start()
+
+	private void OnEnable()
 	{
-        GameEvents<DialogueEvent>.Subscribe(BeginDialogue);
+		GameEvents<DialogueEvent>.Subscribe(BeginDialogue);
         //GameContext.Instance.OnPlayDialogue += BeginDialogue;
         GameEvents<PlayerInputEvent>.Subscribe(e => 
         {
@@ -45,10 +36,20 @@ private static DialogueSystem Instance;
             }
         }
         );
-        DialoguePanel.SetActive(false);
-        //GameContext.Instance.OnDialogueNextLine += NextLine;
 	}
-
+	private void OnDisable()
+	{
+		GameEvents<DialogueEvent>.Unsubscribe(BeginDialogue);
+		//GameContext.Instance.OnPlayDialogue += BeginDialogue;
+		GameEvents<PlayerInputEvent>.Unsubscribe(e =>
+		{
+			if (e.ActionType == PlayerInputActionType.NextDialogue) //Only check if the player presses the next dialogue button
+			{
+				NextLine();
+			}
+		}
+		);
+	}
 	private void Load()
     {
 		TextAsset jsonFile = Resources.Load<TextAsset>("dialogue");
@@ -92,40 +93,24 @@ private static DialogueSystem Instance;
     /// <param name="SceneID">The scene within the chapter to play the dialogue from</param>
     private void BeginDialogue(DialogueEvent e)
     {
+        EventManager.Instance.Raise("Pause_For_Dialogue");
         currentLine = 0;
         currentDialogue = GetDialogueLines(e.Chapter, e.Scene);
-		DisplayDialogue(currentDialogue[currentLine]);
+		UIManager.Instance.DisplayDialogue(currentDialogue[currentLine]);
         currentDialogueID = e.Id;
-        EventManager.Raise("Pause_For_Dialogue");
 	}
-    /// <summary>
-    /// Display the dialogue line on the screen and show the dialogue panel if it is hidden.
-    /// </summary>
-    /// <param name="line">The data that stores the speaker and what they are saying</param>
-    private void DisplayDialogue(DialogueLine line)
-    { 
-        SpeakerName.text = line.speaker;
-		DialogueText.text = line.text;
-        //TODO: Add Image UI and initalize it
-
-        if(line.cameraName != "" || line.cameraName != null) 
-        {
-			CameraManager.SetCurrentCamera(line.cameraName, line.blendSpeed);
-        }
-
-        if(!DialoguePanel.activeInHierarchy) DialoguePanel.SetActive(true);
-	}
+    
     /// <summary>
     /// Progress to the next line of dialogue. End the dialogue if there is no line to progress to.
     /// </summary>
     private void NextLine()
     {
-        if (DialoguePanel.activeInHierarchy && GameManager.CurrentGameState == GameStates.Dialogue)
+        if (GameManager.Instance.CurrentGameState == GameStates.Dialogue)
         {
             if (currentLine < currentDialogue.Length - 1)
             {
                 currentLine++;
-                DisplayDialogue(currentDialogue[currentLine]);
+				UIManager.Instance.DisplayDialogue(currentDialogue[currentLine]);
             }
             else
             {
@@ -138,15 +123,13 @@ private static DialogueSystem Instance;
     /// </summary>
     private void EndDialogue() 
     {
-        EventManager.MarkEventCompleted(currentDialogueID);
-        DialoguePanel.SetActive(false);
-		SpeakerName.text = "";
-		DialogueText.text = "";
+        EventManager.Instance.MarkEventCompleted(currentDialogueID);
+        UIManager.Instance.ClearUIText("DialogueElement");
         currentLine = 0;
         currentDialogue = null;
         currentDialogueID = "";
-		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
-		EventManager.Raise("Resume_Game");
+		CameraManager.Instance.SetCurrentCamera("3rd Person Camera", 0f);
+		EventManager.Instance.Raise("Resume_Game");
 	}
 
     

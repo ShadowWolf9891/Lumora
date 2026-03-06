@@ -7,11 +7,19 @@ public class UIHealthBar : MonoBehaviour
     Animator anim;
     void Awake()
     {
-        GameEvents<PlayerHealthChanged>.Subscribe(UpdateHealthBar);
+        
         anim = GetComponent<Animator>();
     }
+	private void OnEnable()
+	{
+		GameEvents<PlayerHealthChanged>.Subscribe(UpdateHealthBar);
+	}
+	private void OnDisable()
+	{
+		GameEvents<PlayerHealthChanged>.Unsubscribe(UpdateHealthBar);
+	}
 
-    private void UpdateHealthBar(PlayerHealthChanged e)
+	private void UpdateHealthBar(PlayerHealthChanged e)
     {
         currentHealth = e.CurrentHealthValue;
 

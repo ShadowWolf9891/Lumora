@@ -6,7 +6,7 @@ public class KillPlayerVolume : MonoBehaviour
 	{
 		if(other.gameObject.CompareTag("Player"))
 		{
-			EventManager.Raise("GameOver");
+			EventManager.Instance.Raise("GameOver");
 		}
 	}
 }

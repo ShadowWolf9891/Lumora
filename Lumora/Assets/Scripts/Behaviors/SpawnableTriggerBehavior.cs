@@ -29,11 +29,10 @@ public class SpawnableTriggerBehavior : MonoBehaviour
 		if (((1 << other.gameObject.layer) & layerMask.value) != 0)
 		{
 			Debug.Log($"{other.gameObject.name} entered the trigger.");
-			EventManager.Raise(EventToTrigger);
+			EventManager.Instance.Raise(EventToTrigger);
             if(!IsRepeatable)
             {
-                SpawnerManager.MarkTriggered(Id);
-                Destroy(gameObject);
+                SpawnerManager.Instance.MarkTriggered(Id, gameObject);
             }
         }
 	}
