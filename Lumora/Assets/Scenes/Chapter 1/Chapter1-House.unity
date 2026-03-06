@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 250966105}
   - component: {fileID: 250966107}
   m_Layer: 0
-  m_Name: Ch1Cam4House
+  m_Name: C1S2Cam4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1147,19 +1147,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.9611282
+      value: -0.715286
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.2761026
+      value: -0.6988318
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1167,7 +1167,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 359.9761
+      value: 448.667
       objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1175,7 +1175,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.212101
+      value: 7.425807
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1183,23 +1183,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.7992754
+      value: 2.5457072
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.89338404
+      value: -0.57852256
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.086889945
+      value: 0.05626671
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.4387417
+      value: 0.80990183
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.042671762
+      value: 0.0787705
       objectReference: {fileID: 0}
     - target: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_Name
@@ -1226,6 +1226,11 @@ PrefabInstance:
 --- !u!1 &512977893 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+  m_PrefabInstance: {fileID: 512977892}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &512977894 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9180318048084745592, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
   m_PrefabInstance: {fileID: 512977892}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &512977904
@@ -1337,7 +1342,7 @@ GameObject:
   - component: {fileID: 603323407}
   - component: {fileID: 603323408}
   m_Layer: 0
-  m_Name: Ch1Cam3House
+  m_Name: C1S2Cam3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1504,6 +1509,61 @@ Transform:
   - {fileID: 1655911353}
   m_Father: {fileID: 1330704109}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &670200641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 670200642}
+  - component: {fileID: 670200643}
+  m_Layer: 0
+  m_Name: KipMonologue2TL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &670200642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670200641}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1425592337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &670200643
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670200641}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 866d133f944aada40a43b6aaba9881d9, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -183441837467127979, guid: 866d133f944aada40a43b6aaba9881d9, type: 2}
+    value: {fileID: 512977894}
+  - key: {fileID: 7677195019441290873, guid: 866d133f944aada40a43b6aaba9881d9, type: 2}
+    value: {fileID: 512977904}
+  - key: {fileID: -916323894828495095, guid: 866d133f944aada40a43b6aaba9881d9, type: 2}
+    value: {fileID: 0}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1001 &689870115
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1656,6 +1716,37 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 4509197106646676418, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
   m_PrefabInstance: {fileID: 512977892}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &825001212
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 825001213}
+  m_Layer: 0
+  m_Name: C1S2Cam6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &825001213
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825001212}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1655911353}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &967606481 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5168038578614055071, guid: fbf71086c60a35a41add73b20ee0f364, type: 3}
@@ -1695,7 +1786,7 @@ GameObject:
   - component: {fileID: 1062373468}
   - component: {fileID: 1062373467}
   m_Layer: 0
-  m_Name: Ch1Cam5House
+  m_Name: C1S2Cam5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2313,7 +2404,7 @@ GameObject:
   - component: {fileID: 1217715201}
   - component: {fileID: 1217715202}
   m_Layer: 0
-  m_Name: Ch1Cam1House
+  m_Name: C1S2Cam1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2327,8 +2418,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217715199}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0012432132, y: -0.9959073, z: -0.013864358, w: -0.08930277}
-  m_LocalPosition: {x: 81.571, y: -1.771, z: -111.059}
+  m_LocalRotation: {x: -0.095294125, y: -0.17502153, z: -0.017022476, w: 0.97979426}
+  m_LocalPosition: {x: 84.14238, y: -2.635795, z: -117.65216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2465,6 +2556,7 @@ Transform:
   m_Children:
   - {fileID: 1772857918}
   - {fileID: 1580116991}
+  - {fileID: 670200642}
   m_Father: {fileID: 1330704109}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1443580558
@@ -2665,6 +2757,7 @@ Transform:
   - {fileID: 603323407}
   - {fileID: 250966106}
   - {fileID: 1062373466}
+  - {fileID: 825001213}
   m_Father: {fileID: 641959368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1728614799
@@ -2981,7 +3074,7 @@ GameObject:
   - component: {fileID: 1981390870}
   - component: {fileID: 1981390871}
   m_Layer: 0
-  m_Name: Ch1Cam2House
+  m_Name: C1S2Cam2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
