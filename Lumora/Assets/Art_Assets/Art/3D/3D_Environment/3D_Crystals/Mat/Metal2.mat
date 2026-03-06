@@ -37,7 +37,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: a9842961db8f2724a92a8c3e9f737a49, type: 3}
+        m_Texture: {fileID: 2800000, guid: d62d6f2cdd39f574ab3541ec8d560959, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
@@ -73,15 +73,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a9842961db8f2724a92a8c3e9f737a49, type: 3}
+        m_Texture: {fileID: 2800000, guid: d62d6f2cdd39f574ab3541ec8d560959, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: 6e4b35766fea4d7409142005c03cf6c0, type: 3}
+        m_Texture: {fileID: 2800000, guid: b4e2680211a43e04bbde1aa354269274, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: ae55d926bf32def4888bb6c7ab7bb97c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6f7e30b11fa28a14d8c8007671eebf0c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -130,8 +130,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AORemapMax: 0.8156315
-    - _AORemapMin: 0.47695407
+    - _AORemapMax: 1
+    - _AORemapMin: 0.6613225
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 1
@@ -167,7 +167,7 @@ Material:
     - _DstBlend: 0
     - _DstBlend2: 0
     - _EmissiveColorMode: 1
-    - _EmissiveExposureWeight: 0.71
+    - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 0.92
     - _EmissiveIntensityUnit: 0
     - _EnableBlendModePreserveSpecularLighting: 1
@@ -197,7 +197,7 @@ Material:
     - _MetallicRemapMin: 0.7334672
     - _Mode: 0
     - _NormalMapSpace: 0
-    - _NormalScale: 5
+    - _NormalScale: 4.6
     - _ObjectSpaceUVMapping: 0
     - _ObjectSpaceUVMappingEmissive: 0
     - _OcclusionStrength: 1
@@ -214,8 +214,8 @@ Material:
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _Smoothness: 0.5
-    - _SmoothnessRemapMax: 0.48897803
-    - _SmoothnessRemapMin: 0.31062147
+    - _SmoothnessRemapMax: 1
+    - _SmoothnessRemapMin: 0.8216434
     - _SmoothnessTextureChannel: 0
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
@@ -249,19 +249,19 @@ Material:
     - _UVDetail: 0
     - _UVEmissive: 0
     - _UVSec: 0
-    - _UseEmissiveIntensity: 1
+    - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.99999994, b: 0.99999994, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.7207546, g: 0.63888776, b: 0.48684934, a: 1}
+    - _Color: {r: 0.7207546, g: 0.63888764, b: 0.48684925, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissiveColor: {r: 0.92, g: 0.45804036, b: 0, a: 0.92}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 1, g: 0.7339523, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
