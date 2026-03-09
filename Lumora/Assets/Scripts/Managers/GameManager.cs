@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 	List<GameObject> _cachedObjects = new();
 
 	public GameStates CurrentGameState { get; private set; }
+	public GameStates PreviousGameState { get; private set; }
 
 	private GameSaveData _saveData;
 	private bool _loaded = false;
@@ -159,6 +160,7 @@ public class GameManager : MonoBehaviour
 
 	private void OnGameStateChange(ChangeGameStateEvent e)
 	{
+		PreviousGameState = CurrentGameState;
 		CurrentGameState = e.State;
 		EventManager.Instance.MarkEventCompleted(e.Id);
 	}
