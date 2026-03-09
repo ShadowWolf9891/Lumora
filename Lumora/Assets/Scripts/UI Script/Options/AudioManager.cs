@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
    
-    public Sound[] musicSounds, sfxSounds;
+    public List<Sound> musicSounds, sfxSounds;
     public AudioSource musicSource, sfxSource;
     public static AudioManager Instance;
 
@@ -19,11 +20,30 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+	private void OnEnable()
+	{
+        GameEvents<LoadSceneEvent>.Subscribe(OnLoadScene);
+	}
+	private void OnDisable()
+	{
+		GameEvents<LoadSceneEvent>.Unsubscribe(OnLoadScene);
+	}
 
-    //checks if current audio source matches the name of the audio source in array
-    public void PlayMusic(string name)
+	private void OnLoadScene(LoadSceneEvent e)
+	{
+        PlayMusic(e.SceneIndex switch
+        {
+            0 => "TitleTrack",
+            1 => "TitleTrack",
+            2 => "Chapter1Background",
+            _ => throw new NotImplementedException(),
+        });
+	}
+
+	//checks if current audio source matches the name of the audio source in array
+	public void PlayMusic(string name)
     {
-        Sound s = Array.Find(musicSounds, x => x.name == name);
+        Sound s = musicSounds.Find(x => x.name == name);
         if (s == null)
         {
             Debug.Log("Sound not found");
@@ -36,7 +56,7 @@ public class AudioManager : MonoBehaviour
     }
     public void PlaySFX(string name)
     {
-        Sound s = Array.Find(sfxSounds, x => x.name == name);
+        Sound s = sfxSounds.Find(x => x.name == name);
         if (s == null)
         {
             Debug.Log("Sound not found");

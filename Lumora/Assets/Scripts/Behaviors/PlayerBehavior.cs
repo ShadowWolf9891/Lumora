@@ -13,8 +13,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     private float sprintMaxSpeed = 6;
     [SerializeField, Tooltip("How quickly the player stops moving in m/s")]
 	float stoppingForce = 3;
-	[SerializeField, Tooltip("Height of the player for jumping in m")]
-	float playerHeight = 1.2f;
+	//[SerializeField, Tooltip("Height of the player for jumping in m")]
+	//float playerHeight = 1.2f;
 	[SerializeField, Tooltip("How high the player can jump in m")]
 	float jumpHeight = 5;
 	[SerializeField, Tooltip("LayerMask for IsGrounded")]
@@ -72,24 +72,30 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        SubscribeToEvents();
         GetComponentReferences();
     }
-	private void Start()
+	private void OnEnable()
 	{
-
-		CameraManager.SetCurrentCamera("3rd Person Camera");
-	}
-
-	private void SubscribeToEvents()
-    {
-        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
-        GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
-        GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
-        GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Subscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(GameEventChanged);
-    }
+	}
+	private void OnDisable()
+	{
+		GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
+		GameEvents<PlayerSpottedEvent>.Unsubscribe(GetSpotted);
+		GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
+		GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
+		GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockAbility);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(GameEventChanged);
+	}
+	private void Start()
+	{
+		CameraManager.Instance.SetCurrentCamera("3rd Person Camera");
+	}
 
     private void GetComponentReferences()
     {
@@ -295,7 +301,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		//Debug.Log("Preparing throw.");
 		isThrowing = true;
 		
-		CameraManager.SetCurrentCamera("ThrowCamera", 0.2f);
+		CameraManager.Instance.SetCurrentCamera("ThrowCamera", 0.2f);
 		throwYaw = mainCam.transform.forward.x;
 		throwPitch = -10f; // slight upward bias
 
@@ -367,13 +373,13 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		isThrowing = false;
 		lineRenderer.enabled = false;
 		Destroy(activeHitSphere);
-		if (!CameraManager.IsBlending())
+		if (!CameraManager.Instance.IsBlending())
 		{
 			GameObject projectile = Instantiate(thrownObjPrefab, throwLocation.position, Quaternion.identity);
 			Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
 			projectileRb.AddForce(startVelocity, ForceMode.Impulse);
 		}
-		CameraManager.ReturnToPreviousCamera(0.5f);
+		CameraManager.Instance.ReturnToPreviousCamera(0.5f);
 	}
 	#endregion
 
@@ -429,8 +435,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     /// <returns></returns>
     private bool IsGrounded()
 	{
-		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight / 2, transform.position.z), UnityEngine.Color.darkRed);
-		return Physics.Raycast(transform.position, Vector3.down, playerHeight / 2, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
+		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - 0.1f , transform.position.z), UnityEngine.Color.yellowNice);
+		return Physics.Raycast(new Vector3 (transform.position.x, transform.position.y +0.1f, transform.position.z), Vector3.down, 0.2f, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
 	}
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{
@@ -486,10 +492,15 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		}
 
 	}
-	#endregion
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z));
+    }
+    #endregion
 
-	#region Save/Load
-	public void Save(GameSaveData data)
+    #region Save/Load
+    public void Save(GameSaveData data)
 	{
 		data.playerData = new PlayerSaveData()
 		{
@@ -499,7 +510,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			pathData = new PathData() { 
 				CurrentPath = pathObjectBehavior.GetCurrentPathAndPoint().Item1,
 				CurrentPoint = pathObjectBehavior.GetCurrentPathAndPoint().Item2 },
-			inventory = InventoryManager.InventoryData
+			inventory = InventoryManager.Instance.InventoryData
 		};
 	}
 	public void Load(GameSaveData data)
@@ -509,8 +520,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		playerHealthBehaviors.CurrentHealthValue = data.playerData.health;
 		if(data.playerData.pathData.CurrentPath != -1 && data.playerData.pathData.CurrentPoint != -1)
 			waypointImage.transform.position = pathObjectBehavior.GoToPath(data.playerData.pathData.CurrentPath, data.playerData.pathData.CurrentPoint);
-		InventoryManager.InventoryData = data.playerData.inventory;
-		CameraManager.SetCurrentCamera("3rd Person Camera", 0f);
+		InventoryManager.Instance.InventoryData = data.playerData.inventory;
+		CameraManager.Instance.SetCurrentCamera("3rd Person Camera", 0f);
 	}
 	
 	#endregion

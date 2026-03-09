@@ -3,16 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public static class InventoryManager
+public class InventoryManager : MonoBehaviour 
 {
-	public static Dictionary<string, int> InventoryData { get; set; }
-	static readonly HashSet<InventoryObject> itemData;
+	public static InventoryManager Instance { get; private set; }
+	public Dictionary<string, int> InventoryData { get; set; }
+	readonly HashSet<InventoryObject> itemData;
 
+	private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else Destroy(gameObject);
+	}
 	/// <summary>
 	/// Add an inventory object to the player's inventory. Increase amount by 1 if they already have it.
 	/// </summary>
 	/// <param name="io">The object to add.</param>
-	public static void Add(InventoryObject io)
+	public void Add(InventoryObject io)
 	{
 		if(!itemData.Contains(io)) itemData.Add(io);
 		if(InventoryData.ContainsKey(io.itemName))InventoryData[io.itemName] += 1;
@@ -22,7 +31,7 @@ public static class InventoryManager
 	/// Remove an inventory object from the player's inventory. If they have more than 1, decrease the amount by 1.
 	/// </summary>
 	/// <param name="io">The object to remove.</param>
-	public static void Remove(InventoryObject io)
+	public void Remove(InventoryObject io)
 	{
 		if (itemData.Contains(io)) itemData.Remove(io);
 		if (InventoryData.ContainsKey(io.itemName)) InventoryData[io.itemName] -= 1;
@@ -33,11 +42,11 @@ public static class InventoryManager
 	/// </summary>
 	/// <param name="itemName">Name of the item to get the data for.</param>
 	/// <returns>Inventory Object</returns>
-	public static InventoryObject GetItemData(string itemName) => itemData.FirstOrDefault(x => x.itemName == itemName);
+	public InventoryObject GetItemData(string itemName) => itemData.FirstOrDefault(x => x.itemName == itemName);
 }
 
 [Serializable]
-public struct InventoryObject
+public class InventoryObject
 {
 	public string itemName;
 	public string itemDescription;

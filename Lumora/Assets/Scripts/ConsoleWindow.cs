@@ -91,7 +91,7 @@ public static class ConsoleWindow
     }
 	private static void RaiseConsoleCommand<T>(T consoleEvent) where T : GameEventType
 	{
-		EventManager.EventQueue.Enqueue(consoleEvent);
+		EventManager.Instance.EventQueue.Enqueue(consoleEvent);
 	}
 
 	//Dictionary of valid types of objects the user can input and automatically parses them.
