@@ -472,6 +472,20 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		}
 	}
 
+	public float GetAnimatorSpeedForMovement()
+    {
+        float speedMod = IsCrouching ? stealthSpeedModifier : 1f;
+        Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+		if (IsSprinting)
+		{
+			return sprintMaxSpeed / groundSpeed.magnitude;
+		}
+		else
+		{
+			return (maxSpeed * speedMod / groundSpeed.magnitude);
+		}
+	}
+
 	private void HandleWaypoints()
 	{
 		if (pathObjectBehavior == null) return;
