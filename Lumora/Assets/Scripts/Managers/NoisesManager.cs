@@ -4,19 +4,31 @@ using UnityEngine;
 public class NoisesManager : MonoBehaviour
 {
     //Noises Manager, to be attached to Noises Manager in tools, spawns in 'noise' objects 
-
+    public static NoisesManager Instance;
     [SerializeField]
     GameObject genericNoiseObject;
     [SerializeField]
     GameObject sprintNoiseObject;
-    private void Start()
+
+	private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else Destroy(gameObject);
+	}
+	private void OnEnable()
     {
         GameEvents<SpawnVisibleNoiseEvent>.Subscribe(RaiseNoise);
         //GameContext.Instance.OnGenericNoise += RaiseNoise;
     }
+	private void OnDisable()
+	{
+		GameEvents<SpawnVisibleNoiseEvent>.Unsubscribe(RaiseNoise);
+	}
 
-
-    private void RaiseNoise(SpawnVisibleNoiseEvent e)
+	private void RaiseNoise(SpawnVisibleNoiseEvent e)
     {
         if (e.IsPlayerSpecificNoise)
         {

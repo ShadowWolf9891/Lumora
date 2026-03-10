@@ -8,12 +8,16 @@ public class UIInventoryController : MonoBehaviour
     [SerializeField]
     GameObject bG;
 
-    private void Start()
+    private void OnEnable()
     {
         GameEvents<CollectionEvent>.Subscribe(AddToInventory);
     }
+	private void OnDisable()
+	{
+		GameEvents<CollectionEvent>.Unsubscribe(AddToInventory);
+	}
 
-    public void AddToInventory(CollectionEvent e)
+	public void AddToInventory(CollectionEvent e)
     {
         Debug.Log("inventory registering");
         switch (e.Type)

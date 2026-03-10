@@ -4,25 +4,35 @@ using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public static class CameraManager
+public class CameraManager : MonoBehaviour
 {
-	static List<CinemachineCamera> _cameraList;
-	static CinemachineBrain _brain;
+	public static CameraManager Instance { get; private set; }
+	[SerializeField] CinemachineBrain _brain;
 
-	public static CinemachineCamera CurrentCamera { get; private set; }
-	public static CinemachineCamera PreviousCamera { get; private set; }
+	List<CinemachineCamera> _cameraList;
+	public CinemachineCamera CurrentCamera { get; private set; }
+	public CinemachineCamera PreviousCamera { get; private set; }
+
+	private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else Destroy(gameObject);
+	}
 
 	/// <summary>
 	/// Load all of the cinemachine cameras in the scene into the list. 
 	/// No need to call this unless you add your own cameras during runtime.
 	/// </summary>
-	public static void LoadCameras()
+	public void LoadCameras()
 	{
 		_cameraList = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsSortMode.InstanceID).ToList();
-		_brain = CinemachineBrain.GetActiveBrain(0);
-		if(CurrentCamera ==null)
+		if(CurrentCamera ==null && _cameraList.Count > 0)
 		{
-			SetCurrentCamera("3rd Person Camera");
+			if (_cameraList.Exists(cam => cam.name == "3rd Person Camera")) SetCurrentCamera("3rd Person Camera");
+			else SetCurrentCamera(0);
 		}
 	}
 
@@ -30,7 +40,7 @@ public static class CameraManager
 	/// Set the current cinemachine camera based on its index, ordered by instance ID.
 	/// </summary>
 	/// <param name="cameraIndex"></param>
-    public static void SetCurrentCamera(int cameraIndex, float blendSpeed = 1.0f)
+    public void SetCurrentCamera(int cameraIndex, float blendSpeed = 1.0f)
     {
 		if(_cameraList == null) { LoadCameras(); }
 
@@ -42,10 +52,9 @@ public static class CameraManager
 
 		if (CurrentCamera == _cameraList[cameraIndex]) return;
 
-		PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
+		if(_brain.ActiveVirtualCamera != null) PreviousCamera = _brain.ActiveVirtualCamera as CinemachineCamera;
 		CurrentCamera = _cameraList[cameraIndex];
 
-		
 		if(PreviousCamera) PreviousCamera.gameObject.SetActive(false);
 		CurrentCamera.gameObject.SetActive(true);
 
@@ -58,7 +67,7 @@ public static class CameraManager
 	/// Set the current camera based on the cinemachine camera name.
 	/// </summary>
 	/// <param name="cameraName"></param>
-	public static void SetCurrentCamera(string cameraName, float blendSpeed = 1.0f)
+	public void SetCurrentCamera(string cameraName, float blendSpeed = 1.0f)
 	{
 		if (_cameraList == null) { LoadCameras(); }
 		int index = _cameraList.FindIndex(cam => cam.name == cameraName);
@@ -75,7 +84,7 @@ public static class CameraManager
 	/// Set the current active camera to the previous camera.
 	/// </summary>
 	/// <param name="blendSpeed"></param>
-	public static void ReturnToPreviousCamera(float blendSpeed = 1.0f)
+	public void ReturnToPreviousCamera(float blendSpeed = 1.0f)
 	{
 		if (PreviousCamera == null || CurrentCamera == null) 
 		{
@@ -93,16 +102,15 @@ public static class CameraManager
 		_brain.DefaultBlend.Time = blendSpeed;
 	}
 
-	public static bool IsBlending()
+	public bool IsBlending()
 	{
 		if(_brain == null) return false;
 		return _brain.IsBlending;
 	}
 
-	public static void Reset()
+	public void Reset()
 	{
-		 _cameraList = null;
-		_brain = null;
+		_cameraList = null;
 		CurrentCamera = null;
 		PreviousCamera = null;
 	}

@@ -19,12 +19,21 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
         agent = GetComponent<NavMeshAgent>();
 		pathBehavior = GetComponent<PathObjectBehavior>();
     }
+	private void OnEnable()
+	{
+		GameEvents<PathEvent>.Subscribe(ChangePathStatus);
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
+		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);	
+	}
+	private void OnDisable()
+	{
+		GameEvents<PathEvent>.Unsubscribe(ChangePathStatus);
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(FreezeNPC);
+		GameEvents<ChangeNPCWalkTypeEvent>.Unsubscribe(ChangeNPCWalk);
+	}
 	void Start()
 	{
 		if(curTarget == null) curTarget = GameObject.Find("Player");
-		GameEvents<PathEvent>.Subscribe(ChangePathStatus);
-		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeNPC);
-		GameEvents<ChangeNPCWalkTypeEvent>.Subscribe(ChangeNPCWalk);
 	}
 
 	private void ChangePathStatus(PathEvent e)
@@ -45,27 +54,27 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
                 break;
             case PathStatus.PAUSE:
                 agent.isStopped = true;
-				EventManager.MarkEventCompleted(e.Id);
+				EventManager.Instance.MarkEventCompleted(e.Id);
 				break;
             case PathStatus.RESUME:
                 agent.isStopped = false;
-				EventManager.MarkEventCompleted(e.Id);
+				EventManager.Instance.MarkEventCompleted(e.Id);
 				break;
             case PathStatus.NEXT_PATH:
 				agent.SetDestination(pathBehavior.GoToNextPath());
-				EventManager.MarkEventCompleted(eventID);
+				if (eventID != null && !EventManager.Instance.GetCompletedEvents().Contains(eventID)) EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.PREV_PATH:
 				agent.SetDestination(pathBehavior.GoToPreviousPath());
-				EventManager.MarkEventCompleted(eventID);
+				EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
                 break;
             case PathStatus.END_EARLY:
                 agent.isStopped = true;
                 agent.ResetPath();
-				EventManager.MarkEventCompleted(eventID);
-				EventManager.MarkEventCompleted(e.Id);
+				EventManager.Instance.MarkEventCompleted(eventID);
+				EventManager.Instance.MarkEventCompleted(e.Id);
 				break;
 		}
 
@@ -105,7 +114,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		if(pathBehavior.IsDonePath(transform.position) && eventID != null)
 		{
 			agent.ResetPath();
-			EventManager.MarkEventCompleted(eventID);
+			EventManager.Instance.MarkEventCompleted(eventID);
 			eventID = null;
 		}
 	}
@@ -169,7 +178,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		}
 		curWalkType = e.WalkType;
 		followDistance = e.FollowDistance;
-		EventManager.MarkEventCompleted(e.Id);
+		EventManager.Instance.MarkEventCompleted(e.Id);
 	}
 	/// <summary>
 	/// If the NPC is close to a target position within a given threshold
