@@ -464,7 +464,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 2.5f * Time.deltaTime);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 25f * Time.fixedDeltaTime);
 	}
 
 	/// <summary>
