@@ -11,14 +11,13 @@ public class PlayerAnimatorController : MonoBehaviour
     Rigidbody rb;
     bool canThrow = false;
 
-    float savedMoveSpeed;
+    float savedRunWalkIndex;
     private void Start()
     {
         GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Subscribe(UnlockThrow);
-        GameEvents<DialogueEvent>.Subscribe(GoToIdle);
 
         animator = GetComponent<Animator>(); 
         behavior = gameObject.GetComponentInParent<PlayerBehavior>();
@@ -31,7 +30,6 @@ public class PlayerAnimatorController : MonoBehaviour
         GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockThrow);
-        GameEvents<DialogueEvent>.Unsubscribe(GoToIdle);
         GameEvents<ChangeGameStateEvent>.Subscribe(GameStateChanged);
     }
 
@@ -63,7 +61,17 @@ public class PlayerAnimatorController : MonoBehaviour
 
 	private void Update()
     {
-        animator.SetFloat("moveSpeed", rb.linearVelocity.normalized.magnitude);
+        //add functionality to check if player is throwing and standing still, too lazy for that rn
+        if (rb.linearVelocity.magnitude <= 0.05)
+        {
+            if (!animator.GetBool("Isidle"))
+            {
+                animator.SetBool("isIdle", true);
+                animator.SetFloat("runWalkIndex", 0);
+                animator.SetFloat("moveSpeed", 0);
+                animator.speed = 1;
+            }
+        }
     }
 
     private void UnlockThrow(UnlockAbilityEvent e) 
@@ -89,9 +97,26 @@ public class PlayerAnimatorController : MonoBehaviour
     }
     private void Move(Vector3 moveDir)
     {
-        animator.SetFloat("moveSpeed", moveDir.magnitude);
-		if(moveDir.magnitude > 0.05 && animator.GetBool("isIdle")) animator.SetBool("isIdle", false);
-	}
+        //Do Movement by setting moveSpeed
+        float targetMoveSpeed = behavior.GetAnimatorSpeedForMovement();
+        animator.SetFloat("moveSpeed", targetMoveSpeed);
+
+        //Run/walk
+        if (animator.GetBool("isSprinting") && targetMoveSpeed > 0.75)
+        {
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 1, 1f));
+            animator.speed = targetMoveSpeed/2;
+        }
+        else
+        {
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 0, 0.5f));
+            animator.speed = targetMoveSpeed;
+        }
+
+        //disable idle
+        if (moveDir.magnitude > 0.05 && animator.GetBool("isIdle")) animator.SetBool("isIdle", false);
+    }
+
     private void DoThrow()
     {
         animator.SetTrigger("doThrow");
@@ -105,31 +130,27 @@ public class PlayerAnimatorController : MonoBehaviour
 		animator.SetBool("isSprinting", !animator.GetBool("isSprinting"));
 	}
 
+    //note: this has to be here because animation event calls 
 	public void TriggerSprintNoise()
     {
         behavior.TriggerSprintNoise();
     }
 
-	private void GoToIdle(DialogueEvent e)
-	{
-        //animator.SetBool("isIdle", true);
-        //animator.SetFloat("moveSpeed", 0);
-    }
     private void GameStateChanged(ChangeGameStateEvent e)
     {
         if (e.State == GameStates.Running)
         {
             animator.speed = 1;
-            if (savedMoveSpeed != 0)
+            if (savedRunWalkIndex != 0)
             {
-                animator.SetFloat("moveSpeed", savedMoveSpeed);
+                animator.SetFloat("runWalkIndex", savedRunWalkIndex);
             }
-            savedMoveSpeed = 0;
+            savedRunWalkIndex = 0;
         }
         else
         {
             animator.speed = 0;
-            savedMoveSpeed = animator.GetFloat("moveSpeed");
+            savedRunWalkIndex = animator.GetFloat("runWalkIndex");
         }
     }
 }

@@ -464,7 +464,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.fixedDeltaTime);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 2.5f * Time.deltaTime);
 	}
 
 	/// <summary>
@@ -491,6 +491,20 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 			rb.AddForce(-horizontalVel * stoppingForce, ForceMode.Acceleration);
 			//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+		}
+	}
+
+	public float GetAnimatorSpeedForMovement()
+    {
+        float speedMod = IsCrouching ? stealthSpeedModifier : 1f;
+        Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+		if (IsSprinting)
+		{
+			return groundSpeed.magnitude / sprintMaxSpeed;
+		}
+		else
+		{
+			return  groundSpeed.magnitude / (maxSpeed * speedMod);
 		}
 	}
 
