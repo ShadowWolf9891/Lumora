@@ -31,7 +31,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] UIElement[] UIElements;
     private readonly HashSet<string> _loadedPrefabs = new();
     private readonly Dictionary<string, GameObject> _cachedObjects = new();
-    private InputAction restartAction, consoleAction, backAction, pauseAction;
     private Canvas UICanvas;
 
     private void Awake()
@@ -49,23 +48,13 @@ public class UIManager : MonoBehaviour
     {
         GameEvents<UpdateUIEvent>.Subscribe(HandleUIVisibility);
         GameEvents<ChangeGameStateEvent>.Subscribe(HandleStateChange);
-        InputSystem.onActionChange += HandleButtonPress;
         SceneManager.sceneLoaded += OnNewSceneLoad;
     }
     private void OnDisable()
     {
         GameEvents<UpdateUIEvent>.Unsubscribe(HandleUIVisibility);
         GameEvents<ChangeGameStateEvent>.Unsubscribe(HandleStateChange);
-        InputSystem.onActionChange -= HandleButtonPress;
         SceneManager.sceneLoaded -= OnNewSceneLoad;
-    }
-    private void Start()
-    {
-        restartAction = InputSystem.actions.FindAction("South");
-        consoleAction = InputSystem.actions.FindAction("Console");
-        backAction = InputSystem.actions.FindAction("East");
-        pauseAction = InputSystem.actions.FindAction("Escape");
-
     }
     private void OnNewSceneLoad(Scene newScene, LoadSceneMode loadSceneMode)
     {
@@ -136,64 +125,28 @@ public class UIManager : MonoBehaviour
                 break;
             case GameStates.Paused:
 				Cursor.lockState = CursorLockMode.None;
-                if (_loadedPrefabs.Contains("ConsoleElement") && _cachedObjects.TryGetValue("ConsoleElement", out GameObject go))
-                    if (go.activeInHierarchy) return;
                 HandleUIVisibility("PlayerElement", true, false); //Clear everything not on the UI canvas
                 HandleUIVisibility("PauseElement", true, true); //Layer pause screen on top
-                
 				break;
             case GameStates.Dialogue:
 				HandleUIVisibility("DialogueElement", true, false); //Clear everything except dialogue
 				break;
             case GameStates.Cutscene:
-				HandleUIVisibility("DialogueElement", true, false); //Dialogue will always show when in a cutscene. Can change this.
+				//HandleUIVisibility("DialogueElement", true, false); //Dialogue will always show when in a cutscene. Can change this.
 				break;
             case GameStates.Game_Over:
 				Cursor.lockState = CursorLockMode.None;
 				HandleUIVisibility("GameOverElement", true, false);
                 break;
+            case GameStates.Console:
+				Cursor.lockState = CursorLockMode.None;
+                HandleUIVisibility("ConsoleElement", true, false);
+				break;
             default:
                 break;
 
         }
 	}
-	private void HandleButtonPress(object inputAction, InputActionChange change)
-    {
-        if(change != InputActionChange.ActionStarted) return;
-
-		if (inputAction == consoleAction)
-		{
-			if (_cachedObjects.TryGetValue("ConsoleElement", out _))
-            {
-                HandleUIVisibility("ConsoleElement", !_cachedObjects["ConsoleElement"].activeInHierarchy, true);
-            }
-			else HandleUIVisibility("ConsoleElement", true, true);
-			EventManager.Instance.Raise(_cachedObjects["ConsoleElement"].activeInHierarchy ? "Pause_Game" : "Resume_Game");
-		}
-
-		switch (GameManager.Instance.CurrentGameState)
-        {
-            case GameStates.Running:
-                if (inputAction == pauseAction) EventManager.Instance.Raise("Pause_Game");
-				break;
-            case GameStates.Paused:
-                if (inputAction == backAction || inputAction == pauseAction) EventManager.Instance.Raise("Resume_Game");
-				break;
-            case GameStates.Dialogue:
-                //Skip dialogue stuff, or go to next line when their is no player
-                break;
-            case GameStates.Cutscene:
-                //Skip cutscene stuff
-                break;
-            case GameStates.Game_Over:
-				if (restartAction.WasPressedThisFrame())
-				{
-					EventManager.Instance.Raise(new LoadSceneEvent("ReloadThisScene", SceneManager.GetActiveScene().buildIndex));
-				}
-				break;
-            default: break;
-        }
-    }
 	private void BindElement(UIElement element, GameObject instance)
 	{
         foreach (var childBind in element.bindableChildrenList)
@@ -206,7 +159,7 @@ public class UIManager : MonoBehaviour
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => childBind.OnClick?.Invoke());
             }
-            else if (child.TryGetComponent<InputField>(out var input))
+            else if (child.TryGetComponent<TMP_InputField>(out var input))
             {
                 input.onEndEdit.RemoveAllListeners();
                 input.onEndEdit.AddListener((value) => childBind.OnInputEndEdit?.Invoke(value));
@@ -219,11 +172,11 @@ public class UIManager : MonoBehaviour
 	public void OnExitClick() => Application.Quit();
 	public void OnOptionsPressed() =>  HandleUIVisibility("OptionElement", true, false);
     public void OnControllerPress() => HandleUIVisibility("ControllerElement", true, false);
-    public void OnConsoleValueSubmit(string command)
+    public void OnConsoleValueSubmit(string _)
     {
         if (!_loadedPrefabs.Contains("ConsoleElement")) return;
 
-        //string command = _cachedObjects["ConsoleElement"].GetComponentInChildren<TMP_InputField>().text;
+        string command = _cachedObjects["ConsoleElement"].GetComponentInChildren<TMP_InputField>().text;
 		var textField = _cachedObjects["ConsoleElement"].GetComponentInChildren<ScrollRect>().content.GetComponentInChildren<TextMeshProUGUI>();
        
         string errorOrComplete = ConsoleWindow.DoConsoleCommand(command);
