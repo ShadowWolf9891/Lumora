@@ -4426,11 +4426,11 @@ PlayableDirector:
   m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: -3521242770124627720, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 1278311584}
   - key: {fileID: 4740780763893006325, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
     value: {fileID: 2138775494}
   - key: {fileID: 4487631595795942287, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
-    value: {fileID: 1745834145}
+    value: {fileID: 0}
   - key: {fileID: 1769446802549838063, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
     value: {fileID: 611864750}
   - key: {fileID: 8599491205536990571, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
@@ -4441,7 +4441,6 @@ PlayableDirector:
     value: {fileID: 1467772792}
   m_ExposedReferences:
     m_References:
-    - 7761bb76d67c63e4ba903a989e7e8f84: {fileID: 2138775492}
     - 9992ba4fe1fb0b4458d911bb842ebe87: {fileID: 2138775492}
 --- !u!1001 &118061084
 PrefabInstance:
@@ -9205,7 +9204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.ProbeVolumePerSceneData
   serializedBakingSet: {fileID: 11400000, guid: dfa3cca7e6ab1a34a852fee1ec47cffc, type: 2}
-  sceneGUID: 26df20c19b4394f418900533fe60f7f7
+  sceneGUID: a232329a1fbde4247b3bd6308f6c5967
   obsoleteAsset: {fileID: 0}
   obsoleteCellSharedDataAsset: {fileID: 0}
   obsoleteCellSupportDataAsset: {fileID: 0}
@@ -29028,6 +29027,7 @@ Transform:
   - {fileID: 1809555154}
   - {fileID: 933461145}
   - {fileID: 117124717}
+  - {fileID: 1278311583}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1112071672 stripped
@@ -32614,6 +32614,70 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 494356, guid: cdcddd86eaed0dc46b445853268a7b07, type: 3}
   m_PrefabInstance: {fileID: 1213144943}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1278311582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1278311583}
+  - component: {fileID: 1278311584}
+  m_Layer: 0
+  m_Name: CinemachineBrain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1278311583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278311582}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.06679747, y: 0.9231136, z: -0.18738079, w: -0.32907137}
+  m_LocalPosition: {x: 385.88007, y: 34.549282, z: 123.27561}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1107264349}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1278311584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278311582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
+  ShowDebugText: 0
+  ShowCameraFrustum: 1
+  IgnoreTimeScale: 0
+  WorldUpOverride: {fileID: 0}
+  ChannelMask: -1
+  UpdateMethod: 2
+  BlendUpdateMethod: 1
+  LensModeOverride:
+    Enabled: 0
+    DefaultMode: 2
+  DefaultBlend:
+    Style: 1
+    Time: 2
+    CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  CustomBlends: {fileID: 0}
 --- !u!1001 &1278727653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43003,14 +43067,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2638844395527130795, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.07543579
-      objectReference: {fileID: 0}
-    - target: {fileID: 2638844395527130795, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.08093455
-      objectReference: {fileID: 0}
     - target: {fileID: 3238719513988401299, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 381.22
@@ -43053,31 +43109,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.3438168
+      value: 7.0805483
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.1192813
+      value: 3.1192808
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.58187103
+      value: 2.0337715
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.665044
+      value: 0.5896104
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.13499583
+      value: 0.119683534
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7198215
+      value: -0.7828067
       objectReference: {fileID: 0}
     - target: {fileID: 3953328667526337740, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.14611499
+      value: 0.15889995
       objectReference: {fileID: 0}
     - target: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_Name
@@ -43107,11 +43163,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 611864760}
   m_SourcePrefab: {fileID: 100100000, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
---- !u!95 &1745834145 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7889819627037043003, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-  m_PrefabInstance: {fileID: 1745834144}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1751209204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52349,7 +52400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 0
-    m_Value: 10
+    m_Value: 100
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -52386,8 +52437,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138775491}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.9989507, z: 0, w: -0.04579892}
-  m_LocalPosition: {x: 404.49, y: 0.54, z: 342.41}
+  m_LocalRotation: {x: -0.0000000074505815, y: -0.9989507, z: -0, w: -0.04579896}
+  m_LocalPosition: {x: 404.49, y: 0.5400009, z: 342.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
