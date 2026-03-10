@@ -69,6 +69,7 @@ public class TimelineManager : MonoBehaviour
 			
 			director.time = e.StartTime;
 			director.Play();
+			EventManager.Instance.Raise(new ChangeGameStateEvent("Start_Cutscene", GameStates.Cutscene));
 		}
 
 		//TODO: Implement End time to end the timeline when it reaches that point.
@@ -88,6 +89,7 @@ public class TimelineManager : MonoBehaviour
 			EventManager.Instance.MarkEventCompleted(key);
 			_eventTracker.Remove(key);
 		}
+		EventManager.Instance.Raise(new ChangeGameStateEvent("End_Cutscene", GameManager.Instance.PreviousGameState));
 	}
 
 }
