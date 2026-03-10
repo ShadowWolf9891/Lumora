@@ -61,11 +61,16 @@ public class PlayerAnimatorController : MonoBehaviour
 
 	private void Update()
     {
+        //add functionality to check if player is throwing and standing still, too lazy for that rn
         if (rb.linearVelocity.magnitude <= 0.05)
         {
-            animator.SetBool("isIdle", true);
-            animator.SetFloat("runWalkIndex", 0);
-            animator.speed = 1;
+            if (!animator.GetBool("Isidle"))
+            {
+                animator.SetBool("isIdle", true);
+                animator.SetFloat("runWalkIndex", 0);
+                animator.SetFloat("moveSpeed", 0);
+                animator.speed = 1;
+            }
         }
     }
 
@@ -92,16 +97,24 @@ public class PlayerAnimatorController : MonoBehaviour
     }
     private void Move(Vector3 moveDir)
     {
-        if (animator.GetBool("isSprinting"))
+        //Do Movement by setting moveSpeed
+        float targetMoveSpeed = behavior.GetAnimatorSpeedForMovement();
+        animator.SetFloat("moveSpeed", targetMoveSpeed);
+
+        //Run/walk
+        if (animator.GetBool("isSprinting") && targetMoveSpeed > 0.75)
         {
-            animator.SetFloat("runWalkIndex", 1);
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 1, 1f));
+            animator.speed = targetMoveSpeed/2;
         }
         else
         {
-            animator.SetFloat("runWalkIndex", 0);
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 0, 0.5f));
+            animator.speed = targetMoveSpeed;
         }
+
+        //disable idle
         if (moveDir.magnitude > 0.05 && animator.GetBool("isIdle")) animator.SetBool("isIdle", false);
-        animator.speed = behavior.GetAnimatorSpeedForMovement();
     }
 
     private void DoThrow()

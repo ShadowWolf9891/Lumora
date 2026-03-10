@@ -464,7 +464,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.fixedDeltaTime);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 2.5f * Time.deltaTime);
 	}
 
 	/// <summary>
@@ -500,11 +500,11 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
         Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 		if (IsSprinting)
 		{
-			return sprintMaxSpeed / groundSpeed.magnitude;
+			return groundSpeed.magnitude / sprintMaxSpeed;
 		}
 		else
 		{
-			return (maxSpeed * speedMod / groundSpeed.magnitude);
+			return  groundSpeed.magnitude / (maxSpeed * speedMod);
 		}
 	}
 
