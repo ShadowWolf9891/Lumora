@@ -1,16 +1,25 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+/// <summary>
+/// Controls when the user presses a button, and nothing else.
+/// </summary>
+public class InputManager : MonoBehaviour
 {
-
+	public static InputManager Instance;
 	//Private variables
-	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction;
+	private InputAction moveAction, sprintAction, interactAction, crouchAction, jumpAction, throwAction, lookAction, restartAction, consoleAction, backAction, pauseAction;
 	private Vector2 moveInput;
 	private bool sprinting;
-	private Camera mainCam;
-
-    private void Start()
+	private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else Destroy(gameObject);
+	}
+	private void Start()
 	{
 		//GameContext.Instance.OnPauseGame += FreezePlayer;
 		//GameContext.Instance.OnUnPauseGame += UnFreezePlayer;
@@ -22,8 +31,11 @@ public class PlayerController : MonoBehaviour
 		sprintAction = InputSystem.actions.FindAction("West");
 		crouchAction = InputSystem.actions.FindAction("East");
 		jumpAction = InputSystem.actions.FindAction("South");
-		lookAction = InputSystem.actions.FindAction("Look");
-		mainCam = Camera.main;
+		lookAction = InputSystem.actions.FindAction("Look"); 
+		restartAction = InputSystem.actions.FindAction("South");
+		consoleAction = InputSystem.actions.FindAction("Console");
+		backAction = InputSystem.actions.FindAction("East");
+		pauseAction = InputSystem.actions.FindAction("Escape");
 	}
 
 	private void Update()
@@ -34,6 +46,11 @@ public class PlayerController : MonoBehaviour
 	private void GetPlayerInputs()
 	{
 		//Always possible actions...
+		if (consoleAction.WasPressedThisFrame())
+		{
+			EventManager.Instance.Raise(new ChangeGameStateEvent("Handle_Console",
+				GameManager.Instance.CurrentGameState == GameStates.Console ? GameManager.Instance.PreviousGameState : GameStates.Console));
+		}
 
 		if (GameManager.Instance.CurrentGameState == GameStates.Dialogue)
 		{
@@ -49,7 +66,7 @@ public class PlayerController : MonoBehaviour
 			if (moveAction.IsInProgress())
 			{
 				moveInput = moveAction.ReadValue<Vector2>();
-				MovePlayer();
+				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, true, moveInput));
 			}
 			if (lookAction.IsInProgress())
 			{
@@ -87,18 +104,5 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
-	private void MovePlayer()
-	{
-		//calculates proper move direction
-		Vector3 camForward = mainCam.transform.forward;
-		Vector3 camRight = mainCam.transform.right;
-		camForward.y = 0f;
-		camRight.y = 0f;
-		camForward.Normalize();
-		camRight.Normalize();
-		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
-
-		GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("move", PlayerInputActionType.Move, default, moveDirection));
-
-	}
+	
 }
