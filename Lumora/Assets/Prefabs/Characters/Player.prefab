@@ -5179,7 +5179,6 @@ GameObject:
   - component: {fileID: 3238719513988401299}
   - component: {fileID: 4975226791562960143}
   - component: {fileID: 7257983983751162677}
-  - component: {fileID: 6481701089280577369}
   - component: {fileID: 8209262538507549975}
   - component: {fileID: 7166657601331200534}
   - component: {fileID: 7869366584272912734}
@@ -5263,18 +5262,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6481701089280577369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5350591719694058521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64004f7d73669f54e8d0cab59e76b23d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
 --- !u!114 &8209262538507549975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5301,7 +5288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c8a4b7c42f93f947925e6ffcd37e79d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBehavior
-  acceleration: 20
+  acceleration: 100
   maxSpeed: 3
   sprintMaxSpeed: 5
   stoppingForce: 3
@@ -5385,7 +5372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTeleportationBehaviors1
   teleportMoveSpeed: 2.5
-  modelObject: {fileID: 0}
+  modelObject: {fileID: 3518922497451829755}
   particleObject: {fileID: 4280995118842430473}
 --- !u!1 &8427146139572042984
 GameObject:

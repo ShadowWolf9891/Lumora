@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(HideController))]
@@ -60,7 +61,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	CapsuleCollider playerCollider;
 	PathObjectBehavior pathObjectBehavior;
 	private Vector3 lastWallNormal = Vector3.zero;
-	private Camera mainCam;
+	private CinemachineCamera thirdPersonCam, throwCam;
 	private Vector3 curThrowDirection;
 	private float throwYaw;
 	private float throwPitch;
@@ -95,6 +96,9 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	private void Start()
 	{
 		CameraManager.Instance.SetCurrentCamera("3rd Person Camera");
+		thirdPersonCam = CameraManager.Instance.CurrentCamera;
+
+
 	}
 
     private void GetComponentReferences()
@@ -102,7 +106,6 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
         rb = GetComponent<Rigidbody>();
         hideController = GetComponent<HideController>();
         playerCollider = GetComponent<CapsuleCollider>();
-		mainCam = Camera.main;
 		pathObjectBehavior = TryGetComponent(out PathObjectBehavior pathObj) ? pathObj : null;
 		playerHealthBehaviors = TryGetComponent(out PlayerHealthBehaviors pHealth) ? pHealth : null;
 	}
@@ -127,25 +130,30 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		switch (e.ActionType)
 		{
 			case PlayerInputActionType.Move:
-				Move(e.MoveDirection);
+				if(GameManager.Instance.CurrentGameState == GameStates.Running)
+					Move(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Look:
-				UpdateThrow(e.MoveDirection);
+				if (GameManager.Instance.CurrentGameState == GameStates.Running)
+					UpdateThrow(e.MoveDirection);
 				break;
 			case PlayerInputActionType.Interact:
 				Interact();
 				break;
 			case PlayerInputActionType.Sprint:
-				DoSprint();
+				if (GameManager.Instance.CurrentGameState == GameStates.Running)
+					DoSprint();
 				break;
 			case PlayerInputActionType.Jump:
-				Jump();
+				if (GameManager.Instance.CurrentGameState == GameStates.Running)
+					Jump();
 				break;
 			case PlayerInputActionType.Crouch:
-				Crouch();
+				if (GameManager.Instance.CurrentGameState == GameStates.Running)
+					Crouch();
 				break;
 			case PlayerInputActionType.Throw:
-				if (canThrow)
+				if (canThrow && GameManager.Instance.CurrentGameState == GameStates.Running)
 				{
 					PrepareThrow();
 				}
@@ -197,19 +205,32 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	}
 	//Contains basic movement, crouched movement, jumping, and all helpers associated
 	#region Movement
-	private void Move(Vector3 moveDirection)
+	private void Move(Vector3 moveInput)
 	{
 		HandleWaypoints();
-		if (isHiding) HideMove(moveDirection);
+		if (isHiding) HideMove(GetMoveDirection(moveInput));
 		else
         {
-			rb.AddForce(acceleration * Time.fixedDeltaTime * 60 * moveDirection, ForceMode.Acceleration);
-            FaceMoveDirection(moveDirection);
+			rb.AddForce(acceleration * Time.fixedDeltaTime * 60 * GetMoveDirection(moveInput), ForceMode.Acceleration);
+            FaceMoveDirection(GetMoveDirection(moveInput));
         }
 
         if (isThrowing) { UpdateThrow(Vector3.zero); }
 	}
-    private void DoSprint()
+	private Vector3 GetMoveDirection(Vector3 moveInput)
+	{
+
+		//calculates proper move direction
+		Vector3 camForward = thirdPersonCam.transform.forward;
+		Vector3 camRight = thirdPersonCam.transform.right;
+		camForward.y = 0f;
+		camRight.y = 0f;
+		camForward.Normalize();
+		camRight.Normalize();
+		Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
+		return moveDirection;
+	}
+	private void DoSprint()
     {
 		//Called via HandleInput(). Starts player sprinting that continues until player stops moving.
 		if (IsCrouching)
@@ -302,7 +323,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		isThrowing = true;
 		
 		CameraManager.Instance.SetCurrentCamera("ThrowCamera", 0.2f);
-		throwYaw = mainCam.transform.forward.x;
+		if(throwCam == null) throwCam = CameraManager.Instance.CurrentCamera;
+		throwYaw = throwCam.transform.forward.x;
 		throwPitch = -10f; // slight upward bias
 
 	}
@@ -442,7 +464,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 10f * Time.fixedDeltaTime);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 25f * Time.fixedDeltaTime);
 	}
 
 	/// <summary>
@@ -469,6 +491,20 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 			rb.AddForce(-horizontalVel * stoppingForce, ForceMode.Acceleration);
 			//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+		}
+	}
+
+	public float GetAnimatorSpeedForMovement()
+    {
+        float speedMod = IsCrouching ? stealthSpeedModifier : 1f;
+        Vector3 groundSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+		if (IsSprinting)
+		{
+			return groundSpeed.magnitude / sprintMaxSpeed;
+		}
+		else
+		{
+			return  groundSpeed.magnitude / (maxSpeed * speedMod);
 		}
 	}
 
