@@ -64,13 +64,22 @@ public class PlayerAnimatorController : MonoBehaviour
         //add functionality to check if player is throwing and standing still, too lazy for that rn
         if (rb.linearVelocity.magnitude <= 0.05)
         {
-            if (!animator.GetBool("Isidle"))
+            if (!animator.GetBool("isIdle"))
             {
                 animator.SetBool("isIdle", true);
                 animator.SetFloat("runWalkIndex", 0);
                 animator.SetFloat("moveSpeed", 0);
                 animator.speed = 1;
             }
+
+        }
+        if (animator.GetFloat("standUpIndex") >= 0.1f && !animator.GetBool("isCrouched"))
+        {
+            animator.SetFloat("standUpIndex", Mathf.Lerp(animator.GetFloat("standUpIndex"), 0, 0.2f));
+        }
+        else if (animator.GetFloat("standUpIndex") >= 0f && !animator.GetBool("isCrouched"))
+        {
+            animator.SetFloat("standUpIndex", 0);
         }
     }
 
@@ -101,15 +110,16 @@ public class PlayerAnimatorController : MonoBehaviour
         float targetMoveSpeed = behavior.GetAnimatorSpeedForMovement();
         animator.SetFloat("moveSpeed", targetMoveSpeed);
 
+
         //Run/walk
         if (animator.GetBool("isSprinting") && targetMoveSpeed > 0.75)
         {
-            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 1, 1f));
-            animator.speed = targetMoveSpeed/2;
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 1, 0.2f));
+            animator.speed = targetMoveSpeed;
         }
         else
         {
-            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 0, 0.5f));
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 0, 0.3f));
             animator.speed = targetMoveSpeed;
         }
 
@@ -124,7 +134,12 @@ public class PlayerAnimatorController : MonoBehaviour
 	private void DoCrouchToggle()
 	{
         animator.SetBool("isCrouched", !animator.GetBool("isCrouched"));
-	}
+
+        if (animator.GetBool("isCrouched"))
+        {
+            animator.SetFloat("standUpIndex", 1);
+        }
+    }
 	private void DoSprintToggle()
 	{
 		animator.SetBool("isSprinting", !animator.GetBool("isSprinting"));
