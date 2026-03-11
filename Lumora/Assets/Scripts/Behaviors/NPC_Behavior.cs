@@ -46,39 +46,47 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		//	return;
 		//}
 
+		//Curstatus now is only set on Pause and Resume since those are the only states that matter.
+		//All other states are just changing between the two in various circumstances.
+
         switch (e.NewStatus)
         {
             case PathStatus.START:
 				agent.SetDestination(pathBehavior.RestartPath());
 				eventID = e.Id;
-                break;
+				curStatus = PathStatus.RESUME;
+				break;
             case PathStatus.PAUSE:
                 agent.isStopped = true;
 				EventManager.Instance.MarkEventCompleted(e.Id);
+				curStatus = e.NewStatus;
 				break;
             case PathStatus.RESUME:
                 agent.isStopped = false;
 				EventManager.Instance.MarkEventCompleted(e.Id);
+				curStatus = e.NewStatus;
 				break;
             case PathStatus.NEXT_PATH:
 				agent.SetDestination(pathBehavior.GoToNextPath());
-				if (eventID != null && !EventManager.Instance.GetCompletedEvents().Contains(eventID)) EventManager.Instance.MarkEventCompleted(eventID);
+				if (eventID != null && !EventManager.Instance.GetCompletedEvents().Contains(eventID))
+					EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
-                break;
+				curStatus = PathStatus.RESUME;
+				break;
             case PathStatus.PREV_PATH:
 				agent.SetDestination(pathBehavior.GoToPreviousPath());
 				EventManager.Instance.MarkEventCompleted(eventID);
 				eventID = e.Id;
-                break;
+				curStatus = PathStatus.RESUME;
+				break;
             case PathStatus.END_EARLY:
                 agent.isStopped = true;
                 agent.ResetPath();
 				EventManager.Instance.MarkEventCompleted(eventID);
 				EventManager.Instance.MarkEventCompleted(e.Id);
+				curStatus = PathStatus.PAUSE;
 				break;
 		}
-
-        curStatus = e.NewStatus;
 	}
 
 	private void Update()
@@ -107,16 +115,15 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		if (agent.isStopped) ToggleNPCMovement();
 
 		if (!pathBehavior.HasPath()) return;
-		//Go to next point if at destination
-		if (pathBehavior.IsAtPoint(transform.position, 2f)) agent.SetDestination(pathBehavior.GetNextPoint());
-
+		
 		//If there is no next point, reset and mark move event as complete.
-		if(pathBehavior.IsDonePath(transform.position) && eventID != null)
+		if(pathBehavior.IsDonePath(transform.position, 2f) && eventID != null)
 		{
 			agent.ResetPath();
 			EventManager.Instance.MarkEventCompleted(eventID);
 			eventID = null;
 		}
+		else if (pathBehavior.IsAtPoint(transform.position, 2f)) agent.SetDestination(pathBehavior.GetNextPoint()); //Go to next point if at destination
 	}
 	private void LeadPlayer()
 	{

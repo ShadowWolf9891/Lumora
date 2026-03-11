@@ -4437,13 +4437,19 @@ PlayableDirector:
   - key: {fileID: 4487631595795942287, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
     value: {fileID: 0}
   - key: {fileID: 1769446802549838063, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
-    value: {fileID: 611864750}
+    value: {fileID: 0}
   - key: {fileID: 8599491205536990571, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
     value: {fileID: 2002295152}
   - key: {fileID: -6383573977449076872, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
     value: {fileID: 160082696}
   - key: {fileID: -8323853003432896393, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
     value: {fileID: 1467772792}
+  - key: {fileID: -6372934436699854980, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 5567221272079766530, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -361740253247684069, guid: c495de7f149b6154eb2b71906bf3cccf, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - 9992ba4fe1fb0b4458d911bb842ebe87: {fileID: 2138775492}
@@ -16759,7 +16765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[3].x
-      value: -19.63208
+      value: -15.430237
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[3].y
@@ -16767,7 +16773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[3].z
-      value: 125.69289
+      value: 130.07246
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[4].x
@@ -17656,28 +17662,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
   m_PrefabInstance: {fileID: 1745834144}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &611864750
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 611864739}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6129ea655cd6b79408070695c97aad3c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &611864760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20565,11 +20549,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[0].x
-      value: -3.0697021
+      value: 0.1585083
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[0].z
-      value: -1.0853882
+      value: -0.04321289
       objectReference: {fileID: 0}
     - target: {fileID: 5750544148645462713, guid: eead9b5ef7f76384e9c63f0ccb43b838, type: 3}
       propertyPath: points.Array.data[1].x
@@ -43667,6 +43651,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.21469317
       objectReference: {fileID: 0}
+    - target: {fileID: 7497666410630653361, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7ff06fef56db09c4d9d584bac40f9c6d, type: 2}
     - target: {fileID: 7596880070375761188, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0.04537332
@@ -43824,9 +43812,6 @@ PrefabInstance:
     - {fileID: 1706678912207664925, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 611864750}
     - targetCorrespondingSourceObject: {fileID: 5350591719694058521, guid: b9ce4f1637cf809458c23b851e976df1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 611864760}
@@ -55402,6 +55387,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 387878022488835085, guid: 662eca64309b405429573bc93e6326b4, type: 3}
+      propertyPath: curTarget
+      value: 
+      objectReference: {fileID: 611864739}
     - target: {fileID: 1079991673032417238, guid: 662eca64309b405429573bc93e6326b4, type: 3}
       propertyPath: 'pathObjects.Array.data[0]'
       value: 
