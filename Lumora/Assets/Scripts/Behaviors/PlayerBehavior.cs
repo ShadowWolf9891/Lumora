@@ -281,11 +281,11 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 
 		FaceMoveDirection(moveDirection);
 		//Debug for crouch movement, uncomment to re-enable.
-		Debug.DrawLine(transform.position, projectedNextPosition, UnityEngine.Color.green);
-		Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), UnityEngine.Color.red);
-		Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), UnityEngine.Color.red);
-		Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), UnityEngine.Color.orange);
-		Debug.DrawLine(transform.position, transform.position + wallNormal, UnityEngine.Color.blue);
+		//Debug.DrawLine(transform.position, projectedNextPosition, UnityEngine.Color.green);
+		//Debug.DrawLine(transform.position, currentCollider.ClosestPoint(transform.position), UnityEngine.Color.red);
+		//Debug.DrawLine(nextPosition, currentCollider.ClosestPoint(nextPosition), UnityEngine.Color.red);
+		//Debug.DrawLine(currentCollider.ClosestPoint(transform.position), currentCollider.ClosestPoint(nextPosition), UnityEngine.Color.orange);
+		//Debug.DrawLine(transform.position, transform.position + wallNormal, UnityEngine.Color.blue);
 	}
 
 	#endregion
@@ -464,7 +464,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		if (moveDirection.sqrMagnitude < 0.001f) return; //Return since 0 would give error
 		Quaternion rotateTo = Quaternion.LookRotation(moveDirection, Vector3.up);
-		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 2.5f * Time.deltaTime);
+		rb.rotation = Quaternion.Slerp(rb.rotation, rotateTo, 25f * Time.fixedDeltaTime);
 	}
 
 	/// <summary>
