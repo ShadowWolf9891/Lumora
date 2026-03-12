@@ -167,7 +167,7 @@ public class UIManager : MonoBehaviour
         }
 	}
     //Button behaviors on click
-    public void OnStartClick() => EventManager.Instance.Raise(new LoadSceneEvent("StartNewGame", SceneManager.GetActiveScene().buildIndex + 1));
+    public void OnStartClick() => EventManager.Instance.Raise(new LoadSceneEvent("StartNewGame", SceneManager.GetActiveScene().buildIndex + 2));
     public void OnResumeClick() => EventManager.Instance.Raise("Resume_Game");
 	public void OnExitClick() => Application.Quit();
 	public void OnOptionsPressed() =>  HandleUIVisibility("OptionElement", true, false);
