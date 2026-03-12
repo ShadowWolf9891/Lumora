@@ -5185,6 +5185,7 @@ GameObject:
   - component: {fileID: 8960652971036187636}
   - component: {fileID: 8854146597825932092}
   - component: {fileID: 6528589005173891193}
+  - component: {fileID: 7136743037017839042}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -5374,6 +5375,28 @@ MonoBehaviour:
   teleportMoveSpeed: 2.5
   modelObject: {fileID: 3518922497451829755}
   particleObject: {fileID: 4280995118842430473}
+--- !u!95 &7136743037017839042
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350591719694058521}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6129ea655cd6b79408070695c97aad3c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8427146139572042984
 GameObject:
   m_ObjectHideFlags: 0
