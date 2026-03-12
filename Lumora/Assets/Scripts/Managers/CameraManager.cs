@@ -77,7 +77,7 @@ public class CameraManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning($"Cannot set camera to cameraIndex: {index}. IndexOutOfRangeException. {_cameraList.Count}");
+			Debug.LogWarning($"Cannot set camera to cameraIndex: {index} with name {cameraName}. IndexOutOfRangeException. {_cameraList.Count}");
 		}
 	}
 	/// <summary>
