@@ -279,7 +279,7 @@ public class EnemyBehavior : MonoBehaviour
 			agent.isStopped = false;
 			animController.animator.speed = 1;
 		}
-		else 
+		else if (e.State != GameStates.Running || e.State != GameStates.Teleporting)
 		{
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;

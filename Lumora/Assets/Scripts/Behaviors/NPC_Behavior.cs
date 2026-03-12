@@ -210,7 +210,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 			agent.velocity = previousVelocity;
 			agent.isStopped = false;
 		}
-		else if (e.State == GameStates.Paused || e.State == GameStates.Game_Over) //Not sure what to do with cutscenes yet
+		else if (e.State != GameStates.Running) 
 		{
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;
