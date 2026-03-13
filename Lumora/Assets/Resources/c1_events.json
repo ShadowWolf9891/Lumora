@@ -44,10 +44,25 @@
             "id" : "Bridge_Cross_Trigger",
             "parameters" : 
             {
-                "worldLocation" : "332.68, 30.86, 197.53",
-                "radius" : "10",
+                "worldLocation" : "330.59, 31.06, 199.11",
+                "radius" : "3",
                 "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Bridge_Dialogue"
+                "eventToRaiseOnTrigger" : "Bridge_Cutscene"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Bridge_Cutscene",
+            "eventsOnComplete":
+            [
+                "Bridge_Dialogue"
+            ],
+            "parameters":
+            {
+                "timelineName": "BridgeDiaTL",
+                "startTime": 0,
+                "endTime": 1.5
+               
             }
         },
         {
@@ -55,12 +70,24 @@
             "id": "Bridge_Dialogue",
             "eventsOnComplete":
             [
-                "Pit_Cold_Trigger"
+                "Pit_Cold_Trigger",
+                "Bridge_Cutscene_2"
             ],
             "parameters" :
             {
                 "chapter":"1",
                 "scene":"2"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Bridge_Cutscene_2",
+            "parameters":
+            {
+                "timelineName": "BridgeDiaTL",
+                "startTime": 1.9,
+                "endTime": -1
+               
             }
         },
         {
