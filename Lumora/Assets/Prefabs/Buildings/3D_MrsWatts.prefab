@@ -1647,6 +1647,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4733950758187967389}
+  - component: {fileID: 1566990927543923940}
   m_Layer: 0
   m_Name: 3D_MrsWatts
   m_TagString: Untagged
@@ -1675,6 +1676,31 @@ Transform:
   - {fileID: 4083792722804861464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &1566990927543923940
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5402507070594119975}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 30
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.4
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 1429017885678342533}
+    - renderer: {fileID: 4847280544878080016}
+    - renderer: {fileID: 5627035417177312686}
+    - renderer: {fileID: 198128281827233898}
+    - renderer: {fileID: 4246744997842569006}
+    - renderer: {fileID: 7126037058454559784}
+    - renderer: {fileID: 7126037058454559784}
+  m_Enabled: 1
 --- !u!1 &5778607544756348623
 GameObject:
   m_ObjectHideFlags: 0
