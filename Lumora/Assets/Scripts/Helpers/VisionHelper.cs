@@ -64,7 +64,7 @@ public static class VisionHelper
 			float distance = direction.magnitude + 0.05f;
 
 			if (distance > viewDistance) continue;
-			Debug.DrawRay(origin, direction.normalized * (distance), Color.mediumVioletRed, Time.deltaTime);
+			Debug.DrawRay(origin, direction.normalized * (distance), Color.darkMagenta, Time.deltaTime);
 			if (Physics.Raycast(origin, direction.normalized, out RaycastHit hit, distance, layerMask))
 			{
 				if (hit.collider.transform.root == target.transform) return true;
