@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
 using UnityEngine.InputSystem.XR;
+using System.Collections;
 
 [RequireComponent(typeof(PathObjectBehavior))]
 public class EnemyBehavior : MonoBehaviour
@@ -34,6 +35,9 @@ public class EnemyBehavior : MonoBehaviour
 	[SerializeField] float searchRadius = 10f;
 	[SerializeField] int numberOfSearchPoints = 3;
 	[SerializeField] float timeAtEachPoint = 1f;
+	[SerializeField] float lookRotationSpeed = 90f;   // degrees per second
+	[SerializeField] float[] lookAngles = { -45f, 45f, -20f }; // angles to sweep through
+
 
 	[Header("Alerted Properties")]
 	[SerializeField]
@@ -65,7 +69,12 @@ public class EnemyBehavior : MonoBehaviour
 	string bb_IsAlerted = "IsAlerted";
 	string bb_LostPlayer = "LostPlayer";
 
-    //[SerializeField] GameObject endScreen;
+	private bool isLooking = false;
+	private Quaternion rotationBeforeLook; // Store as a field, not a local
+	private float previousAngularSpeed;
+	private Coroutine lookCoroutine;       // Track the coroutine so you can stop it reliably
+
+	//[SerializeField] GameObject endScreen;
 	EnemyAnimatorController animController;
     #endregion
 
@@ -90,9 +99,16 @@ public class EnemyBehavior : MonoBehaviour
 		curState = AlertStates.IDLE;
 		OnChangeState();
 
-		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeEnemy);
 		//GameContext.Instance.OnPauseGame += FreezeEnemy;
 		//GameContext.Instance.OnUnPauseGame += UnFreezeEnemy;
+	}
+	private void OnEnable()
+	{
+		GameEvents<ChangeGameStateEvent>.Subscribe(FreezeEnemy);
+	}
+	private void OnDisable()
+	{
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(FreezeEnemy);
 	}
 
 	// Update is called once per frame
@@ -131,13 +147,13 @@ public class EnemyBehavior : MonoBehaviour
 		if (distance <= chasingRange && canSee)
 		{
 			if (!bb.Get<bool>(bb_CanSeePlayer)) bb.Set<bool>(bb_CanSeePlayer, true);
-			if (!bb.Get<bool>(bb_LostPlayer)) bb.Set<bool>(bb_LostPlayer, true);
 		}
 		else
 		{
 			if (bb.Get<bool>(bb_CanSeePlayer))
 			{
 				bb.Set<bool>(bb_CanSeePlayer, false);
+				if (!bb.Get<bool>(bb_LostPlayer)) bb.Set<bool>(bb_LostPlayer, true);
 			}
 				
 		}
@@ -212,6 +228,8 @@ public class EnemyBehavior : MonoBehaviour
 
 		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
 		{
+			if (!isLooking) lookCoroutine = StartCoroutine(LookAroundAtPoint());
+
 			waitTimer += Time.deltaTime;
 			if (waitTimer >= timeAtEachPoint)
 			{
@@ -240,7 +258,7 @@ public class EnemyBehavior : MonoBehaviour
 			OnChangeState();
 		}
 
-		Vector3 predictedPos = playerRef.transform.position + playerRef.GetComponent<Rigidbody>().linearVelocity * 0.5f;
+		Vector3 predictedPos = playerRef.transform.position + playerRef.GetComponent<Rigidbody>().linearVelocity;
 
 		agent.SetDestination(predictedPos);
 
@@ -267,6 +285,7 @@ public class EnemyBehavior : MonoBehaviour
 
 	private void OnChangeState()
 	{
+		StopLooking();
 		alertController.ChangeImage(curState);
 		searchPoints.Clear();
 	}
@@ -279,7 +298,7 @@ public class EnemyBehavior : MonoBehaviour
 			agent.isStopped = false;
 			animController.animator.speed = 1;
 		}
-		else if (e.State != GameStates.Running || e.State != GameStates.Teleporting)
+		else if (e.State != GameStates.Running && e.State != GameStates.Teleporting)
 		{
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;
@@ -297,7 +316,7 @@ public class EnemyBehavior : MonoBehaviour
 	/// <returns></returns>
 	private bool CanSeeTarget(GameObject target, float range)
 	{
-        return VisionHelper.CanSeeTarget(gameObject, target, angleOfVision, range, eyeLocation, LayerMask.GetMask("Default", "Player", "Obstacles"));
+        return VisionHelper.CanSeeTarget(gameObject, target,  range, angleOfVision, eyeLocation, LayerMask.GetMask("Default", "Player", "Obstacles"));
 	}
 	private bool IsObjectInRange(GameObject other, float range)
 	{
@@ -362,11 +381,11 @@ public class EnemyBehavior : MonoBehaviour
 		}
 		//Get closest point to start search at.
 		Vector3 closestPoint = points[0];
-		float closestDistance = Vector3.Distance(points[0], transform.position);
+		float closestDistance = Vector3.Distance(points[0], startPos);
 
 		foreach (Vector3 point in points)
 		{
-			float dist = Vector3.Distance(point, transform.position);
+			float dist = Vector3.Distance(point, startPos);
 			if (dist < closestDistance)
 			{
 				closestDistance = dist;
@@ -374,6 +393,64 @@ public class EnemyBehavior : MonoBehaviour
 			}
 		}
 		return closestPoint;
+	}
+	private IEnumerator LookAroundAtPoint()
+	{
+		isLooking = true;
+		previousAngularSpeed = agent.angularSpeed;
+		agent.angularSpeed = 0f;
+		rotationBeforeLook = transform.rotation; // Capture once into the field
+
+		foreach (float angle in lookAngles)
+		{
+			Quaternion targetRotation = rotationBeforeLook * Quaternion.Euler(0, angle, 0);
+			while (Quaternion.Angle(transform.rotation, targetRotation) > 0.5f)
+			{
+				if (!agent.isStopped)
+					transform.rotation = Quaternion.RotateTowards(
+						transform.rotation,
+						targetRotation,
+						lookRotationSpeed * Time.deltaTime
+					);
+				yield return null;
+			}
+			yield return new WaitForSeconds(0.2f);
+		}
+
+		// Restore rotation on natural completion
+		yield return StartCoroutine(ReturnToBaseRotation(previousAngularSpeed));
+	}
+	private void StopLooking()
+	{
+		if (lookCoroutine != null)
+		{
+			StopCoroutine(lookCoroutine);
+			lookCoroutine = null;
+		}
+		if (isLooking)
+		{
+			transform.rotation = rotationBeforeLook; // Snap back on interruption
+			agent.angularSpeed = previousAngularSpeed; // Restore agent control
+			isLooking = false;
+		}
+	}
+
+	private IEnumerator ReturnToBaseRotation(float previousAngularSpeed)
+	{
+		while (Quaternion.Angle(transform.rotation, rotationBeforeLook) > 0.5f)
+		{
+			if (!agent.isStopped)
+				transform.rotation = Quaternion.RotateTowards(
+					transform.rotation,
+					rotationBeforeLook,
+					lookRotationSpeed * Time.deltaTime
+				);
+			yield return null;
+		}
+
+		transform.rotation = rotationBeforeLook;
+		agent.angularSpeed = previousAngularSpeed;
+		isLooking = false;
 	}
 	/// <summary>
 	/// Fix enemies all using the same scriptable object assets.
@@ -458,7 +535,7 @@ public class EnemyBehavior : MonoBehaviour
 	}
 	private void OnDrawGizmos()
 	{
-		if (searchPoints.Count > 0)			//if search points are available, display all
+		if (searchPoints.Count > 0)         //if search points are available, display all
 		{
 			foreach (var point in searchPoints)
 			{
@@ -467,10 +544,27 @@ public class EnemyBehavior : MonoBehaviour
 			}
 		}
 
-        if (curState == AlertStates.CHASING)		//Display attack range
-        {
-            Gizmos.color = Color.darkRed;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
-        }
+		if (curState == AlertStates.CHASING)        //Display attack range
+		{
+			Gizmos.color = Color.darkRed;
+			Gizmos.DrawWireSphere(transform.position, attackRange);
+		}
+		float viewDistance = alertRange;
+		if (playerRef != null)
+		{ 
+			if (playerRef.TryGetComponent<VisibilityManager>(out VisibilityManager vm))
+			{
+				viewDistance -= viewDistance * vm.Visibility;
+			}
+		}
+		Gizmos.color = Color.yellow;
+		Quaternion rotation = Quaternion.Euler(0, angleOfVision / 2, 0);
+		Vector3 direction = rotation * transform.forward * viewDistance;
+		Gizmos.DrawLine(transform.position + eyeLocation, transform.position + eyeLocation + direction );
+		Quaternion rotation2 = Quaternion.Euler(0, -angleOfVision / 2, 0);
+		Vector3 direction2 = rotation2 * transform.forward * viewDistance;
+		Gizmos.DrawLine(transform.position + eyeLocation, transform.position + eyeLocation + direction2);
+		Gizmos.DrawLine(transform.position + eyeLocation, transform.position + eyeLocation + transform.forward * viewDistance);
+
 	}
 }

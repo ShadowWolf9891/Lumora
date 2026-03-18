@@ -35,16 +35,18 @@ public class VisibilityManager : MonoBehaviour
     private PlayerBehavior playerBehavior;
 	private void Awake()
 	{
-        SetVisibilityLevel(VisibilityLevels.Default);
 		playerBehavior = GetComponent<PlayerBehavior>();
 		
-
         //We're serializing this because we're got getting the component somehow
         //if(!TryGetComponent<LightingSampler>(out sampler))
         //{
         //    Debug.Log("Lighting Sampler not attached to player.");
         //}
         //sampler = GetComponent<LightingSampler>();
+	}
+	private void Start()
+	{
+		SetVisibilityLevel(VisibilityLevels.Default);
 	}
 	private void OnEnable()
 	{
@@ -60,7 +62,7 @@ public class VisibilityManager : MonoBehaviour
 	}
 	private void SetVisibilityLevel(VisibilityLevels level)
     {
-        float lightLevel = Mathf.Pow(sampler.brightness, 1f/LightEffectOnVision);
+        float lightLevel = Mathf.Pow(sampler.brightness, LightEffectOnVision);
         switch (level)
         {
             case VisibilityLevels.Default:
@@ -88,7 +90,7 @@ public class VisibilityManager : MonoBehaviour
 				{
 					SetVisibilityLevel(VisibilityLevels.Sprinting);
 				}
-                SetVisibilityLevel(VisibilityLevels.Default);
+                else SetVisibilityLevel(VisibilityLevels.Default);
 				break;
 		}
     }
