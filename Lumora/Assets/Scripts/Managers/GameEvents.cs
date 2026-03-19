@@ -234,7 +234,7 @@ public enum COLLECTABLE_TYPES
 {
     LOST_CHAPTER,
     HEAL_CRYSTAL,
-    DISTRACTION_CRYSTAL,
+    DISTRACTION_PICKUP,
 }
 public class CollectionEvent : GameEventType
 {
