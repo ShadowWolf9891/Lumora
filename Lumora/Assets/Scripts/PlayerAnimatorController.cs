@@ -114,12 +114,12 @@ public class PlayerAnimatorController : MonoBehaviour
         //Run/walk
         if (animator.GetBool("isSprinting") && targetMoveSpeed > 0.75)
         {
-            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 1, 0.2f));
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 1, 0.1f));
             animator.speed = targetMoveSpeed;
         }
         else
         {
-            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 0, 0.3f));
+            animator.SetFloat("runWalkIndex", Mathf.Lerp(animator.GetFloat("runWalkIndex"), 0, 0.15f));
             animator.speed = targetMoveSpeed;
         }
 
