@@ -48,7 +48,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	private Collider coverObject;
 
 	[Header("WaypointSettings")]
-	[SerializeField] private GameObject waypointImage;
+	[SerializeField] public GameObject waypointImage;
 
 	//State settings
 	[HideInInspector] public bool IsCrouching { get; private set; }
