@@ -1,6 +1,8 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 
@@ -28,34 +30,29 @@ public class WaypointCompass : MonoBehaviour
         Transform waypointTransform = activeWaypoint.transform;
         Transform playerTransform = playerRef.transform;
         Transform cameraTransform = cameraRef.transform;
+        
         Vector3 direction = waypointTransform.position - playerTransform.position;
+        
+        direction.y = 0;
 
+        Vector3 camPos = cameraTransform.forward;
+        camPos.y = 0;
+        
         //Gets the horizontal angle between camera direction and waypoint
-        float angle = Vector3.SignedAngle(cameraTransform.forward, direction, Vector3.up);
+        float angle = Vector3.SignedAngle(camPos, direction, Vector3.up);
+        Debug.Log(angle);
 
-        //convers angle it UI pos
+        //converts angle to UI pos
         float compassWidth = 500f;
-        float normalized = angle / 180;
+        float normalized = angle / 180f;
+        float halfWidth = compassWidth / 2;
 
-        float xPos = normalized * (compassWidth / 2f);
-
+        float xPos = normalized * halfWidth;
+        
+        float clampEnds = Mathf.Clamp(xPos, -halfWidth, halfWidth);
+        
+        
         //moves waypoint icon
-        waypointIcon.rectTransform.anchoredPosition = new Vector2(xPos, waypointIcon.rectTransform.anchoredPosition.y);
-    
-        //shows distance to waypoint
-        float distance = Vector3.Distance(playerTransform.position, waypointTransform.position);
-        //iconText.text = Mathf.RoundToInt(distance) + "m";
-
-        //checks if waypoint is behind the player
-        float dot = Vector3.Dot(playerTransform.forward, direction.normalized);
-        if(dot < 0)
-        {
-            //if waypoint is behind player
-            waypointIcon.gameObject.SetActive(false);
-        }
-        else
-        {
-            waypointIcon.gameObject.SetActive(true);
-        }
+        waypointIcon.rectTransform.anchoredPosition = new Vector2(clampEnds, waypointIcon.rectTransform.anchoredPosition.y);
     }
 }

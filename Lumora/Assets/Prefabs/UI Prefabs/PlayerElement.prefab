@@ -145,7 +145,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 450}
-  m_SizeDelta: {x: 750, y: 5}
+  m_SizeDelta: {x: 500, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2213770688531745305
 CanvasRenderer:
@@ -636,6 +636,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 499ddc5ef8a27db44a14996756baf4ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointCompass
+  playerRef: {fileID: 0}
+  activeWaypoint: {fileID: 0}
+  waypointIcon: {fileID: 0}
 --- !u!1 &3175954283130864229
 GameObject:
   m_ObjectHideFlags: 0
