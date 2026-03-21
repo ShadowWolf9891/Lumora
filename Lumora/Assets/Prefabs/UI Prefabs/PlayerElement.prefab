@@ -559,8 +559,9 @@ GameObject:
   - component: {fileID: 4701869118375792250}
   - component: {fileID: 90365785324504979}
   - component: {fileID: 3762683069115542642}
+  - component: {fileID: 3256832526909773806}
   m_Layer: 5
-  m_Name: Image
+  m_Name: WaypointIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -623,6 +624,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3256832526909773806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095052326584721391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499ddc5ef8a27db44a14996756baf4ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaypointCompass
 --- !u!1 &3175954283130864229
 GameObject:
   m_ObjectHideFlags: 0
