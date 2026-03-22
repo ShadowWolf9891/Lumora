@@ -8,11 +8,12 @@ using UnityEngine.UI;
 
 public class WaypointCompass : MonoBehaviour
 {
-    [SerializeField]private GameObject playerRef;
-    [SerializeField]private GameObject activeWaypoint;
-    [SerializeField]private Image waypointIcon;
-    private TextMeshProUGUI iconText;
+    private GameObject playerRef;
     private GameObject cameraRef;
+    private GameObject activeWaypoint;
+    [SerializeField]private Image waypointIcon;
+    
+    private TextMeshProUGUI iconText;
 
     void Awake()
     {
@@ -20,6 +21,7 @@ public class WaypointCompass : MonoBehaviour
         playerRef = GameObject.Find("Player");
         activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
         waypointIcon = this.GetComponent<Image>();
+        iconText = GetComponentInChildren<TextMeshProUGUI>();
     }
     void Update()
     {
@@ -35,7 +37,7 @@ public class WaypointCompass : MonoBehaviour
         
         direction.y = 0;
 
-        Vector3 camPos = cameraTransform.forward;
+        Vector3 camPos = cameraTransform.forward / 2;
         camPos.y = 0;
         
         //Gets the horizontal angle between camera direction and waypoint
@@ -44,7 +46,7 @@ public class WaypointCompass : MonoBehaviour
 
         //converts angle to UI pos
         float compassWidth = 500f;
-        float normalized = angle / 180f;
+        float normalized = angle / 60f;
         float halfWidth = compassWidth / 2;
 
         float xPos = normalized * halfWidth;
@@ -52,7 +54,10 @@ public class WaypointCompass : MonoBehaviour
         float clampEnds = Mathf.Clamp(xPos, -halfWidth, halfWidth);
         
         
-        //moves waypoint icon
+        //moves waypoint icon and updates text
         waypointIcon.rectTransform.anchoredPosition = new Vector2(clampEnds, waypointIcon.rectTransform.anchoredPosition.y);
+        
+        float distance = Vector3.Distance(playerTransform.position, waypointTransform.position);
+        iconText.text = Mathf.RoundToInt(distance) + "m";
     }
 }
