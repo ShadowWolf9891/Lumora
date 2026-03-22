@@ -42,7 +42,6 @@ public class WaypointCompass : MonoBehaviour
         
         //Gets the horizontal angle between camera direction and waypoint
         float angle = Vector3.SignedAngle(camPos, direction, Vector3.up);
-        Debug.Log(angle);
 
         //converts angle to UI pos
         float compassWidth = 500f;
