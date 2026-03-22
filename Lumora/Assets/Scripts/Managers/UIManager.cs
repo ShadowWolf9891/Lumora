@@ -133,7 +133,8 @@ public class UIManager : MonoBehaviour
 				break;
             case GameStates.Cutscene:
 				//HandleUIVisibility("DialogueElement", true, false); //Dialogue will always show when in a cutscene. Can change this.
-				break;
+				HandleUIVisibility("PlayerElement", false, false);
+                break;
             case GameStates.Game_Over:
 				Cursor.lockState = CursorLockMode.None;
 				HandleUIVisibility("GameOverElement", true, false);
