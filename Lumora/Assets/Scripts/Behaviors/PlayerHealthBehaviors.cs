@@ -6,7 +6,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
     [Header("Health Values")]
     [SerializeField]
     [Range(0, 10)]
-    int maxHealth = 3;
+    int maxHealth;
     public int CurrentHealthValue { get; set; }
     [SerializeField]
     bool godModeEnabled;
@@ -44,7 +44,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
             {
                 DoGameOver();
             }
-            GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", CurrentHealthValue));
+            UIHealthBar.Instance.UpdateHealthBar(CurrentHealthValue);
         }
     }
 
