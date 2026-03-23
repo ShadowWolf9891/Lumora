@@ -4,15 +4,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(HideController))]
 public class PlayerBehavior : MonoBehaviour, ISaveable
 {
-    #region Properties
-    [Header("Player Settings")]
+	#region Properties
+	[Header("Player Settings")]
 	[SerializeField, Tooltip("How fast the player accelerates to max speed in m/s^2")]
 	private float acceleration = 10;
 	[SerializeField, Tooltip("The maximum speed of the player in m/s")]
 	private float maxSpeed = 4;
-    [SerializeField, Tooltip("Acceleration multiplier for sprinting, applies directly to acceleration")]
-    private float sprintMaxSpeed = 6;
-    [SerializeField, Tooltip("How quickly the player stops moving in m/s")]
+	[SerializeField, Tooltip("Acceleration multiplier for sprinting, applies directly to acceleration")]
+	private float sprintMaxSpeed = 6;
+	[SerializeField, Tooltip("How quickly the player stops moving in m/s")]
 	float stoppingForce = 3;
 	//[SerializeField, Tooltip("Height of the player for jumping in m")]
 	//float playerHeight = 1.2f;
@@ -21,8 +21,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	[SerializeField, Tooltip("LayerMask for IsGrounded")]
 	LayerMask groundedLayers;
 
-    //throw mechanic
-    [Header("Throw Settings")]
+	//throw mechanic
+	[Header("Throw Settings")]
 	[SerializeField] GameObject thrownObjPrefab;
 	[SerializeField] Transform throwLocation;
 	[SerializeField] float throwForce = 10;
@@ -36,25 +36,28 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	private float timeBetweenPoints = 0.15f;
 	private bool isThrowing;
 	private bool canThrow;
+    public int rocksHeld { get; private set; }
 
-	[Header("Stealth Settings")]
+    [Header("Stealth Settings")]
 	[SerializeField] private float detectDistance = 1f;
 	[SerializeField] private float stealthSpeedModifier = 0.5f;
-    [SerializeField] private float sprintNoiseMade = 5f;
-    [SerializeField] private float standingHeight = 1.8f;
-    [SerializeField] private float crouchedHeight = 1.4f;
+	[SerializeField] private float sprintNoiseMade = 5f;
+	[SerializeField] private float standingHeight = 1.8f;
+	[SerializeField] private float crouchedHeight = 1.4f;
 	[SerializeField] private float stealthSnapDistance = 0.6f;
 	private Collider coverObject;
 
 	[Header("WaypointSettings")]
-	[SerializeField] private GameObject waypointImage;
+	[SerializeField] public GameObject waypointImage;
 
 	//State settings
-	[HideInInspector]public bool IsCrouching { get; private set; }
+	[HideInInspector] public bool IsCrouching { get; private set; }
 	[HideInInspector] public bool IsSprinting { get; private set; }
 
-	//Private properties
-	private HideController hideController;
+
+
+    //Private properties
+    private HideController hideController;
 	private PlayerHealthBehaviors playerHealthBehaviors;
 	bool isHiding = false;
 	Rigidbody rb;
@@ -65,8 +68,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	private Vector3 curThrowDirection;
 	private float throwYaw;
 	private float throwPitch;
-    Vector3 savedVelocity;
-    Vector3 savedAngularVelocity;
+	Vector3 savedVelocity;
+	Vector3 savedAngularVelocity;
     #endregion
 
     #region Initializing
@@ -83,6 +86,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
 		GameEvents<UnlockAbilityEvent>.Subscribe(UnlockAbility);
 		GameEvents<ChangeGameStateEvent>.Subscribe(GameEventChanged);
+		GameEvents<CollectionEvent>.Subscribe(OnCollectableEvent);
 	}
 	private void OnDisable()
 	{
@@ -221,8 +225,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 
 		//calculates proper move direction
-		Vector3 camForward = thirdPersonCam.transform.forward;
-		Vector3 camRight = thirdPersonCam.transform.right;
+		Vector3 camForward = CameraManager.Instance.CurrentCamera.transform.forward;
+		Vector3 camRight = CameraManager.Instance.CurrentCamera.transform.right;
 		camForward.y = 0f;
 		camRight.y = 0f;
 		camForward.Normalize();
@@ -318,6 +322,12 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	#region Throwing
 	private void PrepareThrow()
 	{
+		if (rocksHeld < 1)
+		{
+			Debug.LogWarning("PrepareThrow called with no rocks. TODO add better feedback");
+			return;
+		}
+
 		//when pressing throw key, creates a line render to show expected trajectory for projectile
 		//Debug.Log("Preparing throw.");
 		isThrowing = true;
@@ -402,6 +412,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			projectileRb.AddForce(startVelocity, ForceMode.Impulse);
 		}
 		CameraManager.Instance.ReturnToPreviousCamera(0.5f);
+
+		rocksHeld -= 1;
 	}
 	#endregion
 
@@ -448,14 +460,21 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 
     }
 
-    #endregion
+	private void OnCollectableEvent(CollectionEvent e)
+	{
+		if (e.Type == COLLECTABLE_TYPES.DISTRACTION_PICKUP)
+		{
+			rocksHeld += e.Count;
+		}
+	}
+	#endregion
 
-    #region Helpers
-    /// <summary>
-    /// Checks if the player is on the ground or not.
-    /// </summary>
-    /// <returns></returns>
-    private bool IsGrounded()
+	#region Helpers
+	/// <summary>
+	/// Checks if the player is on the ground or not.
+	/// </summary>
+	/// <returns></returns>
+	private bool IsGrounded()
 	{
 		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - 0.1f , transform.position.z), UnityEngine.Color.yellowNice);
 		return Physics.Raycast(new Vector3 (transform.position.x, transform.position.y +0.1f, transform.position.z), Vector3.down, 0.2f, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);

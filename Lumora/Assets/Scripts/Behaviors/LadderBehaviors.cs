@@ -6,13 +6,43 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
     [SerializeField] Transform topLadderPoint;
     [SerializeField] Transform bottomLadderPoint;
 
+    [Header("Display variables")]
+    [SerializeField]
+    string interactionPrompt;
+    [SerializeField]
+    GameObject interactionPromptImageObjectTop, interactionPromptImageObjectBot;
+
+    private GameObject playerRef;
+
+    public bool isInteractionPromptVisible { get; private set; }
+
+    private void Start()
+    {
+        playerRef = GameObject.FindGameObjectWithTag("Player");
+    }
     public string GetInteractionPrompt()
     {
-        return ("Press E to use ladder.");
+        isInteractionPromptVisible = true;
+        if (IsPlayerCloserToTopPoint(playerRef))
+        {
+            if (interactionPromptImageObjectBot.activeSelf)
+                interactionPromptImageObjectBot.SetActive(false);
+            interactionPromptImageObjectTop.SetActive(true);
+        }
+        else
+        {
+            if (interactionPromptImageObjectTop.activeSelf)
+                interactionPromptImageObjectTop.SetActive(false);
+            interactionPromptImageObjectBot.SetActive(true);
+        }
+
+        return interactionPrompt;
     }
     public void DisableInteractionPrompt()
     {
-
+        isInteractionPromptVisible = false;
+        interactionPromptImageObjectTop.SetActive(false);
+        interactionPromptImageObjectBot.SetActive(false);
     }
     public bool IsHoldInteraction()
     {
@@ -22,13 +52,12 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
     public bool OnInteractStart()
     {
         Debug.Log("Running Interaction start with ladder");
-        GameObject playerRef = GameObject.FindWithTag("Player");
         //Is top point or bottom point closer? teleport player to opposite point
         if (IsPlayerCloserToTopPoint(playerRef))
         {
             Debug.Log("LadderBehaviors: player is closer to TOP ladder point, starting TP event");
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
-                $"Teleporting Player to: {bottomLadderPoint} from: {topLadderPoint}", 
+                $"",
                 bottomLadderPoint.position));
 
         }
@@ -36,7 +65,7 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         {
             Debug.Log("LadderBehaviors: player is closer to BOTTOM ladder point, starting TP event");
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
-                $"Teleporting Player to: {topLadderPoint} from: {bottomLadderPoint}", 
+                $"",
                 topLadderPoint.position));
         }
 
