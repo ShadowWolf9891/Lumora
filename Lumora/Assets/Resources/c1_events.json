@@ -2,14 +2,6 @@
     "allEvents":
     [
         {
-            "type": "ChangeGameStateEvent",
-            "id": "ResumeGame",
-            "parameters":
-            {
-                "state": "0"
-            }
-        },
-        {
             "type": "BeginCutsceneEvent",
             "id": "ShiftLeader_Enter",
             "eventsOnComplete":
@@ -26,7 +18,7 @@
             "id": "Chapter1_Intro",
             "eventsOnComplete" :
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Bridge_Cross_Trigger",
                 "ShiftLeader_Walking_1"
             ],

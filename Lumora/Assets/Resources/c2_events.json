@@ -36,20 +36,12 @@
             }
         },
         {
-            "type": "ChangeGameStateEvent",
-            "id": "ResumeGame",
-            "parameters":
-            {
-                "state": "0"
-            }
-        },
-        {
             "type": "DialogueEvent",
             "id": "Chapter2_Intro",
             "eventsOnComplete" :
             [
                 "Mrs_Watts_Front_Arrive_Trigger",
-                "ResumeGame"
+                "Resume_Game"
             ],
             "parameters" :
             {
@@ -74,8 +66,8 @@
             "id" : "C2_Arrive_Watts_Front",
             "eventsOnComplete" :
             [
-                "Watts_Back_Trigger",
-                "ResumeGame"
+                "Resume_Game",
+                "Watts_Back_Trigger"
             ],
             "parameters" :
             {
@@ -281,7 +273,7 @@
                 "C2_Arrive_Darren_Trigger",
                 "Lira_Leave_Watts_Trigger",
                 "Lira_Leave_Door_Trigger",
-                "ResumeGame"
+                "Resume_Game"
             ],
             "parameters":
             {
@@ -556,7 +548,7 @@
             "id": "C2_Lira_Darren_11",
             "eventsOnComplete":
             [
-                "ResumeGame"
+                "Resume_Game"
             ],
             "parameters":
             {
