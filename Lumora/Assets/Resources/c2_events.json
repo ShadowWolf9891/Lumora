@@ -103,12 +103,24 @@
             "id": "C2_Watts_Back",
             "eventsOnComplete" :
             [
-                "Watts_Door_Open"
+                "C2_Watts_Light_On"
             ],
             "parameters":
             {
                 "chapter":"2",
                 "scene": "4"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "C2_Watts_Light_On",
+            "eventsOnComplete" :
+            [
+                "Watts_Door_Open"
+            ],
+            "parameters":
+            {
+                "timelineName": "WattsLightOnTL"
             }
         },
         {
@@ -128,8 +140,7 @@
             "id": "C2_Watts_Answer",
             "eventsOnComplete":
             [
-                "Watts_Walk_Inside",
-                "Watts_DClose_Trigger"
+                "Watts_Walk_Inside"
             ],
             "parameters":
             {
@@ -142,7 +153,7 @@
             "id": "Watts_Walk_Inside",
             "eventsOnComplete":
             [
-                "Watts_Inside_Trigger"
+                "C2_Watts_Lira"
             ],
             "parameters":
             {
@@ -150,33 +161,16 @@
             }
         },
         {
-            "type": "SpawnTriggerEvent",
-            "id": "Watts_Inside_Trigger",
+            "type": "DialogueEvent",
+            "id": "C2_Watts_Lira",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Lira_1"
+            ],
             "parameters":
             {
-                "worldLocation": "-165.21, 0.34, -817.62",
-                "radius":"1",
-                "layerMask":"Player",
-                "eventToRaiseOnTrigger": "C2_Watts_Lira_1"
-            }
-        },
-        {
-            "type":"SpawnTriggerEvent",
-            "id": "Watts_DClose_Trigger",
-            "parameters":
-            {
-                "worldLocation": "-165.21, 0.34, -817.62",
-                "radius": "1",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "Watts_Door_Close"
-            }
-        },
-        {
-            "type": "BeginCutsceneEvent",
-            "id": "Watts_Door_Close",
-            "parameters":
-            {
-                "timelineName": "WattsDoorCloseTL"
+                "chapter": "2",
+                "scene": "6"
             }
         },
         {
@@ -184,24 +178,12 @@
             "id": "C2_Watts_Lira_1",
             "eventsOnComplete":
             [
-                "Watts_BRB"
+                
             ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "7"
-            }
-        },
-        {
-            "type":"BeginCutsceneEvent",
-            "id": "Watts_BRB",
-            "eventsOnComplete":
-            [
-                "C2_Watts_Lira_2"
-            ],
-            "parameters":
-            {
-                "timelineName": "WattsBRBTL"
             }
         },
         {
