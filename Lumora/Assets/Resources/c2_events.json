@@ -36,11 +36,20 @@
             }
         },
         {
+            "type": "ChangeGameStateEvent",
+            "id": "ResumeGame",
+            "parameters":
+            {
+                "state": "0"
+            }
+        },
+        {
             "type": "DialogueEvent",
             "id": "Chapter2_Intro",
             "eventsOnComplete" :
             [
-                "Mrs_Watts_Front_Arrive_Trigger"
+                "Mrs_Watts_Front_Arrive_Trigger",
+                "ResumeGame"
             ],
             "parameters" :
             {
@@ -65,7 +74,8 @@
             "id" : "C2_Arrive_Watts_Front",
             "eventsOnComplete" :
             [
-                "Watts_Back_Trigger"
+                "Watts_Back_Trigger",
+                "ResumeGame"
             ],
             "parameters" :
             {
@@ -178,12 +188,37 @@
             "id": "C2_Watts_Lira_1",
             "eventsOnComplete":
             [
-                
+                "C2_WattsBRB"
             ],
             "parameters":
             {
                 "chapter": "2",
                 "scene": "7"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "C2_WattsBRB",
+            "eventsOnComplete":
+            [
+                 "C2_Lira_Mirror"
+            ],
+            "parameters":
+            {
+                "timelineName": "WattsBRBTL"
+            }
+        },
+        {
+            "type": "DialogueEvent",
+            "id": "C2_Lira_Mirror",
+            "eventsOnComplete":
+            [
+
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "63"
             }
         },
         {
@@ -245,7 +280,8 @@
             [
                 "C2_Arrive_Darren_Trigger",
                 "Lira_Leave_Watts_Trigger",
-                "Lira_Leave_Door_Trigger"
+                "Lira_Leave_Door_Trigger",
+                "ResumeGame"
             ],
             "parameters":
             {
@@ -520,7 +556,7 @@
             "id": "C2_Lira_Darren_11",
             "eventsOnComplete":
             [
-                ""
+                "ResumeGame"
             ],
             "parameters":
             {
