@@ -48,7 +48,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	private Collider coverObject;
 
 	[Header("WaypointSettings")]
-	[SerializeField] private GameObject waypointImage;
+	[SerializeField] public GameObject waypointImage;
 
 	//State settings
 	[HideInInspector] public bool IsCrouching { get; private set; }
@@ -225,8 +225,8 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 
 		//calculates proper move direction
-		Vector3 camForward = thirdPersonCam.transform.forward;
-		Vector3 camRight = thirdPersonCam.transform.right;
+		Vector3 camForward = CameraManager.Instance.CurrentCamera.transform.forward;
+		Vector3 camRight = CameraManager.Instance.CurrentCamera.transform.right;
 		camForward.y = 0f;
 		camRight.y = 0f;
 		camForward.Normalize();
@@ -467,15 +467,14 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			rocksHeld += e.Count;
 		}
 	}
+	#endregion
 
-    #endregion
-
-    #region Helpers
-    /// <summary>
-    /// Checks if the player is on the ground or not.
-    /// </summary>
-    /// <returns></returns>
-    private bool IsGrounded()
+	#region Helpers
+	/// <summary>
+	/// Checks if the player is on the ground or not.
+	/// </summary>
+	/// <returns></returns>
+	private bool IsGrounded()
 	{
 		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - 0.1f , transform.position.z), UnityEngine.Color.yellowNice);
 		return Physics.Raycast(new Vector3 (transform.position.x, transform.position.y +0.1f, transform.position.z), Vector3.down, 0.2f, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);

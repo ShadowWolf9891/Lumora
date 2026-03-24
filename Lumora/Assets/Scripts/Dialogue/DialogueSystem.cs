@@ -129,7 +129,7 @@ public class DialogueSystem : MonoBehaviour
         currentDialogue = null;
         currentDialogueID = "";
 		CameraManager.Instance.SetCurrentCamera("3rd Person Camera", 0f);
-		EventManager.Instance.Raise("Resume_Game");
+		//EventManager.Instance.Raise("Resume_Game");
 	}
 
     
