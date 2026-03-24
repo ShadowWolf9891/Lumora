@@ -130,9 +130,10 @@ public class UIManager : MonoBehaviour
 				break;
             case GameStates.Dialogue:
 				HandleUIVisibility("DialogueElement", true, false); //Clear everything except dialogue
+				HandleUIVisibility("PlayerElement", false, false);
 				break;
             case GameStates.Cutscene:
-				//HandleUIVisibility("DialogueElement", true, false); //Dialogue will always show when in a cutscene. Can change this.
+				HandleUIVisibility("DialogueElement", false, false); //Dialogue will always show when in a cutscene. Can change this.
 				HandleUIVisibility("PlayerElement", false, false);
                 break;
             case GameStates.Game_Over:
