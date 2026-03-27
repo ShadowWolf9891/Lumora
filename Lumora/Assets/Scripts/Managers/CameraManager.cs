@@ -22,6 +22,15 @@ public class CameraManager : MonoBehaviour
 		else Destroy(gameObject);
 	}
 
+	private void OnEnable()
+	{
+		GameEvents<ChangeGameStateEvent>.Subscribe(ReturnToThirdPerson);
+	}
+	private void OnDisable()
+	{
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(ReturnToThirdPerson);
+	}
+
 	/// <summary>
 	/// Load all of the cinemachine cameras in the scene into the list. 
 	/// No need to call this unless you add your own cameras during runtime.
@@ -77,7 +86,7 @@ public class CameraManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning($"Cannot set camera to cameraIndex: {index}. IndexOutOfRangeException. {_cameraList.Count}");
+			Debug.LogWarning($"Cannot set camera to cameraIndex: {index} with name {cameraName}. IndexOutOfRangeException. {_cameraList.Count}");
 		}
 	}
 	/// <summary>
@@ -113,5 +122,15 @@ public class CameraManager : MonoBehaviour
 		_cameraList = null;
 		CurrentCamera = null;
 		PreviousCamera = null;
+	}
+
+	public void ReturnToThirdPerson(ChangeGameStateEvent e)
+	{
+		if (_cameraList == null) { LoadCameras(); }
+		if (e.State == GameStates.Running)
+		{
+			if (_cameraList.Exists(cam => cam.name == "3rd Person Camera")) SetCurrentCamera("3rd Person Camera");
+			else SetCurrentCamera(0);
+		}
 	}
 }

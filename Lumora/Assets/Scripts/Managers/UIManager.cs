@@ -130,10 +130,12 @@ public class UIManager : MonoBehaviour
 				break;
             case GameStates.Dialogue:
 				HandleUIVisibility("DialogueElement", true, false); //Clear everything except dialogue
+				HandleUIVisibility("PlayerElement", false, false);
 				break;
             case GameStates.Cutscene:
-				//HandleUIVisibility("DialogueElement", true, false); //Dialogue will always show when in a cutscene. Can change this.
-				break;
+				HandleUIVisibility("DialogueElement", false, false); //Dialogue will always show when in a cutscene. Can change this.
+				HandleUIVisibility("PlayerElement", false, false);
+                break;
             case GameStates.Game_Over:
 				Cursor.lockState = CursorLockMode.None;
 				HandleUIVisibility("GameOverElement", true, false);
@@ -147,7 +149,9 @@ public class UIManager : MonoBehaviour
 
         }
 	}
-	private void BindElement(UIElement element, GameObject instance)
+
+   
+    private void BindElement(UIElement element, GameObject instance)
 	{
         foreach (var childBind in element.bindableChildrenList)
         {
@@ -167,11 +171,36 @@ public class UIManager : MonoBehaviour
         }
 	}
     //Button behaviors on click
-    public void OnStartClick() => EventManager.Instance.Raise(new LoadSceneEvent("StartNewGame", SceneManager.GetActiveScene().buildIndex + 1));
+    public void OnStartClick() => EventManager.Instance.Raise(new LoadSceneEvent("StartNewGame", SceneManager.GetActiveScene().buildIndex + 2));
     public void OnResumeClick() => EventManager.Instance.Raise("Resume_Game");
 	public void OnExitClick() => Application.Quit();
 	public void OnOptionsPressed() =>  HandleUIVisibility("OptionElement", true, false);
     public void OnControllerPress() => HandleUIVisibility("ControllerElement", true, false);
+
+    //New Start click,between 2 different illustrations (Main Menu Update)
+    public void OnMainMenuStartClick()
+    {
+        if (!_cachedObjects.TryGetValue("MainMenuElement", out GameObject mainMenu)) return;
+
+        var transition = mainMenu.GetComponent<MainMenuTransition>();
+
+        foreach (Transform child in mainMenu.transform)
+        {
+            var cg = child.GetComponent<CanvasGroup>();
+            if (cg == null) continue;
+
+            string n = child.name.Trim();
+            if (n == "Illustration1_Group") transition.illustration1 = cg;
+            else if (n == "Illustration2_Group") transition.illustration2 = cg;
+            else if (n == "LumoraTitle1") transition.lumoraTitle1 = cg;
+            else if (n == "LumoraTitle2") transition.lumoraTitle2 = cg;
+            else if (n == "ButtonsGroup") transition.buttonsGroup = cg;
+            else if (n == "BlackOverlay") transition.blackOverlay = cg;
+        }
+
+        Debug.Log($"ill1={transition.illustration1} ill2={transition.illustration2}");
+        transition.OnStartButtonPressed();
+    }
     public void OnConsoleValueSubmit(string _)
     {
         if (!_loadedPrefabs.Contains("ConsoleElement")) return;

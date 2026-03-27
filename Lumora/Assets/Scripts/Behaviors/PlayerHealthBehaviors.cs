@@ -6,7 +6,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
     [Header("Health Values")]
     [SerializeField]
     [Range(0, 10)]
-    int maxHealth = 3;
+    int maxHealth;
     public int CurrentHealthValue { get; set; }
     [SerializeField]
     bool godModeEnabled;
@@ -15,11 +15,21 @@ public class PlayerHealthBehaviors : MonoBehaviour
     {
         //Todo? Add health value from save on start
         CurrentHealthValue = maxHealth;
+    }
+
+    private void OnEnable()
+    {
+        GameEvents<CollectionEvent>.Subscribe(OnCollectionEvent);
         GameEvents<PlayerDamagedEvent>.Subscribe(TakeDamage);
         GameEvents<GodModeEvent>.Subscribe(EnableGodMode);
     }
+    private void OnDisable()
+    {
+        GameEvents<PlayerDamagedEvent>.Unsubscribe(TakeDamage);
+        GameEvents<GodModeEvent>.Unsubscribe(EnableGodMode);
+    }
 
-	private void EnableGodMode(GodModeEvent e)
+    private void EnableGodMode(GodModeEvent e)
 	{
         godModeEnabled = e.GodModeEnabled;
 	}
@@ -34,9 +44,18 @@ public class PlayerHealthBehaviors : MonoBehaviour
             {
                 DoGameOver();
             }
-            GameEvents<PlayerHealthChanged>.Raise(new PlayerHealthChanged("Player Health Changed", CurrentHealthValue));
+            UIHealthBar.Instance.UpdateHealthBar(CurrentHealthValue);
         }
     }
+
+
+    private void OnCollectionEvent(CollectionEvent e)
+    {
+        if (e.Type != COLLECTABLE_TYPES.HEAL_CRYSTAL)
+            return;
+        RestoreHealth(e.Count);
+    }
+
 
     public void RestoreHealth(int healingValue)     //Triggers upon health restore keybind. should probably be tied to animation event?
     {

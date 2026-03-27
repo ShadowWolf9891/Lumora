@@ -6,9 +6,9 @@
           {
             "id": 1,
             "dialogues": [
-              {"speaker": "Shift Leader", "text": "Lira! You’re being moved to the pit. Follow me.", "cameraName": "Cam2_C1_S1", "blendSpeed": 0},
-              {"speaker": "Lira", "text": "*Just put in the time and you won’t have to work the pit anymore.*", "cameraName": "Cam3_C1_S1", "blendSpeed": 0},
-              {"speaker": "Lira", "text": "At this point I think Kip is lying to me.", "cameraName": "Cam3_C1_S1", "blendSpeed": 0}
+              {"speaker": "Shift Leader", "text": "Lira! You’re being moved to the pit. Follow me.", "cameraName": "DiaCam1C1S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "*Just put in the time and you won’t have to work the pit anymore.*", "cameraName": "DiaCam2C1S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "At this point I think Kip is lying to me.", "cameraName": "DiaCam2C1S1", "blendSpeed": 0}
             ]
           },
           {
@@ -28,7 +28,7 @@
           {
             "id": 4,
             "dialogues":[
-              {"speaker": "Lira", "text": "Damn, how does the pit keep getting colder?"}
+              {"speaker": "Lira", "text": "Damn, how does the pit keep getting colder?", "cameraName": "Cam4_C1_S1", "blendSpeed": 0}
             ]
           },
           {
@@ -304,7 +304,7 @@
           {
             "id": 1,
             "dialogues":[
-              {"speaker": "Lira", "text": "Alright, it’s not that far. Lira, you can do this.", "cameraName": "Cam1_C2_S2", "blendSpeed": 5}
+              {"speaker": "Lira", "text": "Alright, it’s not that far. Lira, you can do this.", "cameraName": "Cam1_C2_S1", "blendSpeed": 0}
             ]
           },
           {
@@ -324,43 +324,51 @@
           {
             "id": 4,
             "dialogues":[
-              {"speaker": "Lira", "text": "It’s about my mom, Clara."}
+              {"speaker": "Lira", "text": "It’s about my mom, Clara.", "cameraName": "Cam5_C2_S1", "blendSpeed": 1}
             ]
           },
           {
             "id": 5,
             "dialogues":[
-              {"speaker": "Mrs. Watts", "text": "Lira!"},
-              {"speaker": "Mrs. Watts", "text": "What are you doing out? You might’ve been seen."},
-              {"speaker": "Mrs. Watts", "text": "Get inside quick dear!"}
+              {"speaker": "Mrs. Watts", "text": "Lira!", "cameraName": "Cam4_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "What are you doing out? You might’ve been seen.", "cameraName": "Cam4_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "Get inside quick dear!", "cameraName": "Cam4_C2_S1", "blendSpeed": 0}
             ]
           },
           {
             "id": 6,
             "dialogues":[
-              {"speaker": "Mrs. Watts", "text": "Now what is so urgent you couldn't wait for light?"}
+              {"speaker": "Mrs. Watts", "text": "Now what is so urgent you couldn't wait for light?", "cameraName": "Cam7_C2_S1", "blendSpeed": 0}
             ]
           },
           {
             "id": 7,
             "dialogues":[
-              {"speaker": "Lira", "text": "I found out the truth about my mom."},
-              {"speaker": "Lira", "text": "About her discovery…"},
-              {"speaker": "Mrs. Watts", "text": "Shhh! Don’t say that too loud or you’ll get us both killed."},
-              {"speaker": "Lira", "text": "…and about how she disappeared."},
-              {"speaker": "Lira", "text": "I believe that I can finish her work, and you are the only lead I had."},
-              {"speaker": "Lira", "text": "I need to find her machine."},
-              {"speaker": "Mrs. Watts", "text": "I haven’t thought about Clara in years."},
-              {"speaker": "Mrs. Watts", "text": "We used to work in the tower together until…"},
-              {"speaker": "Mrs. Watts", "text": "Well, you know what happened."},
-              {"speaker": "Lira", "text": "Do you know anything about the machine she created?"},
-              {"speaker": "Mrs. Watts", "text": "Of course! I helped her make it."},
-              {"speaker": "Mrs. Watts", "text": "She did most of the work, I just assisted in the places she struggled."},
-              {"speaker": "Lira", "text": "Do you know where it is?"},
-              {"speaker": "Mrs. Watts", "text": "No, I’m afraid not. "},
+              {"speaker": "Lira", "text": "I found out the truth about my mom.", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "About her discovery…", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "Shhh! Don’t say that too loud or you’ll get us both killed.", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "…and about how she disappeared.", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "I believe that I can finish her work, and you are the only lead I had.", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "I need to find her machine.", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "I haven’t thought about Clara in years.", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "We used to work in the tower together until…", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "Well, you know what happened.", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "Do you know anything about the machine she created?", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "Of course! I helped her make it.", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "She did most of the work, I just assisted in the places she struggled.", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "Do you know where it is?", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "No, I’m afraid not. ", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0},
               {"speaker": "Mrs. Watts", "text": "The last I heard is that someone split it up into three parts."},
-              {"speaker": "Lira", "text": "Three parts?"},
-              {"speaker": "Mrs. Watts", "text": "Hold on one second."}
+              {"speaker": "Lira", "text": "Three parts?", "cameraName": "DiaCam1_C2_S1", "blendSpeed": 0},
+              {"speaker": "Mrs. Watts", "text": "Hold on one second.", "cameraName": "DiaCam2_C2_S1", "blendSpeed": 0}
+            ]
+          },
+          {
+            "id": 63,
+            "dialogues":[
+              {"speaker": "Lira", "text": "No wonder my mom was friends with her, she's so sweet.", "cameraName": "Cam11_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "Her house kinda smells werid though.", "cameraName": "Cam11_C2_S1", "blendSpeed": 0},
+              {"speaker": "Lira", "text": "I guess I shouldn't be talking, Kips been telling me to clean my room for the past couple light cycles.", "cameraName": "Cam11_C2_S1", "blendSpeed": 0}
             ]
           },
           {

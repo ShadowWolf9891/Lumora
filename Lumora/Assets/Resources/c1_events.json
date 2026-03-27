@@ -18,6 +18,7 @@
             "id": "Chapter1_Intro",
             "eventsOnComplete" :
             [
+                "Resume_Game",
                 "Bridge_Cross_Trigger",
                 "ShiftLeader_Walking_1"
             ],
@@ -44,10 +45,25 @@
             "id" : "Bridge_Cross_Trigger",
             "parameters" : 
             {
-                "worldLocation" : "332.68, 30.86, 197.53",
-                "radius" : "1",
+                "worldLocation" : "330.59, 31.06, 199.11",
+                "radius" : "3",
                 "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Bridge_Dialogue"
+                "eventToRaiseOnTrigger" : "Bridge_Cutscene"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Bridge_Cutscene",
+            "eventsOnComplete":
+            [
+                "Bridge_Dialogue"
+            ],
+            "parameters":
+            {
+                "timelineName": "BridgeDiaTL",
+                "startTime": 0,
+                "endTime": 1.5
+               
             }
         },
         {
@@ -55,7 +71,8 @@
             "id": "Bridge_Dialogue",
             "eventsOnComplete":
             [
-                "Pit_Cold_Trigger"
+                "Pit_Cold_Trigger",
+                "Bridge_Cutscene_2"
             ],
             "parameters" :
             {
@@ -64,10 +81,26 @@
             }
         },
         {
+            "type": "BeginCutsceneEvent",
+            "id": "Bridge_Cutscene_2",
+            "eventsOnComplete":
+            [
+                "ResumeGame"
+            ],
+            "parameters":
+            {
+                "timelineName": "BridgeDiaTL",
+                "startTime": 1.9,
+                "endTime": -1
+               
+            }
+        },
+        {
             "type": "DialogueEvent",
             "id": "Crouch_Warning",
             "eventsOnComplete":
             [
+                "ResumeGame",
                 "ShiftLeader_Walking_2"
             ],
             "parameters":
@@ -114,6 +147,7 @@
             "id": "Pit_1",
             "eventsOnComplete":
             [
+                "ResumeGame",
                 "Pit_Crystal_Trigger"
             ],
             "parameters" :
@@ -241,6 +275,7 @@
             "id": "Shaw_7",
             "eventsOnComplete":
             [
+                "ResumeGame",
                 "Shaw_Leave",
                 "Pit_3"
             ],
@@ -289,6 +324,7 @@
             "id": "Pit_5",
             "eventsOnComplete":
             [
+                "ResumeGame",
                 "ShiftLeader_Leave",
                 "Pit_Crystal_Trigger_2"
             ],
@@ -330,7 +366,9 @@
         {
             "type": "DialogueEvent",
             "id": "Pit_6",
-            "eventsOnComplete": [
+            "eventsOnComplete": 
+            [
+                "ResumeGame",
                 "Lira_CollectHeatUnit_Trigger"
             ],
             "parameters": {
@@ -363,7 +401,7 @@
             "type": "LoadSceneEvent",
             "id": "Chapter1Scene1End",
             "parameters": {
-                "sceneIndex": 2
+                "sceneIndex": 3
             }
         }
     ]

@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1249237670179353019, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 6072573532894319396, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.2966318
+      objectReference: {fileID: 0}
+    - target: {fileID: 6072573532894319396, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 6072573532894319396, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.8018882
+      objectReference: {fileID: 0}
     - target: {fileID: 6072573532894319396, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
@@ -40,8 +56,40 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Crystal Prefab
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1325500136445498446, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+    - {fileID: 8316786636513626804, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+    - {fileID: 1249237670179353019, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7886938681976497904, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8677507255629910273}
   m_SourcePrefab: {fileID: 100100000, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+--- !u!1 &1840869364561906499 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7886938681976497904, guid: c7589ab9b6b657d498d5f213a3d9a000, type: 3}
+  m_PrefabInstance: {fileID: 8428517621034626483}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8677507255629910273
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840869364561906499}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

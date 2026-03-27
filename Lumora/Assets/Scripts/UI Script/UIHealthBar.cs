@@ -1,44 +1,37 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIHealthBar : MonoBehaviour
 {
-    [SerializeField]
-    int currentHealth;
-    Animator anim;
+    public static UIHealthBar Instance;
+    [SerializeField]Sprite[] healthSprites;
+    UnityEngine.UI.Image healthIcon;
     void Awake()
     {
-        
-        anim = GetComponent<Animator>();
+        if (Instance == null)
+		{
+			Instance = this;
+		}
+		else Destroy(gameObject);
+
+        healthIcon = GetComponent<UnityEngine.UI.Image>();
     }
-	private void OnEnable()
-	{
-		GameEvents<PlayerHealthChanged>.Subscribe(UpdateHealthBar);
-	}
-	private void OnDisable()
-	{
-		GameEvents<PlayerHealthChanged>.Unsubscribe(UpdateHealthBar);
-	}
 
-	private void UpdateHealthBar(PlayerHealthChanged e)
+	public void UpdateHealthBar(int currentHealth)
     {
-        currentHealth = e.CurrentHealthValue;
-
-        if (anim != null)
+        Debug.Log(currentHealth);
+        if (currentHealth >= 7) //above 7
         {
-            if (currentHealth >= 7) //above 7
-            {
-                anim.SetTrigger("GreenHealth");
-            }
-            else if (currentHealth <= 6 && currentHealth >= 4) //between 6 and 4
-            {
-                anim.SetTrigger("YellowHealth");
-            }
-            else //below 3
-            {
-                anim.SetTrigger("RedHealth");
-                Debug.Log("Health Bar is in red");
-            }
+            healthIcon.sprite = healthSprites[0];
         }
-        else Debug.Log("Health Bar Animator is null");
+        else if (currentHealth <= 6 && currentHealth >= 4) //between 6 and 4
+        {
+            healthIcon.sprite = healthSprites[1];
+        }
+        else //below 3
+        {
+            healthIcon.sprite = healthSprites[2];
+        }
     }
 }
