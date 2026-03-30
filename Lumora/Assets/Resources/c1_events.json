@@ -6,6 +6,7 @@
             "id": "ShiftLeader_Enter",
             "eventsOnComplete":
             [
+                "Resume_Game",
                 "Chapter1_Intro"
             ],
             "parameters":
@@ -72,8 +73,7 @@
             "eventsOnComplete":
             [
                 "Pit_Cold_Trigger",
-                "Bridge_Cutscene_2",
-                "Resume_Game"
+                "Bridge_Cutscene_2"
             ],
             "parameters":
             {
@@ -84,6 +84,10 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "Bridge_Cutscene_2",
+            "eventsOnComplete":
+            [
+                "Resume_Game"
+            ],
             "parameters":
             {
                 "timelineName": "BridgeDiaTL",
