@@ -61,6 +61,7 @@ public class PlayerAnimatorController : MonoBehaviour
 
 	private void Update()
     {
+        if (GameManager.Instance.CurrentGameState != GameStates.Running) return;
         //add functionality to check if player is throwing and standing still, too lazy for that rn
         if (rb.linearVelocity.magnitude <= 0.05)
         {
