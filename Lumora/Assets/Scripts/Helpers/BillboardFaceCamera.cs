@@ -10,6 +10,10 @@ public class BillboardFaceCamera : MonoBehaviour
     }
     void Update()
     {
+        if (cameraTarget != CameraManager.Instance.CurrentCamera.transform) 
+        {
+            cameraTarget = CameraManager.Instance.CurrentCamera.transform;
+        }
         Vector3 pointToLookAt = transform.position + (transform.position - cameraTarget.position);
         transform.LookAt(pointToLookAt);
     }
