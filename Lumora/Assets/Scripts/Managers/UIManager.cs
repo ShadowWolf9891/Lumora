@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
             {
                 HandleUIVisibility(obj.Key, false, false);
             }
+            HandleUIVisibility("DialogueElement", false, false);
         }
         switch (newScene.name)
         {
