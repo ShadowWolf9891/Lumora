@@ -124,7 +124,11 @@ public class TimelineManager : MonoBehaviour
 			_eventTracker.Remove(key);
 			_directorEntries.Remove(key);
 		}
-		EventManager.Instance.Raise(new ChangeGameStateEvent("End_Cutscene", GameManager.Instance.PreviousGameState));
+
+		//Must resume game from json file on cutscene end!!
+
+
+		//EventManager.Instance.Raise(new ChangeGameStateEvent("End_Cutscene", GameManager.Instance.PreviousGameState));
 	}
 
 }
