@@ -72,9 +72,10 @@
             "eventsOnComplete":
             [
                 "Pit_Cold_Trigger",
-                "Bridge_Cutscene_2"
+                "Bridge_Cutscene_2",
+                "Resume_Game"
             ],
-            "parameters" :
+            "parameters":
             {
                 "chapter":"1",
                 "scene":"2"
@@ -83,16 +84,11 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "Bridge_Cutscene_2",
-            "eventsOnComplete":
-            [
-                "ResumeGame"
-            ],
             "parameters":
             {
                 "timelineName": "BridgeDiaTL",
                 "startTime": 1.9,
                 "endTime": -1
-               
             }
         },
         {
@@ -100,7 +96,7 @@
             "id": "Crouch_Warning",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "ShiftLeader_Walking_2"
             ],
             "parameters":
