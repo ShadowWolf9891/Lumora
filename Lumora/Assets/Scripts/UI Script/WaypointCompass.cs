@@ -1,9 +1,6 @@
 using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 
 public class WaypointCompass : MonoBehaviour
@@ -20,7 +17,7 @@ public class WaypointCompass : MonoBehaviour
         cameraRef = GameObject.Find("3rd Person Camera");
         playerRef = GameObject.Find("Player");
         activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
-        waypointIcon = this.GetComponent<Image>();
+        waypointIcon = GetComponent<Image>();
         iconText = GetComponentInChildren<TextMeshProUGUI>();
     }
     void Update()
