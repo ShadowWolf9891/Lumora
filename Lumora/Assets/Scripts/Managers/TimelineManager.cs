@@ -6,12 +6,23 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
+
 public class TimelineManager : MonoBehaviour
 {
 	public static TimelineManager Instance;
 	public List<PlayableDirector> _directors { get; private set; }
 	public Dictionary<string, PlayableDirector> _eventTracker = new();
+	private Dictionary<string, DirectorEntry> _directorEntries = new();
 	private CinemachineBrain _brain;
+
+
+	// Store both the director and its optional end time
+	private struct DirectorEntry
+	{
+		public PlayableDirector Director;
+		public double? EndTime; // null means play to completion
+	}
+
 	private void Awake()
 	{
 		if (Instance == null)
@@ -37,7 +48,21 @@ public class TimelineManager : MonoBehaviour
 			d.stopped += OnDirectorStopped;
 	}
 
-
+	private void Update()
+	{
+		// Check each active director to see if it has passed its end time
+		foreach (var kvp in _directorEntries)
+		{
+			var entry = kvp.Value;
+			if (entry.EndTime.HasValue &&
+				entry.Director.state == PlayState.Playing &&
+				entry.Director.time >= entry.EndTime.Value)
+			{
+				entry.Director.time = entry.EndTime.Value;
+				entry.Director.Stop(); // triggers OnDirectorStopped
+			}
+		}
+	}
 	/// <summary>
 	/// Start a cutscene at a specific start time using the begin cutscene event. 
 	/// Use Raise("EventName") or load it from the json file.
@@ -55,24 +80,33 @@ public class TimelineManager : MonoBehaviour
 		{
 			_eventTracker.Add(e.Id, director);
 		}
-		if (director.state != PlayState.Playing) 
+		double? endTime = (e.EndTime > 0 && e.EndTime > e.StartTime) ? e.EndTime : null;
+
+		if (!_directorEntries.ContainsKey(e.Id))
+		{
+			_directorEntries.Add(e.Id, new DirectorEntry
+			{
+				Director = director,
+				EndTime = endTime
+			});
+		}
+
+		if (director.state != PlayState.Playing)
 		{
 			var timeline = director.playableAsset as TimelineAsset;
-			foreach(var track in timeline.GetOutputTracks()) 
+			foreach (var track in timeline.GetOutputTracks())
 			{
-				if(track is CinemachineTrack)
+				if (track is CinemachineTrack)
 				{
 					director.SetGenericBinding(track, _brain);
 					break;
 				}
 			}
-			
+
 			director.time = e.StartTime;
 			director.Play();
 			EventManager.Instance.Raise(new ChangeGameStateEvent("Start_Cutscene", GameStates.Cutscene));
 		}
-
-		//TODO: Implement End time to end the timeline when it reaches that point.
 	}
 	private void OnDirectorStopped(PlayableDirector director)
 	{
@@ -88,6 +122,7 @@ public class TimelineManager : MonoBehaviour
 		{
 			EventManager.Instance.MarkEventCompleted(key);
 			_eventTracker.Remove(key);
+			_directorEntries.Remove(key);
 		}
 		EventManager.Instance.Raise(new ChangeGameStateEvent("End_Cutscene", GameManager.Instance.PreviousGameState));
 	}
