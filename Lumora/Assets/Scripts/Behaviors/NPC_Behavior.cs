@@ -93,11 +93,14 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 
 	private void Update()
 	{
-		UpdateAnimator();
 		if (curStatus == PathStatus.PAUSE) return;
 
 		Move();
 	}
+    private void FixedUpdate()
+    {
+        UpdateAnimator();
+    }
 
     private void Move()
 	{
@@ -290,13 +293,14 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	}
     private void UpdateAnimator()
     {
-		if (!pathBehavior.HasPath() || agent.isStopped || curStatus != PathStatus.RESUME)
+		if (agent.isStopped)
 		{
 			animator.SetFloat("moveSpeed", 0);
 		}
 		else
 		{
 			animator.SetFloat("moveSpeed", 1);
+			animator.speed = 1;
         }
     }
 
