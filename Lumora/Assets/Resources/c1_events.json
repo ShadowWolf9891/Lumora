@@ -100,8 +100,7 @@
             "id": "Crouch_Warning",
             "eventsOnComplete":
             [
-                "Resume_Game",
-                "ShiftLeader_Walking_2"
+                "Walk_Down_Pit_Cutscene"
             ],
             "parameters":
             {
@@ -110,23 +109,15 @@
             }
         },
         {
-            "type": "PathEvent",
-            "id": "ShiftLeader_Walking_2",
+            "type":"BeginCutsceneEvent",
+            "id": "Walk_Down_Pit_Cutscene",
+            "eventsOnComplete":
+            [
+                "Pit_Cold"
+            ],
             "parameters":
             {
-                "npcName":"ShiftLeader",
-                "newStatus": 3
-            }
-        },
-        {
-            "type" : "SpawnTriggerEvent",
-            "id" : "Pit_Cold_Trigger",
-            "parameters" : 
-            {
-                "worldLocation" : "420.29, 0.51, 330",
-                "radius" : "2",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Pit_Cold"
+                "timelineName": "WalkToPitTL"
             }
         },
         {
@@ -328,6 +319,7 @@
             [
                 "Resume_Game",
                 "ShiftLeader_Leave",
+                "SL_PathTypeChange",
                 "Pit_Crystal_Trigger_2"
             ],
             "parameters" :
@@ -351,7 +343,7 @@
             "parameters":
             {
                 "npcName" : "ShiftLeader",
-                "newStatus" : 0
+                "newStatus" : 3
             }
         },
          {
