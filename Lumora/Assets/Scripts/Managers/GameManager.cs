@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Scene = UnityEngine.SceneManagement.Scene;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,11 +26,6 @@ public class GameManager : MonoBehaviour
 		}
 		else Destroy(gameObject);
 	}
-	private void Start()
-	{
-		// Handle case where scene was loaded directly in editor
-		OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-	}
 	private void OnEnable()
 	{
 		GameEvents<ToggleVisibilityEvent>.Subscribe(ToggleVisibility);
@@ -37,7 +33,6 @@ public class GameManager : MonoBehaviour
 		GameEvents<DeleteSaveEvent>.Subscribe(DeleteSave);
 		GameEvents<EnableSaveEvent>.Subscribe(EnableSaving);
 		GameEvents<LoadSceneEvent>.Subscribe(LoadScene);
-		SceneManager.sceneLoaded += OnSceneLoaded;
 		SceneManager.sceneUnloaded += OnSceneUnloaded;
 	}
 
@@ -48,18 +43,11 @@ public class GameManager : MonoBehaviour
 		GameEvents<DeleteSaveEvent>.Unsubscribe(DeleteSave);
 		GameEvents<EnableSaveEvent>.Unsubscribe(EnableSaving);
 		GameEvents<LoadSceneEvent>.Unsubscribe(LoadScene);
-		SceneManager.sceneLoaded -= OnSceneLoaded;
 		SceneManager.sceneUnloaded -= OnSceneUnloaded;
 	}
 	private async void LoadScene(LoadSceneEvent e)
 	{
 		await SceneManager.LoadSceneAsync(e.SceneIndex);
-	}
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-	{
-		if (!SaveSystem.HasSaved && GameConfig.Mode == GameMode.Production) SaveAll();
-		LoadAll(scene.buildIndex);
-		_loaded = true;
 	}
 	private void OnSceneUnloaded(Scene scene)
 	{
@@ -68,6 +56,11 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
+		if (!_loaded) {
+			if (!SaveSystem.HasSaved && GameConfig.Mode == GameMode.Production) SaveAll();
+			LoadAll(SceneManager.GetActiveScene().buildIndex);
+			_loaded = true;
+		}
 		if(_loaded) EventManager.Instance.HandleEvents(); //Handle events each frame if there are any.
 	}
 
