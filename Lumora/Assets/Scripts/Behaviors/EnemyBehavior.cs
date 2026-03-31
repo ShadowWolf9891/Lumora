@@ -20,6 +20,8 @@ public class EnemyBehavior : MonoBehaviour
 	[SerializeField]
 	float alertRange;
 	[SerializeField]
+	float lockedOnRange;
+	[SerializeField]
 	float angleOfVision = 30f;
 	[SerializeField]
 	float attackRange = 1f;
@@ -35,8 +37,9 @@ public class EnemyBehavior : MonoBehaviour
 	[SerializeField] float searchRadius = 10f;
 	[SerializeField] int numberOfSearchPoints = 3;
 	[SerializeField] float timeAtEachPoint = 1f;
-	[SerializeField] float lookRotationSpeed = 90f;   // degrees per second
+	[SerializeField] float lookRotationSpeed = 80f;   // degrees per second. Base of 10 is added to make sure it is above 0 when using look randomness.
 	[SerializeField] float[] lookAngles = { -45f, 45f, -20f }; // angles to sweep through
+	[SerializeField] float lookRandomness = 20f; //Amount of randomness to apply for each angle. Affects speed and angle.
 
 
 	[Header("Alerted Properties")]
@@ -69,10 +72,13 @@ public class EnemyBehavior : MonoBehaviour
 	string bb_IsAlerted = "IsAlerted";
 	string bb_LostPlayer = "LostPlayer";
 
-	private bool isLooking = false;
+	private enum LookState {NOTHING, LOOKING, DONE};
+	private LookState curLookState = LookState.NOTHING;
 	private Quaternion rotationBeforeLook; // Store as a field, not a local
 	private float previousAngularSpeed;
 	private Coroutine lookCoroutine;       // Track the coroutine so you can stop it reliably
+
+	private Vector3 startPosition;
 
 	//[SerializeField] GameObject endScreen;
 	EnemyAnimatorController animController;
@@ -86,6 +92,7 @@ public class EnemyBehavior : MonoBehaviour
 		animController = GetComponentInChildren<EnemyAnimatorController>();
 		pathBehavior = GetComponent<PathObjectBehavior>();
 		agent.SetDestination(pathBehavior.RestartPath());
+		startPosition = transform.position;
 
 		bb = ScriptableObject.CreateInstance<BTBlackboard>();
 		bt = DeepCloneBehaviorTree(btAsset);
@@ -144,7 +151,7 @@ public class EnemyBehavior : MonoBehaviour
 			}
 		}
 
-		if (distance <= chasingRange && canSee)
+		if ((distance <= chasingRange && canSee) || distance <= lockedOnRange)
 		{
 			if (!bb.Get<bool>(bb_CanSeePlayer)) bb.Set<bool>(bb_CanSeePlayer, true);
 		}
@@ -170,16 +177,41 @@ public class EnemyBehavior : MonoBehaviour
 		{
 			curState = AlertStates.IDLE;
 			OnChangeState();
+			StopLooking();
 		}
-		if (!pathBehavior.HasPath()) return;
-
-		if (pathBehavior.IsAtPoint(transform.position))
+		if (pathBehavior.HasPath())
 		{
-			waitTimer += Time.deltaTime;
-			if (waitTimer >= timeAtEachPatrolPoint)
+			if (pathBehavior.IsAtPoint(transform.position))
 			{
-				agent.SetDestination(pathBehavior.GetNextPoint());
-				waitTimer = 0f;
+				waitTimer += Time.deltaTime;
+				if (curLookState == LookState.NOTHING)
+				{
+					lookCoroutine = StartCoroutine(LookAroundAtPoint());
+				}
+				else if (curLookState == LookState.DONE)
+				{
+					if (waitTimer >= timeAtEachPatrolPoint) //Wait an amount of time alerted
+					{
+						waitTimer = 0f;
+						agent.SetDestination(pathBehavior.GetNextPoint());
+						curLookState = LookState.NOTHING;
+					}
+				}
+			}
+		}
+		else
+		{
+			if (curLookState == LookState.NOTHING)
+			{
+				lookCoroutine = StartCoroutine(LookAroundAtPoint());
+			}
+			else if (curLookState == LookState.DONE)
+			{
+				curLookState = LookState.NOTHING;
+			}
+			if(!agent.hasPath && Vector3.Distance(transform.position, startPosition) > agent.stoppingDistance)
+			{
+				agent.SetDestination(startPosition);
 			}
 		}
 	}
@@ -191,15 +223,23 @@ public class EnemyBehavior : MonoBehaviour
 			curState = AlertStates.ALERT;
 			OnChangeState();
 		}
-		//TODO: Have enemy look around
-		waitTimer += Time.deltaTime;
-		if (waitTimer >= alertedTime) //Wait an amount of time alerted
-		{
-			waitTimer = 0f;
-			agent.SetDestination(pathBehavior.GetNextPoint());
 
-			bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
-        }
+		waitTimer += Time.deltaTime;
+
+		if (curLookState == LookState.NOTHING)
+		{
+			lookCoroutine = StartCoroutine(LookAroundAtPoint());
+		}
+		else if (curLookState == LookState.DONE)
+		{
+			if (waitTimer >= alertedTime) //Wait an amount of time alerted
+			{
+				waitTimer = 0f;
+				if(pathBehavior.HasPath()) agent.SetDestination(pathBehavior.GetNextPoint());
+				curLookState = LookState.NOTHING;
+				bb.Set<bool>(bb_IsAlerted, false); //Stop being alerted
+			}
+		}
     }
 
 	public void Searching()
@@ -228,22 +268,27 @@ public class EnemyBehavior : MonoBehaviour
 
 		if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
 		{
-			if (!isLooking) lookCoroutine = StartCoroutine(LookAroundAtPoint());
-
 			waitTimer += Time.deltaTime;
-			if (waitTimer >= timeAtEachPoint)
+			if (curLookState == LookState.NOTHING) lookCoroutine = StartCoroutine(LookAroundAtPoint());
+			else if (curLookState == LookState.DONE)
 			{
-				waitTimer = 0f;
-				searchPoints.Remove(GetClosestPoint(transform.position, searchPoints));
-				if (searchPoints.Count > 0)
+				if (waitTimer >= timeAtEachPoint)
 				{
-					agent.SetDestination(GetClosestPoint(lastKnownPlayerLocation, searchPoints));
-				}
-				else
-				{
-					bb.Set<bool>(bb_LostPlayer, false);
+					waitTimer = 0f;
+					searchPoints.Remove(GetClosestPoint(transform.position, searchPoints));
+					curLookState = LookState.NOTHING;
+					if (searchPoints.Count > 0)
+					{
+						agent.SetDestination(GetClosestPoint(lastKnownPlayerLocation, searchPoints));
+					}
+					else
+					{
+						bb.Set<bool>(bb_LostPlayer, false);
+					}
 				}
 			}
+			
+			
 		}
 	}
 
@@ -256,6 +301,7 @@ public class EnemyBehavior : MonoBehaviour
 			curState = AlertStates.CHASING;
 			GameEvents<PlayerSpottedEvent>.Raise(new PlayerSpottedEvent("PlayerSpottedEvent", this.gameObject));
 			OnChangeState();
+			StopLooking();
 		}
 
 		Vector3 predictedPos = playerRef.transform.position + playerRef.GetComponent<Rigidbody>().linearVelocity;
@@ -285,7 +331,7 @@ public class EnemyBehavior : MonoBehaviour
 
 	private void OnChangeState()
 	{
-		StopLooking();
+		//StopLooking();
 		alertController.ChangeImage(curState);
 		searchPoints.Clear();
 	}
@@ -396,21 +442,23 @@ public class EnemyBehavior : MonoBehaviour
 	}
 	private IEnumerator LookAroundAtPoint()
 	{
-		isLooking = true;
+		curLookState = LookState.LOOKING;
 		previousAngularSpeed = agent.angularSpeed;
 		agent.angularSpeed = 0f;
 		rotationBeforeLook = transform.rotation; // Capture once into the field
 
 		foreach (float angle in lookAngles)
 		{
-			Quaternion targetRotation = rotationBeforeLook * Quaternion.Euler(0, angle, 0);
+			float rAngle = Random.Range(angle - lookRandomness, angle + lookRandomness);
+			float rRotSpeed = Random.Range(lookRotationSpeed - lookRandomness + 10, lookRotationSpeed + lookRandomness + 10);
+			Quaternion targetRotation = rotationBeforeLook * Quaternion.Euler(0, rAngle, 0);
 			while (Quaternion.Angle(transform.rotation, targetRotation) > 0.5f)
 			{
 				if (!agent.isStopped)
 					transform.rotation = Quaternion.RotateTowards(
 						transform.rotation,
 						targetRotation,
-						lookRotationSpeed * Time.deltaTime
+						rRotSpeed * Time.deltaTime
 					);
 				yield return null;
 			}
@@ -427,11 +475,11 @@ public class EnemyBehavior : MonoBehaviour
 			StopCoroutine(lookCoroutine);
 			lookCoroutine = null;
 		}
-		if (isLooking)
+		if (curLookState == LookState.LOOKING)
 		{
 			transform.rotation = rotationBeforeLook; // Snap back on interruption
 			agent.angularSpeed = previousAngularSpeed; // Restore agent control
-			isLooking = false;
+			curLookState = LookState.DONE;
 		}
 	}
 
@@ -450,7 +498,7 @@ public class EnemyBehavior : MonoBehaviour
 
 		transform.rotation = rotationBeforeLook;
 		agent.angularSpeed = previousAngularSpeed;
-		isLooking = false;
+		curLookState = LookState.DONE;
 	}
 	/// <summary>
 	/// Fix enemies all using the same scriptable object assets.

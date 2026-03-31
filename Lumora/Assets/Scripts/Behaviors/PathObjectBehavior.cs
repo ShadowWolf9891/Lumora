@@ -28,7 +28,8 @@ public class PathObjectBehavior : MonoBehaviour
     public Vector3 RestartPath()
     {
         if(paths.Count == 0) LoadPath();
-        currentPath = 0;
+		if (!HasPath()) return transform.position;
+		currentPath = 0;
         currentPoint = 0;
         ErrorCheck();
 		return paths[0].GetPointWorld(0);
@@ -40,6 +41,7 @@ public class PathObjectBehavior : MonoBehaviour
     public Vector3 GetNextPoint()
     {
 		if (paths.Count == 0) LoadPath();
+		if (!HasPath()) return transform.position;
 		ErrorCheck();
         if(currentPoint >= paths[currentPath].points.Count - 1)
         {
@@ -58,6 +60,7 @@ public class PathObjectBehavior : MonoBehaviour
     public bool IsDonePath(Vector3 currentLocation, float threshold = 1f)
     {
 		if (paths.Count == 0) LoadPath();
+        if (!HasPath()) return true;
 		if (currentPoint < paths[currentPath].points.Count - 1 || paths[currentPath].loop) return false;
         
         return IsAtPoint(currentLocation, threshold);
@@ -71,6 +74,7 @@ public class PathObjectBehavior : MonoBehaviour
     public bool IsAtPoint(Vector3 currentLocation, float threshold = 1f) 
     {
 		if (paths.Count == 0) LoadPath();
+		if (!HasPath()) return Vector3.Distance(currentLocation, transform.position) < threshold;
 		return Mathf.Abs((currentLocation - paths[currentPath].GetPointWorld(currentPoint)).magnitude) < threshold;
 	}
     /// <summary>
@@ -90,7 +94,8 @@ public class PathObjectBehavior : MonoBehaviour
 	public Vector3 GoToNextPath()
     {
 		if (paths.Count == 0) LoadPath();
-        if (paths.Count > currentPath + 1) currentPath++;
+		if (!HasPath()) return transform.position;
+		if (paths.Count > currentPath + 1) currentPath++;
         return GoToPath(currentPath);
     }
 	/// <summary>
@@ -100,6 +105,7 @@ public class PathObjectBehavior : MonoBehaviour
 	public Vector3 GoToPreviousPath()
 	{
 		if (paths.Count == 0) LoadPath();
+		if (!HasPath()) return transform.position;
 		if (currentPath > 0) currentPath--;
 		return GoToPath(currentPath);
 	}
@@ -112,6 +118,7 @@ public class PathObjectBehavior : MonoBehaviour
 	public Vector3 GoToPath(int pathIndex, int pointIndex = 0)
     {
 		if (paths.Count == 0) LoadPath();
+        if (!HasPath()) return transform.position; 
 		currentPath = pathIndex;
         currentPoint = pointIndex;
         ErrorCheck();
