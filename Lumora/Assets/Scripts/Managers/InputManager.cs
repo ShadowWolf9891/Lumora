@@ -102,6 +102,10 @@ public class InputManager : MonoBehaviour
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throw", PlayerInputActionType.Throw, true));
 			}
+			if (pauseAction.WasPressedThisFrame())
+			{
+				EventManager.Instance.Raise("Pause_Game");
+			}
 		}
 	}
 	
