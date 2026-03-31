@@ -147,7 +147,7 @@
             "id": "Pit_1",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Pit_Crystal_Trigger"
             ],
             "parameters" :
@@ -185,6 +185,7 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
+                "Resume_Game",
                 "Shaw_Enter"
             ],
             "parameters" :
@@ -198,6 +199,7 @@
             "id": "Shaw_Enter",
             "eventsOnComplete":
             [
+                "Resume_Game",
                 "Shaw_2"
             ],
             "parameters":
@@ -275,7 +277,7 @@
             "id": "Shaw_7",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Shaw_Leave",
                 "Pit_3"
             ],
@@ -324,7 +326,7 @@
             "id": "Pit_5",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "ShiftLeader_Leave",
                 "Pit_Crystal_Trigger_2"
             ],
@@ -368,7 +370,7 @@
             "id": "Pit_6",
             "eventsOnComplete": 
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Lira_CollectHeatUnit_Trigger"
             ],
             "parameters": {
