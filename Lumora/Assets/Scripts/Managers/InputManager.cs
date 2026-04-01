@@ -60,6 +60,13 @@ public class InputManager : MonoBehaviour
 				//GameContext.Instance.RaiseNextDialogueLine();
 			}
 		}
+		else if (GameManager.Instance.CurrentGameState == GameStates.Paused)
+		{
+			if (pauseAction.WasPressedThisFrame())
+			{
+				EventManager.Instance.Raise("Resume_Game");
+			}
+		}
 		else if(GameManager.Instance.CurrentGameState == GameStates.Running)
 		{
 			//Actions that cannot be done while paused...
@@ -102,7 +109,12 @@ public class InputManager : MonoBehaviour
 			{
 				GameEvents<PlayerInputEvent>.Raise(new PlayerInputEvent("throw", PlayerInputActionType.Throw, true));
 			}
+			if (pauseAction.WasPressedThisFrame())
+			{
+				EventManager.Instance.Raise("Pause_Game");
+			}
 		}
+		
 	}
 	
 }

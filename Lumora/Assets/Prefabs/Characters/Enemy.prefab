@@ -258,18 +258,21 @@ MonoBehaviour:
   btAsset: {fileID: 11400000, guid: 4e8f58628c0bf8548a03f67f5472280a, type: 2}
   chasingRange: 10
   alertRange: 20
-  angleOfVision: 160
+  lockedOnRange: 2
+  angleOfVision: 90
   attackRange: 1.5
   eyeLocation: {x: 0, y: 1.6, z: 0}
   timeAtEachPatrolPoint: 2
   searchRadius: 10
   numberOfSearchPoints: 3
   timeAtEachPoint: 1
-  lookRotationSpeed: 90
+  lookRotationSpeed: 80
   lookAngles:
-  - -90
-  - 90
+  - -45
+  - 45
   - -20
+  - 0
+  lookRandomness: 20
   alertedTime: 2
   attackDamage: 4
   attackLockoutTime: 1

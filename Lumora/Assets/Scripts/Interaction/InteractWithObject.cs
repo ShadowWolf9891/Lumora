@@ -100,9 +100,5 @@ public class InteractWithObject : MonoBehaviour
         {
 
         }
-        else
-        {
-            Debug.LogWarning("OnTriggerEnter running on InteractWithObject.cs, but encountered error on Closest Interactable scan. Consider re-setting interact range variable");
-        }
     }
 }

@@ -6,6 +6,7 @@
             "id": "ShiftLeader_Enter",
             "eventsOnComplete":
             [
+                "Resume_Game",
                 "Chapter1_Intro"
             ],
             "parameters":
@@ -74,7 +75,7 @@
                 "Pit_Cold_Trigger",
                 "Bridge_Cutscene_2"
             ],
-            "parameters" :
+            "parameters":
             {
                 "chapter":"1",
                 "scene":"2"
@@ -85,14 +86,13 @@
             "id": "Bridge_Cutscene_2",
             "eventsOnComplete":
             [
-                "ResumeGame"
+                "Resume_Game"
             ],
             "parameters":
             {
                 "timelineName": "BridgeDiaTL",
                 "startTime": 1.9,
                 "endTime": -1
-               
             }
         },
         {
@@ -100,8 +100,7 @@
             "id": "Crouch_Warning",
             "eventsOnComplete":
             [
-                "ResumeGame",
-                "ShiftLeader_Walking_2"
+                "Walk_Down_Pit_Cutscene"
             ],
             "parameters":
             {
@@ -110,23 +109,15 @@
             }
         },
         {
-            "type": "PathEvent",
-            "id": "ShiftLeader_Walking_2",
+            "type":"BeginCutsceneEvent",
+            "id": "Walk_Down_Pit_Cutscene",
+            "eventsOnComplete":
+            [
+                "Pit_Cold"
+            ],
             "parameters":
             {
-                "npcName":"ShiftLeader",
-                "newStatus": 3
-            }
-        },
-        {
-            "type" : "SpawnTriggerEvent",
-            "id" : "Pit_Cold_Trigger",
-            "parameters" : 
-            {
-                "worldLocation" : "420.29, 0.51, 330",
-                "radius" : "2",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "Pit_Cold"
+                "timelineName": "WalkToPitTL"
             }
         },
         {
@@ -147,7 +138,7 @@
             "id": "Pit_1",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Pit_Crystal_Trigger"
             ],
             "parameters" :
@@ -185,6 +176,7 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
+                "Resume_Game",
                 "Shaw_Enter"
             ],
             "parameters" :
@@ -198,6 +190,7 @@
             "id": "Shaw_Enter",
             "eventsOnComplete":
             [
+                "Resume_Game",
                 "Shaw_2"
             ],
             "parameters":
@@ -275,7 +268,7 @@
             "id": "Shaw_7",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Shaw_Leave",
                 "Pit_3"
             ],
@@ -324,8 +317,9 @@
             "id": "Pit_5",
             "eventsOnComplete":
             [
-                "ResumeGame",
+                "Resume_Game",
                 "ShiftLeader_Leave",
+                "SL_PathTypeChange",
                 "Pit_Crystal_Trigger_2"
             ],
             "parameters" :
@@ -349,7 +343,7 @@
             "parameters":
             {
                 "npcName" : "ShiftLeader",
-                "newStatus" : 0
+                "newStatus" : 3
             }
         },
          {
@@ -368,7 +362,7 @@
             "id": "Pit_6",
             "eventsOnComplete": 
             [
-                "ResumeGame",
+                "Resume_Game",
                 "Lira_CollectHeatUnit_Trigger"
             ],
             "parameters": {
