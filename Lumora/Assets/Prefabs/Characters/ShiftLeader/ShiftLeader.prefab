@@ -96,6 +96,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7bb23292213aa454e967566fc8b455c3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 387878022488835085}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7bb23292213aa454e967566fc8b455c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5382958590819744773}
   m_SourcePrefab: {fileID: 100100000, guid: 7bb23292213aa454e967566fc8b455c3, type: 3}
 --- !u!1 &7024452847452549706 stripped
 GameObject:
@@ -179,3 +182,16 @@ MonoBehaviour:
   followDistance: 10
   curTarget: {fileID: 0}
   npcId: b2b039a6-8289-4ae5-8a87-908152733510
+--- !u!114 &5382958590819744773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7024452847452549706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb66c9b55742bb4daaf2531deaaf616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCAnimationBrain
+  animType: 1

@@ -14,12 +14,10 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	NavMeshAgent agent;
 	Vector3 previousVelocity;
 	string eventID;
-	Animator animator;
 	void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
 		pathBehavior = GetComponent<PathObjectBehavior>();
-		animator = GetComponent<Animator>();
     }
 	private void OnEnable()
 	{
@@ -97,11 +95,6 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 
 		Move();
 	}
-    private void FixedUpdate()
-    {
-        UpdateAnimator();
-    }
-
     private void Move()
 	{
 		switch(curWalkType)
@@ -291,18 +284,6 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 			eventID = saved.ActiveEventID;
 		}
 	}
-    private void UpdateAnimator()
-    {
-		if (agent.isStopped)
-		{
-			animator.SetFloat("moveSpeed", 0);
-		}
-		else
-		{
-			animator.SetFloat("moveSpeed", 1);
-			animator.speed = 1;
-        }
-    }
 
     //Generating Unique id for saving in the editor
 

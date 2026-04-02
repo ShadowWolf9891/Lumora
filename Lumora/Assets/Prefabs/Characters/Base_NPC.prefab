@@ -573,6 +573,8 @@ GameObject:
   - component: {fileID: -9183556237426872174}
   - component: {fileID: -4030526836377877179}
   - component: {fileID: 1704879980263910774}
+  - component: {fileID: -184798267811487771}
+  - component: {fileID: -2157823994305777501}
   m_Layer: 0
   m_Name: Base_NPC
   m_TagString: Untagged
@@ -633,6 +635,8 @@ MonoBehaviour:
   curStatus: 1
   curWalkType: 0
   followDistance: 5
+  curTarget: {fileID: 0}
+  npcId: f68b792c-c8f5-4921-a6f7-1532307a44ce
 --- !u!114 &1704879980263910774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,3 +650,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PathObjectBehavior
   pathObjects: []
+--- !u!95 &-184798267811487771
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5560529617613532649}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-2157823994305777501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5560529617613532649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb66c9b55742bb4daaf2531deaaf616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCAnimationBrain
