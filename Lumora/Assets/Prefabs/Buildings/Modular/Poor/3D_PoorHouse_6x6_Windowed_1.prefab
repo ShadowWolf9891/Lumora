@@ -33,8 +33,62 @@ Transform:
   - {fileID: 6823809383680641152}
   - {fileID: 6081759001958633559}
   - {fileID: 8631587980167394342}
+  - {fileID: 1889545474248805540}
   m_Father: {fileID: 4905022645744969662}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1077607973515246793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1889545474248805540}
+  - component: {fileID: 6242003331214611868}
+  m_Layer: 0
+  m_Name: Floors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &1889545474248805540
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077607973515246793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4679544374784031878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6242003331214611868
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077607973515246793}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6.010068, y: 0.1, z: 6.0699835}
+  m_Center: {x: 0.06446457, y: 0.05, z: -0.13517809}
 --- !u!1 &3863982884263862197
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,10 +98,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8631587980167394342}
-  - component: {fileID: 7660655210814948645}
   - component: {fileID: 9033701304758094684}
-  m_Layer: 0
-  m_Name: Roof/Floors
+  m_Layer: 14
+  m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,27 +121,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4679544374784031878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7660655210814948645
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3863982884263862197}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 6.010068, y: 0.1, z: 6.0699835}
-  m_Center: {x: 0.06446457, y: 0.05, z: -0.13517809}
 --- !u!65 &9033701304758094684
 BoxCollider:
   m_ObjectHideFlags: 0
