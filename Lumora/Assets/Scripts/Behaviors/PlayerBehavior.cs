@@ -63,6 +63,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	Rigidbody rb;
 	CapsuleCollider playerCollider;
 	PathObjectBehavior pathObjectBehavior;
+	InteractWithObject interactComponent;
 	private Vector3 lastWallNormal = Vector3.zero;
 	private CinemachineCamera thirdPersonCam, throwCam;
 	private Vector3 curThrowDirection;
@@ -112,6 +113,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
         playerCollider = GetComponent<CapsuleCollider>();
 		pathObjectBehavior = TryGetComponent(out PathObjectBehavior pathObj) ? pathObj : null;
 		playerHealthBehaviors = TryGetComponent(out PlayerHealthBehaviors pHealth) ? pHealth : null;
+		interactComponent = GetComponentInChildren<InteractWithObject>();
 	}
 
     void OnDestroy()
@@ -185,9 +187,9 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	}
 	private void Interact()
 	{
-		//If something to interact with
-
-		//else
+		//If there is a ladder or interactable in range, return. Ideally the interactable would be handled here instead of ignoring it.
+		if (interactComponent.objectInRange) return;
+		
 
 		//Stop hiding if you were hiding previously
 		if (isHiding)

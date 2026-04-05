@@ -12,7 +12,7 @@ public class InteractWithObject : MonoBehaviour
     [SerializeField] LayerMask interactableLayer;
     Collider[] sphereResults = new Collider[16];
     //[SerializeField] TextMeshProUGUI interactionUI;
-    bool objectInRange;
+    public bool objectInRange;
 
     private void Start()
     {
@@ -74,7 +74,7 @@ public class InteractWithObject : MonoBehaviour
 
         //NOTE: this returns a string, so we can set some UI to the interaction prompt here
         currentInteractable.GetInteractionPrompt();
-        Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
+        //Debug.Log($"InteractWithObject - TRUE, current interactable: {currentInteractable}");
         return true;
     }
 
