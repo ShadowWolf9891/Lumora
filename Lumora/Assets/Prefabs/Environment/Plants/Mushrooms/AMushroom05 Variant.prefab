@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 0.44722936, y: 0.4472294, z: 0.4472294}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4551299770531872052}
+  m_Father: {fileID: 4551299770531842398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &8657428334243341479
 Light:
@@ -248,6 +248,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2037037586940478698, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
+      propertyPath: m_Size
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 140008, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
       propertyPath: m_Name
       value: AMushroom05 Variant
@@ -383,13 +387,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 490824, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
-      insertIndex: 0
+    - targetCorrespondingSourceObject: {fileID: 461090, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1700918667659871785}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
---- !u!4 &4551299770531872052 stripped
+--- !u!4 &4551299770531842398 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 490824, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 461090, guid: 2d3d529b7f9a1d34f8b6787de384353a, type: 3}
   m_PrefabInstance: {fileID: 4551299770531512444}
   m_PrefabAsset: {fileID: 0}

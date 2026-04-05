@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 461090}
+  - component: {fileID: -2037037586940478698}
   m_Layer: 11
   m_Name: AMushroom05
   m_TagString: Untagged
@@ -32,6 +33,25 @@ Transform:
   - {fileID: 420158}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &-2037037586940478698
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140008}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.3836403, y: 3.0379057, z: 0.31613398}
+  m_Size: 13.835962
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.39706066
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2328008}
+  m_Enabled: 1
 --- !u!1001 &8340457475629460478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -119,5 +139,10 @@ PrefabInstance:
 --- !u!4 &420158 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8340457475629335232, guid: 4bacca0494859d74bb1ed3bca65cd0f9, type: 3}
+  m_PrefabInstance: {fileID: 8340457475629460478}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &2328008 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8340457475627462198, guid: 4bacca0494859d74bb1ed3bca65cd0f9, type: 3}
   m_PrefabInstance: {fileID: 8340457475629460478}
   m_PrefabAsset: {fileID: 0}
