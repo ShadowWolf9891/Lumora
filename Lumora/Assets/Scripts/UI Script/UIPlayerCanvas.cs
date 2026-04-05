@@ -7,6 +7,11 @@ public class UIPlayerCanvas : MonoBehaviour
 {    
     public static UIPlayerCanvas Instance;
     
+    [Header("Health Bar")]
+    [SerializeField]Sprite[] healthSprites;
+    [SerializeField]Image healthIcon;
+
+
     [Header("Control UI")]
     public Transform controllerLayoutGroup;
 
@@ -51,6 +56,22 @@ public class UIPlayerCanvas : MonoBehaviour
     {
         ClearUI();
         activeWaypoint = null;
+    }
+    public void UpdateHealthBar(int currentHealth)
+    {
+        Debug.Log(currentHealth);
+        if (currentHealth >= 7) //above 7
+        {
+            healthIcon.sprite = healthSprites[0];
+        }
+        else if (currentHealth <= 6 && currentHealth >= 4) //between 6 and 4
+        {
+            healthIcon.sprite = healthSprites[1];
+        }
+        else //below 3
+        {
+            healthIcon.sprite = healthSprites[2];
+        }
     }
     public void RefreshUI()
     {
