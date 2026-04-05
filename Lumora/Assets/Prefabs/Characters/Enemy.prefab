@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 1185649223247278612}
   - component: {fileID: 949569845706991502}
   - component: {fileID: 6195882465414775023}
+  - component: {fileID: 8697196399314483105}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -311,6 +312,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PathObjectBehavior
   pathObjects: []
+--- !u!205 &8697196399314483105
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5516940199162863807}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.000048458576, y: 0.8667939, z: 0.011433974}
+  m_Size: 20
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.39706066
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2085018520746268452}
+    - renderer: {fileID: 6895334096568925625}
+  m_Enabled: 1
 --- !u!1001 &1116879952572901786
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -748,5 +769,15 @@ MonoBehaviour:
 --- !u!4 &645506901087456881 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
+  m_PrefabInstance: {fileID: 1116879952572901786}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &2085018520746268452 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7813590141776298306, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
+  m_PrefabInstance: {fileID: 1116879952572901786}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6895334096568925625 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5822821947120931875, guid: 3c4dfcd9b7873134caac2593ed809ef2, type: 3}
   m_PrefabInstance: {fileID: 1116879952572901786}
   m_PrefabAsset: {fileID: 0}
