@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4185666238712428112}
+  - component: {fileID: 8931326907176739291}
   m_Layer: 0
   m_Name: 3D_LirasHouse
   m_TagString: Untagged
@@ -33,6 +34,27 @@ Transform:
   - {fileID: 3877459845126359734}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &8931326907176739291
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278931145057244483}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.7369199, y: 4.837618, z: 0.17499161}
+  m_Size: 40
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.39706066
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 6038072876850196777}
+    - renderer: {fileID: 3501018688313065845}
+    - renderer: {fileID: 3622958146403359859}
+  m_Enabled: 1
 --- !u!1 &859359758860553313
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,8 +739,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b1dd1c157c35c241add929b944b7fe0, type: 3}
+--- !u!23 &3501018688313065845 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 203547780000771112, guid: 6b1dd1c157c35c241add929b944b7fe0, type: 3}
+  m_PrefabInstance: {fileID: 3622363400214179165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3622958146403359859 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -9222688762631376594, guid: 6b1dd1c157c35c241add929b944b7fe0, type: 3}
+  m_PrefabInstance: {fileID: 3622363400214179165}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3877459845126359734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6b1dd1c157c35c241add929b944b7fe0, type: 3}
+  m_PrefabInstance: {fileID: 3622363400214179165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6038072876850196777 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -2193619051249935244, guid: 6b1dd1c157c35c241add929b944b7fe0, type: 3}
   m_PrefabInstance: {fileID: 3622363400214179165}
   m_PrefabAsset: {fileID: 0}
