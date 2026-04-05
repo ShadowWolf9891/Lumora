@@ -638,11 +638,12 @@ MonoBehaviour:
   - {fileID: 8285132899259237459, guid: e95f245229a648043a7facb97fcdbe2a, type: 3}
   - {fileID: 509615656538730837, guid: 4008a66aa02dcde44ba6c78ac11aeef1, type: 3}
   - {fileID: 247278050797885893, guid: a78628a05784c4a4daa73a8304b59aff, type: 3}
+  - {fileID: 339299521196606726, guid: c3dd8023b16e90643b31eef49b8d9fd4, type: 3}
   triggerControls:
-  - prefab: {fileID: 339299521196606726, guid: c3dd8023b16e90643b31eef49b8d9fd4, type: 3}
+  - prefab: {fileID: 247278050797885893, guid: 241ce7b50ba68c846ba72db8cfba53d8, type: 3}
     layer:
       serializedVersion: 2
-      m_Bits: 2056
+      m_Bits: 2048
   eventControls:
   - {fileID: 8285132899259237459, guid: dfc6a316a93bf294a955d3df643b1a32, type: 3}
   currentUI: []
@@ -1791,7 +1792,6 @@ GameObject:
   - component: {fileID: 8612160353078151708}
   - component: {fileID: 6743629709445535654}
   - component: {fileID: 6682551732354773792}
-  - component: {fileID: 339239585868756317}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1856,22 +1856,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &339239585868756317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7882475875486700885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f42c0f1560920ca45b8657a77c97cd51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIHealthBar
-  healthSprites:
-  - {fileID: 21300000, guid: 643f5de2b48dc554ab774b3fe6e9960f, type: 3}
-  - {fileID: 21300000, guid: 710a550f66a63c64e8a3e6d9d830de5e, type: 3}
-  - {fileID: 21300000, guid: b589f44358ae59645a0a3759d798fdec, type: 3}
 --- !u!1 &8338954607890447119
 GameObject:
   m_ObjectHideFlags: 0

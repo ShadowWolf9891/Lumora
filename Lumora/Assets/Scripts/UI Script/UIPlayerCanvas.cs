@@ -47,6 +47,10 @@ public class UIPlayerCanvas : MonoBehaviour
         activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
         iconText = GameObject.Find("T_Waypoint").GetComponentInChildren<TextMeshProUGUI>();
     }
+    void Update()
+    {
+        UpdateCompass();
+    }
     void OnEnable()
     {
         RefreshUI();
@@ -83,16 +87,17 @@ public class UIPlayerCanvas : MonoBehaviour
         if (GameManager.Instance.CurrentGameState == GameStates.Running)
         {
             foreach (var control in runStateControls) AddControl(control);
-        }
 
-        //player collider dependant icons
-        foreach (var t in triggerControls)
-        {
-            if(t.layer.ToString() == currentLayer)
+            //player collider dependant icons
+            foreach (var t in triggerControls)
             {
-                AddControl(t.prefab);
+                if(t.layer.ToString() == currentLayer)
+                {
+                    AddControl(t.prefab);
+                }
             }
         }
+
 
         currentLayer = null;
     }
@@ -102,6 +107,10 @@ public class UIPlayerCanvas : MonoBehaviour
         currentUI.Add(obj);
 
     }
+    public void TriggerControl(LayerMask layer)
+    {
+        currentLayer = layer.ToString();
+    }
     public void ClearUI()
     {
         foreach (var obj in currentUI)
@@ -110,15 +119,7 @@ public class UIPlayerCanvas : MonoBehaviour
         }
         currentUI.Clear();
     }
-    public void TriggerControl(LayerMask layer)
-    {
-        currentLayer = layer.ToString();
-    }
 
-    void Update()
-    {
-        UpdateCompass();
-    }
     public void UpdateCompass()
     {
         Transform waypointTransform = activeWaypoint.transform;
