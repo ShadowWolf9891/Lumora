@@ -7,18 +7,30 @@ public class WaypointCompass : MonoBehaviour
 {
     private GameObject playerRef;
     private GameObject cameraRef;
+    
+    //Waypoints
     private GameObject activeWaypoint;
     [SerializeField]private Image waypointIcon;
     
     private TextMeshProUGUI iconText;
+
+    //Vision Indicator
+    
 
     void Awake()
     {
         cameraRef = GameObject.Find("3rd Person Camera");
         playerRef = GameObject.Find("Player");
         activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
-        waypointIcon = GetComponent<Image>();
         iconText = GetComponentInChildren<TextMeshProUGUI>();
+    }
+    void OnEnable()
+    {
+        waypointIcon = GetComponent<Image>();
+    }
+    void OnDisable()
+    {
+        waypointIcon = null;
     }
     void Update()
     {

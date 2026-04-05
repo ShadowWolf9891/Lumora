@@ -19,7 +19,6 @@ public class HideController : MonoBehaviour
 	public Collider GetClosestWall(Vector3 sourceLocation, float radius = 2f)
 	{
 		int count = Physics.OverlapSphereNonAlloc(sourceLocation,radius, buffer, coverLayerMask);
-
 		if (count == 0) return null; //Return if nothing hit
 		
 		float closestDistance = float.MaxValue;
