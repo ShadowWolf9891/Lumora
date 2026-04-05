@@ -308,7 +308,6 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
     }
     private void EnterHide(EnterStealthEvent e)
     {
-		UpdateUI();
         IsSprinting = false;
         isHiding = true;
 		coverObject = hideController.GetClosestWall(transform.position);
@@ -316,8 +315,6 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	}
 	private void LeaveHide(LeaveStealthEvent e)
 	{
-		UpdateUI();
-
 		isHiding = false;
 		coverObject = null;
 		lastWallNormal = Vector3.zero;
@@ -483,19 +480,6 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	{
 		Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - 0.1f , transform.position.z), UnityEngine.Color.yellowNice);
 		return Physics.Raycast(new Vector3 (transform.position.x, transform.position.y +0.1f, transform.position.z), Vector3.down, 0.2f, groundedLayers) && rb.linearVelocity.y <= Mathf.Abs(0.001f);
-	}
-	void UpdateUI()
-	{
-		if(IsGrounded()) 
-		{
-			UIPlayerCanvas.Instance.TriggerControl(groundedLayers); 
-			UIPlayerCanvas.Instance.RefreshUI();
-		}
-		else
-		{
-			UIPlayerCanvas.Instance.TriggerControl(0); 
-			UIPlayerCanvas.Instance.RefreshUI();			
-		}
 	}
 	private void FaceMoveDirection(Vector3 moveDirection)
 	{

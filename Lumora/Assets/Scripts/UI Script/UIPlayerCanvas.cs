@@ -18,21 +18,19 @@ public class UIPlayerCanvas : MonoBehaviour
     //control icon prefabs
     public List<GameObject> constControls;
     public List<GameObject> runStateControls;
-    public List<TriggerControls> triggerControls;
+    public List<GameObject> triggerControls;
     public List<GameObject> eventControls;
 
     public List<GameObject> currentUI = new List<GameObject>();
-    public string currentLayer;
 
     
     [Header("Waypoint Compass")]
-    private GameObject playerRef;
-    private GameObject cameraRef;
-    
-    //Waypoints
     [SerializeField]private GameObject activeWaypoint;
     [SerializeField]private Image waypointIcon;
     
+    private GameObject playerRef;
+    private GameObject cameraRef;
+
     private TextMeshProUGUI iconText;
     void Awake()
     {
@@ -87,19 +85,8 @@ public class UIPlayerCanvas : MonoBehaviour
         if (GameManager.Instance.CurrentGameState == GameStates.Running)
         {
             foreach (var control in runStateControls) AddControl(control);
-
-            //player collider dependant icons
-            foreach (var t in triggerControls)
-            {
-                if(t.layer.ToString() == currentLayer)
-                {
-                    AddControl(t.prefab);
-                }
-            }
         }
 
-
-        currentLayer = null;
     }
     public void AddControl(GameObject controlToAdd)
     {
@@ -107,9 +94,13 @@ public class UIPlayerCanvas : MonoBehaviour
         currentUI.Add(obj);
 
     }
-    public void TriggerControl(LayerMask layer)
+    public void DisplayTrigger()
     {
-        currentLayer = layer.ToString();
+            Debug.Log("!!!!!!!");
+    }
+    public void RemoveTrigger()
+    {
+        
     }
     public void ClearUI()
     {
@@ -119,7 +110,6 @@ public class UIPlayerCanvas : MonoBehaviour
         }
         currentUI.Clear();
     }
-
     public void UpdateCompass()
     {
         Transform waypointTransform = activeWaypoint.transform;
@@ -152,11 +142,4 @@ public class UIPlayerCanvas : MonoBehaviour
         float distance = Vector3.Distance(playerTransform.position, waypointTransform.position);
         iconText.text = Mathf.RoundToInt(distance) + "m";
     }
-}
-
-[System.Serializable]
-public class TriggerControls
-{
-    public GameObject prefab;
-    public LayerMask layer;
 }
