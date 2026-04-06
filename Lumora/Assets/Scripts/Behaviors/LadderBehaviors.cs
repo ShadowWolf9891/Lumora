@@ -57,7 +57,7 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         {
             Debug.Log("LadderBehaviors: player is closer to TOP ladder point, starting TP event");
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
-                $"",
+                $"Start_Teleport",
                 bottomLadderPoint.position));
 
         }
@@ -65,7 +65,7 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
         {
             Debug.Log("LadderBehaviors: player is closer to BOTTOM ladder point, starting TP event");
             GameEvents<TeleportPlayerEvent>.Raise(new TeleportPlayerEvent(
-                $"",
+                $"Start_Teleport",
                 topLadderPoint.position));
         }
 

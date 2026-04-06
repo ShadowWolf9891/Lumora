@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class InteractWithObject : MonoBehaviour
 {
-
     IInteractable currentInteractable;
     [SerializeField] float interactRange = 2f;
     [SerializeField] LayerMask interactableLayer;
@@ -96,9 +95,6 @@ public class InteractWithObject : MonoBehaviour
             objectInRange = true;
         }
 
-        if (CanSetClosestToCurrentInteratable())
-        {
-
-        }
+        CanSetClosestToCurrentInteratable();
     }
 }
