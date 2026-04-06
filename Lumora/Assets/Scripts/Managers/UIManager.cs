@@ -176,7 +176,7 @@ public class UIManager : MonoBehaviour
     public void OnResumeClick() => EventManager.Instance.Raise("Resume_Game");
 	public void OnExitClick() => Application.Quit();
 	public void OnOptionsPressed() =>  HandleUIVisibility("OptionElement", true, false);
-    public void OnControllerPress() => HandleUIVisibility("ControllerElement", true, false);
+    public void OnControllerPress() => HandleUIVisibility("P_ControlMenu", true, false); // Controller Element. Named differently for prefab searchability
 
     //New Start click,between 2 different illustrations (Main Menu Update)
     public void OnMainMenuStartClick()
