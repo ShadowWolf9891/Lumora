@@ -64,7 +64,17 @@
             {
                 "abilityName" : "throw"
             }
+        },
+        {
+            "type" :"ChangeGameStateEvent",
+            "id" : "Start_Teleport",
+            "isRepeatable" : true,
+            "parameters":
+            {
+                "state":"5"
+            }
         }
+
 
     ]
 }

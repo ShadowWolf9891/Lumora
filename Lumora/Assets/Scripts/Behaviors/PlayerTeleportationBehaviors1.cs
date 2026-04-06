@@ -26,9 +26,14 @@ public class PlayerTeleportationBehaviors1 : MonoBehaviour
             particleObject.SetActive(false);
         }
     }
-    private void Start()
+    private void OnEnable()
     {
         GameEvents<TeleportPlayerEvent>.Subscribe(DoTeleport);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents<TeleportPlayerEvent>.Unsubscribe(DoTeleport);
     }
 
     private void DoTeleport(TeleportPlayerEvent e)
