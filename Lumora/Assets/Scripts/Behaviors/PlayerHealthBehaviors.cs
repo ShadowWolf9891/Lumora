@@ -44,7 +44,7 @@ public class PlayerHealthBehaviors : MonoBehaviour
             {
                 DoGameOver();
             }
-            UIHealthBar.Instance.UpdateHealthBar(CurrentHealthValue);
+            UIPlayerCanvas.Instance.UpdateHealthBar(CurrentHealthValue);
         }
     }
 

@@ -6,7 +6,7 @@ public class UIHealthBar : MonoBehaviour
 {
     public static UIHealthBar Instance;
     [SerializeField]Sprite[] healthSprites;
-    UnityEngine.UI.Image healthIcon;
+    Image healthIcon;
     void Awake()
     {
         if (Instance == null)
@@ -15,7 +15,7 @@ public class UIHealthBar : MonoBehaviour
 		}
 		else Destroy(gameObject);
 
-        healthIcon = GetComponent<UnityEngine.UI.Image>();
+        healthIcon = GetComponent<Image>();
     }
 
 	public void UpdateHealthBar(int currentHealth)
