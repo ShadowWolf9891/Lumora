@@ -61,8 +61,19 @@ public class PlayerAnimatorController : MonoBehaviour
 
 	private void Update()
     {
-        if (GameManager.Instance.CurrentGameState != GameStates.Running) return;
-        //add functionality to check if player is throwing and standing still, too lazy for that rn
+        //If the game is not running, make sure player is idle and return.
+        if (GameManager.Instance.CurrentGameState != GameStates.Running)
+        {
+            if (!animator.GetBool("isIdle"))
+            {
+                animator.SetBool("isIdle", true);
+                animator.SetFloat("runWalkIndex", 0);
+                animator.SetFloat("moveSpeed", 0);
+                animator.speed = 1;
+            }
+			return;
+        }
+            //add functionality to check if player is throwing and standing still, too lazy for that rn
         if (rb.linearVelocity.magnitude <= 0.05)
         {
             if (!animator.GetBool("isIdle"))
