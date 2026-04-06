@@ -159,7 +159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8513043265067793083}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: 3D_LargeShack_Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5462284886340140133}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,8 +291,62 @@ Transform:
   - {fileID: 4556369508162427176}
   - {fileID: 3608992931293320608}
   - {fileID: 3651081432464891785}
+  - {fileID: 3224741500712692118}
   m_Father: {fileID: 8513043265067793083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5606631016932054626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3224741500712692118}
+  - component: {fileID: 111473492592251352}
+  m_Layer: 0
+  m_Name: Floors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &3224741500712692118
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5606631016932054626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5462284886340140133}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &111473492592251352
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5606631016932054626}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 24.254242, y: 0.10000001, z: 12.248352}
+  m_Center: {x: 0.5, y: -0.1, z: 0}
 --- !u!1 &7778832491810771156
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,10 +356,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3651081432464891785}
-  - component: {fileID: 1444727594593466819}
   - component: {fileID: 2612864129420270972}
-  m_Layer: 11
-  m_Name: Roof/Floors
+  m_Layer: 14
+  m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -326,27 +379,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5462284886340140133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1444727594593466819
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7778832491810771156}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 24.254242, y: 0.10000001, z: 12.248352}
-  m_Center: {x: 0.5, y: -0.1, z: 0}
 --- !u!65 &2612864129420270972
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -366,8 +398,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 24.254242, y: 0.10000001, z: 12.248352}
-  m_Center: {x: 0.5, y: 5.6, z: -0.0012512207}
+  m_Size: {x: 24.254242, y: 0.25, z: 12.248352}
+  m_Center: {x: 0.5, y: 5.675, z: -0.0012512207}
 --- !u!1001 &3027956835761824197
 PrefabInstance:
   m_ObjectHideFlags: 0
