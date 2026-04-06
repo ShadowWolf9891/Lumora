@@ -1,86 +1,86 @@
 {
-    "allEvents":
-    [
+    "allEvents": [
         {
-            "type" : "TestEvent",
-            "id" : "All_Events_Template",
-            "isCompleted" : false,
-            "isRepeatable" : false,
-            "requireCompletedID" : "",
-            "eventsToFire" : 
-            [
+            "type": "TestEvent",
+            "id": "All_Events_Template",
+            "isCompleted": false,
+            "isRepeatable": false,
+            "requireCompletedID": "",
+            "eventsToFire": [
                 "TestEvent2",
                 "TestEvent3"
             ],
-            "eventsOnComplete" : 
-            [
+            "eventsOnComplete": [
                 "TestEvent4",
                 "TestEvent5"
             ],
-            "parameters" :
-            {
-                "state" : "0",
-                "chapter" : "0",
-                "scene":"0",
-                "npcToMove" : "npcObjectName",
-                "prefabName" : "prefabName",
+            "parameters": {
+                "state": "0",
+                "chapter": "0",
+                "scene": "0",
+                "npcToMove": "npcObjectName",
+                "prefabName": "prefabName",
                 "targetLocation": "0,0,0",
                 "targetRotation": "0,0,0",
-                "worldLocation" : "0,0,0",
-                "worldRotation" : "0,0,0",
-                "radius" : "0",
-                "layerMask" : "~0",
-                "eventToRaiseOnTrigger" : "eventID",
-                "moveSpeed" : "0",
-                "autoReturn" : false
+                "worldLocation": "0,0,0",
+                "worldRotation": "0,0,0",
+                "radius": "0",
+                "layerMask": "~0",
+                "eventToRaiseOnTrigger": "eventID",
+                "moveSpeed": "0",
+                "autoReturn": false
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "OpeningCutscene",
+            "eventsOnComplete": [
+                "Chapter2_Intro"
+            ],
+            "parameters": {
+                "timelineName": "LiraWarning"
             }
         },
         {
             "type": "DialogueEvent",
             "id": "Chapter2_Intro",
-            "eventsOnComplete" :
-            [
+            "eventsOnComplete": [
                 "Mrs_Watts_Front_Arrive_Trigger",
                 "Resume_Game"
             ],
-            "parameters" :
-            {
-                "chapter":"2",
-                "scene":"1"
+            "parameters": {
+                "chapter": "2",
+                "scene": "1"
             }
         },
         {
-            "type" : "SpawnTriggerEvent",
-            "id" : "Mrs_Watts_Front_Arrive_Trigger",
-            "parameters" : 
-            {
-                "worldLocation" : "-161.94, 0.49, -822",
-                "radius" : "1",
-                "layerMask" : "Player",
-                "eventToRaiseOnTrigger" : "C2_Arrive_Watts_Front"
+            "type": "SpawnTriggerEvent",
+            "id": "Mrs_Watts_Front_Arrive_Trigger",
+            "parameters": {
+                "worldLocation": "-161.94, 0.49, -822",
+                "radius": "1",
+                "layerMask": "Player",
+                "eventToRaiseOnTrigger": "C2_Arrive_Watts_Front"
             }
 
         },
         {
-            "type" : "DialogueEvent",
-            "id" : "C2_Arrive_Watts_Front",
-            "eventsOnComplete" :
-            [
+            "type": "DialogueEvent",
+            "id": "C2_Arrive_Watts_Front",
+            "eventsOnComplete": [
                 "Resume_Game",
                 "Watts_Back_Trigger"
             ],
-            "parameters" :
-            {
-                "chapter":"2",
-                "scene":"2"
+            "parameters": {
+                "chapter": "2",
+                "scene": "2"
             }
 
         },
         {
             "type": "SpawnTriggerEvent",
             "id": "Watts_Back_Trigger",
-            "parameters":
-            {
+            "parameters": {
                 "worldLocation": "-167.07, 0.49, -812.24",
                 "radius": "2",
                 "layerMask": "Player",
@@ -90,87 +90,73 @@
         {
             "type": "DialogueEvent",
             "id": "C2_Arrive_Watts_Back",
-            "eventsOnComplete" :
-            [
+            "eventsOnComplete": [
                 "C2_Watts_Back"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "3"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Watts_Back",
-            "eventsOnComplete" :
-            [
+            "eventsOnComplete": [
                 "C2_Watts_Light_On"
             ],
-            "parameters":
-            {
-                "chapter":"2",
+            "parameters": {
+                "chapter": "2",
                 "scene": "4"
             }
         },
         {
             "type": "BeginCutsceneEvent",
             "id": "C2_Watts_Light_On",
-            "eventsOnComplete" :
-            [
+            "eventsOnComplete": [
                 "Watts_Door_Open"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "WattsLightOnTL"
             }
         },
         {
             "type": "BeginCutsceneEvent",
             "id": "Watts_Door_Open",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Watts_Answer"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "WattsOpenDoorTL"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Watts_Answer",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "Watts_Walk_Inside"
             ],
-            "parameters":
-            {
-                "chapter":"2",
+            "parameters": {
+                "chapter": "2",
                 "scene": "5"
             }
         },
         {
-            "type":"BeginCutsceneEvent",
+            "type": "BeginCutsceneEvent",
             "id": "Watts_Walk_Inside",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Watts_Lira"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "WattsWalkInsideTL"
             }
         },
         {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Watts_Lira_1"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "6"
             }
@@ -178,12 +164,10 @@
         {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira_1",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_WattsBRB"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "7"
             }
@@ -191,24 +175,20 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "C2_WattsBRB",
-            "eventsOnComplete":
-            [
-                 "C2_Lira_Mirror"
+            "eventsOnComplete": [
+                "C2_Lira_Mirror"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "WattsBRBTL"
             }
         },
         {
             "type": "DialogueEvent",
             "id": "C2_Lira_Mirror",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "Watts_Upstairs"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "63"
             }
@@ -216,24 +196,20 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "Watts_Upstairs",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Watts_Lira_2"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "WattsBlueprintTL"
             }
         },
         {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira_2",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "Blueprint_Table"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "8"
             }
@@ -241,88 +217,74 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "Blueprint_Table",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Watts_3"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "BlueprintTL"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Watts_3",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Watts_4"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "9"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Watts_4",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Watts_5"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "10"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Watts_5",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Watts_6"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "11"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Watts_6",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "Lira_Leave"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "12"
             }
         },
         {
-            "type":"BeginCutsceneEvent",
+            "type": "BeginCutsceneEvent",
             "id": "Lira_Leave",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "Resume_Game"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "LiraLeaveWattsTL"
             }
         },
         {
             "type": "SpawnTriggerEvent",
             "id": "C2_Arrive_Darren_Trigger",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Arrive_Darren_Trigger_2"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "worldLocation": "-150.71, 0.35, -836.5",
                 "radius": "1",
                 "layerMask": "Player",
@@ -330,18 +292,16 @@
             }
         },
         {
-            "type":"BeginCutsceneEvent",
+            "type": "BeginCutsceneEvent",
             "id": "DarrenFrontOpen",
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "DarrenDoorOpen"
             }
         },
         {
             "type": "SpawnTriggerEvent",
             "id": "C2_Arrive_Darren_Trigger_2",
-            "parameters":
-            {
+            "parameters": {
                 "worldLocation": "-150.12, 0.35, -839.5",
                 "radius": "1",
                 "layerMask": "Player",
@@ -349,22 +309,19 @@
             }
         },
         {
-            "type":"BeginCutsceneEvent",
+            "type": "BeginCutsceneEvent",
             "id": "DarrenFrontClose",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Arrive_Darren_Trigger_3"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "DarrenDoorClose"
             }
         },
         {
             "type": "SpawnTriggerEvent",
             "id": "C2_Arrive_Darren_Trigger_3",
-            "parameters":
-            {
+            "parameters": {
                 "worldLocation": "-152.66, 0.35, -843.21",
                 "radius": "1",
                 "layerMask": "Player",
@@ -372,53 +329,45 @@
             }
         },
         {
-            "type":"BeginCutsceneEvent",
+            "type": "BeginCutsceneEvent",
             "id": "DarrenBackOpen",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_1"
-                
+
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "DarrenEnterDoorTL"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_1",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_2"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "15"
             }
         },
-         {
-            "type":"DialogueEvent",
+        {
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_2",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_3"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "16"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_3",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Darren_GrabPic_1"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "17"
             }
@@ -426,132 +375,112 @@
         {
             "type": "BeginCutsceneEvent",
             "id": "C2_Darren_GrabPic_1",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_4"
             ],
-            "parameters": 
-            {
+            "parameters": {
                 "timelineName": "DarrenGrabPicTL"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_4",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_5"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "18"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_5",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_6"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "19"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_6",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_7"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "20"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_7",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_8"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "21"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_8",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Blueprint"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "22"
             }
         },
         {
-            "type":"BeginCutsceneEvent",
+            "type": "BeginCutsceneEvent",
             "id": "C2_Lira_Blueprint",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_9"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "timelineName": "LiraBlueprintTL"
             }
         },
-         {
-            "type":"DialogueEvent",
+        {
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_9",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_10"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "23"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_10",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "C2_Lira_Darren_11"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "24"
             }
         },
         {
-            "type":"DialogueEvent",
+            "type": "DialogueEvent",
             "id": "C2_Lira_Darren_11",
-            "eventsOnComplete":
-            [
+            "eventsOnComplete": [
                 "Resume_Game"
             ],
-            "parameters":
-            {
+            "parameters": {
                 "chapter": "2",
                 "scene": "25"
             }
         }
-        
+
 
     ]
 }

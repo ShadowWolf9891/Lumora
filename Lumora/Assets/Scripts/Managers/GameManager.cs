@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
 		{
 			"Chapter1-Mine" => "ShiftLeader_Enter",
 			"Chapter1-House" => "KipEnterHouse_C1_S2",
-			"Chapter2_Stealth"=>"Chapter2_Intro",
+			"Chapter2_Stealth"=>"OpeningCutscene",
 			_ => ""
 		};
 		if (firstEvent != "" && !EventManager.Instance.GetCompletedEvents().Contains(firstEvent))
