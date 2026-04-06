@@ -51,9 +51,9 @@ public class TimelineManager : MonoBehaviour
 	private void Update()
 	{
 		// Check each active director to see if it has passed its end time
-		foreach (var kvp in _directorEntries)
+		for (int i = 0; i < _directorEntries.Count; i++)
 		{
-			var entry = kvp.Value;
+			if(!_directorEntries.TryGetValue(_directorEntries.Keys.ElementAt(i), out var entry)) { return; }
 			if (entry.EndTime.HasValue &&
 				entry.Director.state == PlayState.Playing &&
 				entry.Director.time >= entry.EndTime.Value)
@@ -105,7 +105,7 @@ public class TimelineManager : MonoBehaviour
 
 			director.time = e.StartTime;
 			director.Play();
-			EventManager.Instance.Raise(new ChangeGameStateEvent("Start_Cutscene", GameStates.Cutscene));
+			EventManager.Instance.Raise("Start_Cutscene");
 		}
 	}
 	private void OnDirectorStopped(PlayableDirector director)

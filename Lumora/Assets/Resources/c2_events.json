@@ -205,7 +205,7 @@
             "id": "C2_Lira_Mirror",
             "eventsOnComplete":
             [
-
+                "Watts_Upstairs"
             ],
             "parameters":
             {
@@ -214,16 +214,40 @@
             }
         },
         {
+            "type": "BeginCutsceneEvent",
+            "id": "Watts_Upstairs",
+            "eventsOnComplete":
+            [
+                "C2_Watts_Lira_2"
+            ],
+            "parameters":
+            {
+                "timelineName": "WattsBlueprintTL"
+            }
+        },
+        {
             "type": "DialogueEvent",
             "id": "C2_Watts_Lira_2",
+            "eventsOnComplete":
+            [
+                "Blueprint_Table"
+            ],
+            "parameters":
+            {
+                "chapter": "2",
+                "scene": "8"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
+            "id": "Blueprint_Table",
             "eventsOnComplete":
             [
                 "C2_Lira_Watts_3"
             ],
             "parameters":
             {
-                "chapter": "2",
-                "scene": "8"
+                "timelineName": "BlueprintTL"
             }
         },
         {
@@ -270,10 +294,7 @@
             "id": "C2_Lira_Watts_6",
             "eventsOnComplete":
             [
-                "C2_Arrive_Darren_Trigger",
-                "Lira_Leave_Watts_Trigger",
-                "Lira_Leave_Door_Trigger",
-                "Resume_Game"
+                "Lira_Leave"
             ],
             "parameters":
             {
@@ -282,41 +303,15 @@
             }
         },
         {
-            "type":"SpawnTriggerEvent",
-            "id": "Lira_Leave_Watts_Trigger",
-            "parameters":
-            {
-                "worldLocation": "-165.21, 0.34, -817.62",
-                "radius": "1",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "Lira_Door_Open"
-            }
-        },
-        {
             "type":"BeginCutsceneEvent",
-            "id": "Lira_Door_Open",
+            "id": "Lira_Leave",
+            "eventsOnComplete":
+            [
+                "Resume_Game"
+            ],
             "parameters":
             {
-                "timelineName": "LiraLeaveDoorOpenTL"
-            }
-        },
-        {
-            "type":"SpawnTriggerEvent",
-            "id": "Lira_Leave_Door_Trigger",
-            "parameters":
-            {
-                "worldLocation": "-166.45, 0.29, -811.64",
-                "radius": "1",
-                "layerMask": "Player",
-                "eventToRaiseOnTrigger": "Lira_Door_Close"
-            }
-        },
-        {
-            "type":"BeginCutsceneEvent",
-            "id": "Lira_Door_Close",
-            "parameters":
-            {
-                "timelineName": "WattsDoorCloseTL"
+                "timelineName": "LiraLeaveWattsTL"
             }
         },
         {

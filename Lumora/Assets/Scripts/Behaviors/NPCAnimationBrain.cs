@@ -30,6 +30,11 @@ public class NPCAnimationBrain : MonoBehaviour
 
     private void UpdateAnimator()
     {
+        if (!agent.enabled)
+        {
+			animator.SetFloat("moveSpeed", 0);
+			return;
+        }
         switch (animType)
         {
             case NPC_ANIM_TYPES.NONE:

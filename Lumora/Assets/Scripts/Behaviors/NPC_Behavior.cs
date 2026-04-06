@@ -12,6 +12,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	[SerializeField] GameObject curTarget;
 	PathObjectBehavior pathBehavior;
 	NavMeshAgent agent;
+	NavMeshPath previousPath;
 	Vector3 previousVelocity;
 	string eventID;
 	void Awake()
@@ -173,7 +174,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 		if (e.NPCName != gameObject.name || 
 			(e.WalkType == curWalkType && e.FollowDistance == followDistance && e.Target == curTarget.name)) return;
 
-		if (e.Target != curTarget.name)
+		if (e.Target != curTarget.name && e.Target != "" && e.Target != null)
 		{
 			GameObject newTarget = GameObject.Find(e.Target);
 			if (newTarget == null)
@@ -205,16 +206,20 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	private void FreezeNPC(ChangeGameStateEvent e)
 	{
 		if(agent == null) return;
-		if (e.State == GameStates.Running && agent.hasPath)
+
+		if(e.State == GameStates.Running && !agent.enabled)
 		{
-			agent.velocity = previousVelocity;
+			agent.enabled = true;
 			agent.isStopped = false;
+			if(previousPath != null) agent.path = previousPath;
 		}
-		else if (e.State != GameStates.Running) 
+		else if (e.State != GameStates.Running && agent.enabled) 
 		{
+			if(agent.hasPath) previousPath = agent.path;
 			previousVelocity = agent.velocity;
 			agent.velocity = Vector3.zero;
 			agent.isStopped = true;
+			agent.enabled = false;
 		}
 	}
 	private void ToggleNPCMovement()

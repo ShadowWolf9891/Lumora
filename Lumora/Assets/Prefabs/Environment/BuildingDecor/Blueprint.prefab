@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1583488992895967627}
   - component: {fileID: 6569453329877121333}
   - component: {fileID: -6934452544358585597}
+  - component: {fileID: 848644317998670573}
   m_Layer: 0
   m_Name: Blueprint
   m_TagString: Untagged
@@ -20,21 +21,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &3843109773654894765
-Transform:
+--- !u!224 &3843109773654894765
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8572217734853135831}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.010219133, w: 0.9999478}
-  m_LocalPosition: {x: -504.126, y: 1.022, z: -698.575}
-  m_LocalScale: {x: 1, y: 0.014736, z: 1}
+  m_LocalRotation: {x: -0.010013458, y: -0.97982234, z: -0.002039941, w: 0.19960934}
+  m_LocalPosition: {x: 0, y: 0, z: -813.95}
+  m_LocalScale: {x: 0.54036, y: 0.007962745, z: 0.54036}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.171}
+  m_LocalEulerAnglesHint: {x: -0.458, y: -156.975, z: 1.078}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -166.06, y: 5.12}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &8694637796709495541
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -68,7 +73,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0ee0dfe3e4e9bad41aa877e17228557f, type: 2}
+  - {fileID: 2100000, guid: 05e5a88e151961d42ad1ba19ce698035, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,3 +141,11 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!222 &848644317998670573
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572217734853135831}
+  m_CullTransparentMesh: 1
