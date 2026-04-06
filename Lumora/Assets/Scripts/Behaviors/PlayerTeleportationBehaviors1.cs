@@ -38,8 +38,7 @@ public class PlayerTeleportationBehaviors1 : MonoBehaviour
 
     private void DoTeleport(TeleportPlayerEvent e)
     {
-        GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Teleporting!, changing game state to Cutscene", GameStates.Teleporting));
-
+        EventManager.Instance.Raise("Start_Teleport");
         EnableTeleportSettings(true);
 
         Vector3 differenceBetweenPoints = -(transform.position - e.PositionToGoTo);
@@ -52,7 +51,7 @@ public class PlayerTeleportationBehaviors1 : MonoBehaviour
     {
         EnableTeleportSettings(false);
 
-        GameEvents<ChangeGameStateEvent>.Raise(new ChangeGameStateEvent("Ending Teleport!, changing game state to Running", GameStates.Running));
+        EventManager.Instance.Raise("Resume_Game");
     }
 
     private void EnableTeleportSettings(bool shouldBeTeleporting)

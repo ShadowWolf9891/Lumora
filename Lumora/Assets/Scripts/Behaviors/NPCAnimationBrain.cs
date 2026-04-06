@@ -42,6 +42,8 @@ public class NPCAnimationBrain : MonoBehaviour
                 break;
 
             case NPC_ANIM_TYPES.WALKING_ONLY:
+                if (!agent.isOnNavMesh)
+                    break;
                 if (agent.isStopped)
                 {
                     animator.SetFloat("moveSpeed", 0);
