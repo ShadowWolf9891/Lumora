@@ -69,9 +69,6 @@ public class LadderBehaviors : MonoBehaviour, IInteractable
                 topLadderPoint.position));
         }
 
-        //Teleporting player will be an event raised by this behavior that player listens for.
-        //upon hearing event, players will disable their model, begin movement, emit particles as they travel, then re-enable model at end point 
-
         //returning false, as this interaction doesn't destroy the ladder
         return false;
     }
