@@ -177,7 +177,7 @@ public class UIManager : MonoBehaviour
     //Button behaviors on click
     public void OnStartClick() => EventManager.Instance.Raise(new LoadSceneEvent("StartNewGame", SceneManager.GetActiveScene().buildIndex + 2));
     public void OnResumeClick() => EventManager.Instance.Raise("Resume_Game");
-	public void OnExitClick() => Application.Quit();
+	public void OnExitClick() => EventManager.Instance.Raise(new LoadSceneEvent("ReturnToMenu", 0));
 	public void OnOptionsPressed() =>  HandleUIVisibility("OptionElement", true, false);
     public void OnControllerPress() => HandleUIVisibility("P_ControlMenu", true, false); // Controller Element. Named differently for prefab searchability
 

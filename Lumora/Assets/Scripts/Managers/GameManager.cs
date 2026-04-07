@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
 
 	public void LoadAll(int curScene)
 	{
+		GameEvents<DeleteSaveEvent>.Raise(new DeleteSaveEvent("Delete save"));
 		CameraManager.Instance.Reset();
 		TimelineManager.Instance.Load();
 
@@ -123,6 +124,7 @@ public class GameManager : MonoBehaviour
 		CameraManager.Instance.LoadCameras();
 		if (SceneManager.GetSceneByBuildIndex(curScene).name == "MainMenu") return;
 
+		
 		string firstEvent = (SceneManager.GetSceneByBuildIndex(curScene).name) switch
 		{
 			"Chapter1-Mine" => "ShiftLeader_Enter",
