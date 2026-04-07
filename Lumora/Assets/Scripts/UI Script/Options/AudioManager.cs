@@ -36,6 +36,7 @@ public class AudioManager : MonoBehaviour
             0 => "TitleTrack",
             1 => "TitleTrack",
             2 => "Chapter1Background",
+            3 => "Chapter2Background",
             _ => throw new NotImplementedException(),
         });
 	}
