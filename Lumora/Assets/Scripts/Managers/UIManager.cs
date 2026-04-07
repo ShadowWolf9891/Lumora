@@ -84,6 +84,9 @@ public class UIManager : MonoBehaviour
                 HandleUIVisibility("PlayerElement", true, false);
                 Cursor.lockState = CursorLockMode.Locked;
                 break;
+            case "Credits":
+                HandleUIVisibility("CreditsElement", true, false);
+                break;
             case "":
                 break;
 
