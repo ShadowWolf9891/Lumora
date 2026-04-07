@@ -4,15 +4,13 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using System;
 
 public class UIPlayerCanvas : MonoBehaviour
 {    
-    public static UIPlayerCanvas Instance;
-    
     [Header("Health Bar")]
     [SerializeField]Sprite[] healthSprites;
     [SerializeField]Image healthIcon;
-
 
     [Header("Control UI")]
     public Transform controllerLayoutGroup;
@@ -31,44 +29,39 @@ public class UIPlayerCanvas : MonoBehaviour
     [SerializeField]private Image waypointIcon;
     
     private GameObject playerRef;
-    private GameObject cameraRef;
-
+    private bool isLoaded = false;
     private TextMeshProUGUI iconText;
-    void Awake()
-    {
-        if (Instance == null)
-		{
-			Instance = this;
-		}
-		else Destroy(gameObject);
+    private int currentHealth = 10;
+    private bool isGodMode = false;
+    private void OnEnable()
+	{
+        GameEvents<PlayerDamagedEvent>.Subscribe(UpdateHealthBar);
+        GameEvents<GodModeEvent>.Subscribe(ToggleGodMode);
+	}
 
-        cameraRef = GameObject.Find("3rd Person Camera");
+	private void OnDisable()
+	{
+		GameEvents<PlayerDamagedEvent>.Unsubscribe(UpdateHealthBar);
+		isLoaded = false;
+	}
+	private void Load()
+    {
         playerRef = GameObject.Find("Player");
         activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
         iconText = GameObject.Find("T_Waypoint").GetComponentInChildren<TextMeshProUGUI>();
+        currentHealth = 10;
+		isLoaded = true;
     }
     void Update()
     {
-        if(activeWaypoint == null) activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
-        else UpdateCompass();
+        UpdateCompass();
     }
-    void OnEnable()
+	private void ToggleGodMode(GodModeEvent e) => isGodMode = e.GodModeEnabled;
+	public void UpdateHealthBar(PlayerDamagedEvent e)
     {
-        activeWaypoint = null;
-        SceneManager.sceneUnloaded += ItLoaded;
-    }
-    void OnDisable()
-    {
-        activeWaypoint = null;
-        SceneManager.sceneUnloaded -= ItLoaded;
-    }
-    void ItLoaded(Scene s)
-    {
-        activeWaypoint = null;
-    }
-    public void UpdateHealthBar(int currentHealth)
-    {
-        Debug.Log(currentHealth);
+        if (isGodMode) return;
+
+        currentHealth -= e.DamageTaken;
         if (currentHealth >= 7) //above 7
         {
             healthIcon.sprite = healthSprites[0];
@@ -119,9 +112,10 @@ public class UIPlayerCanvas : MonoBehaviour
     }
     public void UpdateCompass()
     {
+        if(!isLoaded) Load(); 
         Transform waypointTransform = activeWaypoint.transform;
         Transform playerTransform = playerRef.transform;
-        Transform cameraTransform = cameraRef.transform;
+        Transform cameraTransform = CameraManager.Instance.CurrentCamera.transform;
         
         Vector3 direction = waypointTransform.position - playerTransform.position;
         

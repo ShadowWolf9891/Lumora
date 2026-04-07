@@ -12,26 +12,27 @@ public class PlayerAnimatorController : MonoBehaviour
     bool canThrow = false;
 
     float savedRunWalkIndex;
-    private void Start()
-    {
-        GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
+	private void OnEnable()
+	{
+		GameEvents<PlayerInputEvent>.Subscribe(HandleInput);
         GameEvents<EnterStealthEvent>.Subscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Subscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Subscribe(UnlockThrow);
+        GameEvents<ChangeGameStateEvent>.Subscribe(GameStateChanged);
 
         animator = GetComponent<Animator>(); 
         behavior = gameObject.GetComponentInParent<PlayerBehavior>();
         rb = behavior.gameObject.GetComponent<Rigidbody>();
         canThrow = false;
-    }
-    private void OnDestroy()
+	}
+	private void OnDisable()
     {
         GameEvents<PlayerInputEvent>.Unsubscribe(HandleInput);
         GameEvents<EnterStealthEvent>.Unsubscribe(EnterHide);
         GameEvents<LeaveStealthEvent>.Unsubscribe(LeaveHide);
         GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockThrow);
-        GameEvents<ChangeGameStateEvent>.Subscribe(GameStateChanged);
-    }
+		GameEvents<ChangeGameStateEvent>.Unsubscribe(GameStateChanged);
+	}
 
 
     private void HandleInput(PlayerInputEvent e)
@@ -165,6 +166,7 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void GameStateChanged(ChangeGameStateEvent e)
     {
+        if (!animator.enabled) return;
         if (e.State == GameStates.Running)
         {
             animator.speed = 1;

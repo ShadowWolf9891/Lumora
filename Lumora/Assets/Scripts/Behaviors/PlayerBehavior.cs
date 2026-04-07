@@ -98,14 +98,6 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 		GameEvents<UnlockAbilityEvent>.Unsubscribe(UnlockAbility);
 		GameEvents<ChangeGameStateEvent>.Unsubscribe(GameEventChanged);
 	}
-	private void Start()
-	{
-		CameraManager.Instance.SetCurrentCamera("3rd Person Camera");
-		thirdPersonCam = CameraManager.Instance.CurrentCamera;
-
-
-	}
-
     private void GetComponentReferences()
     {
         rb = GetComponent<Rigidbody>();
