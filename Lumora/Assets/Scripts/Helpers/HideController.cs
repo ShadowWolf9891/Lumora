@@ -26,6 +26,7 @@ public class HideController : MonoBehaviour
 		for (int i = 0; i < count; i++)
 		{
 			Collider c = buffer[i];
+			
 			float tempDistance = Vector3.Distance(c.ClosestPoint(sourceLocation), sourceLocation);
 
 			if (tempDistance < closestDistance)
