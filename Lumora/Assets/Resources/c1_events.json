@@ -175,8 +175,7 @@
             "id": "Pit_2",
             "eventsOnComplete":
             [
-                "Resume_Game",
-                "Shaw_Enter"
+                "Lira_Walk_Back"
             ],
             "parameters" :
             {
@@ -186,10 +185,21 @@
         },
         {
             "type": "BeginCutsceneEvent",
+            "id": "Lira_Walk_Back",
+            "eventsOnComplete":
+            [
+                "Shaw_Enter"
+            ],
+            "parameters":
+            {
+                "timelineName": "LiraWalkToSLTL"
+            }
+        },
+        {
+            "type": "BeginCutsceneEvent",
             "id": "Shaw_Enter",
             "eventsOnComplete":
             [
-                "Resume_Game",
                 "Shaw_2"
             ],
             "parameters":
