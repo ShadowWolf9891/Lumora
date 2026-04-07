@@ -98,6 +98,7 @@ public class NPC_Behavior : MonoBehaviour, ISaveable
 	}
     private void Move()
 	{
+		if (!agent.enabled) return;
 		switch(curWalkType)
 		{
 			case WalkType.NORMAL : 
