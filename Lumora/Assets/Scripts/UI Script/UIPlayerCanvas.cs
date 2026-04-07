@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class UIPlayerCanvas : MonoBehaviour
 {    
@@ -47,16 +49,21 @@ public class UIPlayerCanvas : MonoBehaviour
     }
     void Update()
     {
-        UpdateCompass();
+        if(activeWaypoint == null) activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
+        else UpdateCompass();
     }
     void OnEnable()
     {
-        RefreshUI();
-        activeWaypoint = playerRef.GetComponent<PlayerBehavior>().waypointImage;
+        activeWaypoint = null;
+        SceneManager.sceneUnloaded += ItLoaded;
     }
     void OnDisable()
     {
-        ClearUI();
+        activeWaypoint = null;
+        SceneManager.sceneUnloaded -= ItLoaded;
+    }
+    void ItLoaded(Scene s)
+    {
         activeWaypoint = null;
     }
     public void UpdateHealthBar(int currentHealth)
