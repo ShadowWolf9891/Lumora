@@ -166,7 +166,14 @@ public class TeleportPlayerEvent : GameEventType
         PositionToGoTo = positionToGoTo;
     }
 }
-
+public class StealthCheckEvent : GameEventType
+{ 
+    public bool stealthCheck;
+    public StealthCheckEvent(string id, bool isEnabled) : base(id) 
+    {
+        stealthCheck = isEnabled;
+    }
+}
 
 #endregion
 

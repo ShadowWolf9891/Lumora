@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	float jumpHeight = 5;
 	[SerializeField, Tooltip("LayerMask for IsGrounded")]
 	LayerMask groundedLayers;
+	private UIPlayerCanvas playerCanvas;
 
 	//throw mechanic
 	[Header("Throw Settings")]
@@ -45,6 +47,7 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 	[SerializeField] private float standingHeight = 1.8f;
 	[SerializeField] private float crouchedHeight = 1.4f;
 	[SerializeField] private float stealthSnapDistance = 0.6f;
+	public bool canSnap;
 	private Collider coverObject;
 
 	[Header("WaypointSettings")]
@@ -504,6 +507,17 @@ public class PlayerBehavior : MonoBehaviour, ISaveable
 			Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 			rb.AddForce(-horizontalVel * stoppingForce, ForceMode.Acceleration);
 			//Debug.Log($"Running Stopping force, dragForce = {dragForce.x}, {dragForce.z}");
+		}
+		Collider collider = hideController.GetClosestWall(transform.position);
+		if (collider != null)
+		{
+			canSnap = true;
+			GameEvents<StealthCheckEvent>.Raise(new StealthCheckEvent("SnapUI", canSnap));
+		}
+		else
+		{
+			canSnap = false;
+			GameEvents<StealthCheckEvent>.Raise(new StealthCheckEvent("SnapUI", canSnap));
 		}
 	}
 

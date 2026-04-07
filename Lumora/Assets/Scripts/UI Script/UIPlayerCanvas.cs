@@ -18,7 +18,8 @@ public class UIPlayerCanvas : MonoBehaviour
     //control icon prefabs
     public List<GameObject> constControls;
     public List<GameObject> runStateControls;
-    public List<GameObject> triggerControls;
+    public GameObject SnapToUI;
+    private PlayerBehavior playerBehavior;
     public List<GameObject> eventControls;
 
     public List<GameObject> currentUI = new List<GameObject>();
@@ -37,11 +38,14 @@ public class UIPlayerCanvas : MonoBehaviour
 	{
         GameEvents<PlayerDamagedEvent>.Subscribe(UpdateHealthBar);
         GameEvents<GodModeEvent>.Subscribe(ToggleGodMode);
+        playerBehavior = playerRef.GetComponent<PlayerBehavior>();
+        GameEvents<StealthCheckEvent>.Subscribe(OnstealthCheck);
 	}
 
 	private void OnDisable()
 	{
 		GameEvents<PlayerDamagedEvent>.Unsubscribe(UpdateHealthBar);
+        GameEvents<StealthCheckEvent>.Subscribe(OnstealthCheck);
 		isLoaded = false;
 	}
 	private void Load()
@@ -94,13 +98,9 @@ public class UIPlayerCanvas : MonoBehaviour
         currentUI.Add(obj);
 
     }
-    public void DisplayTrigger()
+    private void OnstealthCheck(StealthCheckEvent e)
     {
-            Debug.Log("!!!!!!!");
-    }
-    public void RemoveTrigger()
-    {
-        
+        SnapToUI.SetActive(e.stealthCheck);
     }
     public void ClearUI()
     {
